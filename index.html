@@ -1,0 +1,4340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1115">
+
+  <title>Sequence Training by PHP</title>
+
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #181b21;
+      --card2: #20242c;
+      --border: #2c313a;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --primary: #84cc16;
+      --primary-dark: #65a30d;
+      --danger: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding:
+        20px 20px calc(30px + env(safe-area-inset-bottom));
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    header {
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .card {
+      margin-bottom: 16px;
+      padding: 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .card h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 46px;
+      padding: 0 12px;
+      background: var(--card2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--card2);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #111;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+    }
+
+    .btn-small {
+      min-height: 36px;
+      padding: 0 10px;
+      font-size: 13px;
+    }
+
+    /* ========================================
+       RECUPERAÇÃO
+    ======================================== */
+
+    .recovery {
+      margin-bottom: 16px;
+      padding: 16px;
+      background: #17220d;
+      border: 1px solid #365314;
+      border-radius: 14px;
+    }
+
+    .recovery-title {
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .recovery-info {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .recovery-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* ========================================
+       LISTA DE EXERCÍCIOS
+    ======================================== */
+
+    .workout-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .exercise-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .exercise-item.dragging {
+      opacity: .5;
+    }
+
+    .exercise-number {
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--border);
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .exercise-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .exercise-name {
+      margin-bottom: 4px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .exercise-details {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .exercise-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--border);
+      color: var(--text);
+      font-weight: bold;
+    }
+
+    .icon-btn:hover {
+      background: #3a404b;
+    }
+
+    .icon-btn:disabled {
+      opacity: .35;
+      cursor: default;
+    }
+
+    .empty {
+      padding: 24px 10px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .bottom-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .full-btn {
+      grid-column: 1 / -1;
+    }
+
+    .tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .custom-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: #30351f;
+      color: var(--primary);
+      margin-left: 5px;
+    }
+
+    /* ========================================
+       TELA DE TREINO
+    ======================================== */
+
+    #workoutScreen,
+    #restScreen,
+    #finishScreen {
+      min-height: calc(100vh - 40px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .workout-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .workout-title {
+      min-width: 0;
+    }
+
+    .workout-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 17px;
+    }
+
+    .workout-title span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pause-btn {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    /* ========================================
+       PROGRESSO
+    ======================================== */
+
+    .progress-container {
+      margin-bottom: 24px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .progress-label strong {
+      color: var(--primary);
+    }
+
+    .progress {
+      height: 8px;
+      overflow: hidden;
+      background: var(--card2);
+      border-radius: 99px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      border-radius: 99px;
+      transition: width .3s ease;
+    }
+
+    /* ========================================
+       EXERCÍCIO ATUAL
+    ======================================== */
+
+    .current-exercise {
+      margin: 10px 0 24px;
+      text-align: center;
+    }
+
+    .current-exercise .label {
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .current-exercise h2 {
+      margin: 0;
+      font-size: clamp(27px, 8vw, 40px);
+      line-height: 1.1;
+    }
+
+    .set-counter {
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .set-counter strong {
+      font-size: 18px;
+    }
+
+    .set-counter span {
+      color: var(--muted);
+    }
+
+    .reps-display {
+      margin-bottom: 14px;
+      padding: 24px 15px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    .reps-display .number {
+      font-size: clamp(60px, 18vw, 100px);
+      line-height: .95;
+      font-weight: 800;
+    }
+
+    .reps-display .caption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .execution-timer {
+      margin-bottom: 20px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .execution-timer strong {
+      display: block;
+      color: var(--text);
+      font-size: 28px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .next-exercise {
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .next-exercise strong {
+      color: var(--text);
+    }
+
+    .main-action {
+      width: 100%;
+      min-height: 64px;
+      margin-bottom: 10px;
+      border: 0;
+      border-radius: 14px;
+      background: var(--primary);
+      color: #111;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .secondary-action {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* ========================================
+       DESCANSO
+    ======================================== */
+
+    .rest-screen-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .rest-label {
+      margin-bottom: 15px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .rest-timer {
+      width: min(72vw, 280px);
+      height: min(72vw, 280px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+      border: 8px solid var(--primary);
+      border-radius: 50%;
+      font-size: clamp(55px, 15vw, 80px);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .rest-next {
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .rest-next strong {
+      color: var(--text);
+    }
+
+    /* ========================================
+       FINAL
+    ======================================== */
+
+    .finish-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .finish-icon {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      background: var(--primary);
+      border-radius: 50%;
+      color: #111;
+      font-size: 42px;
+      font-weight: bold;
+    }
+
+    .finish-content h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+    }
+
+    .finish-content p {
+      margin: 0 0 24px;
+      color: var(--muted);
+    }
+
+    /* ========================================
+       MODAIS
+    ======================================== */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, .72);
+      backdrop-filter: blur(5px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease;
+    }
+
+    .modal-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 430px;
+      padding: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .45);
+      transform: translateY(10px) scale(.98);
+      transition: transform .18s ease;
+    }
+
+    .modal-overlay.visible .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .modal p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+      white-space: pre-line;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 22px;
+    }
+
+    .modal-actions .btn {
+      min-width: 100px;
+    }
+
+    .modal-form {
+      margin-top: 18px;
+    }
+
+    .modal-form .field {
+      margin-bottom: 12px;
+    }
+
+    /* Modal de pausa */
+
+    .pause-modal {
+      text-align: center;
+    }
+
+    .pause-modal h3 {
+      font-size: 24px;
+    }
+
+    .pause-buttons {
+      display: grid;
+      gap: 9px;
+      margin-top: 22px;
+    }
+
+    .pause-buttons .btn {
+      width: 100%;
+    }
+
+    /* ========================================
+       MOBILE
+    ======================================== */
+
+    @media (max-width: 560px) {
+
+      .app {
+        padding:
+          16px 14px calc(24px + env(safe-area-inset-bottom));
+      }
+
+      header h1 {
+        font-size: 25px;
+      }
+
+      .card {
+        padding: 15px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+
+      .form-actions,
+      .recovery-actions {
+        flex-direction: column;
+      }
+
+      .form-actions .btn,
+      .recovery-actions .btn {
+        width: 100%;
+      }
+
+      .exercise-item {
+        align-items: flex-start;
+      }
+
+      .exercise-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .bottom-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .full-btn {
+        grid-column: auto;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+      }
+
+      .modal-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       BUILDER
+  ====================================================== -->
+
+  <main class="app" id="builderScreen">
+
+    <header>
+      <h1>Sequence Training</h1>
+      <p>Physical & Athletic Training</p>
+    </header>
+    <!-- Recuperação de treino -->
+    <section id="recoveryBox" class="recovery hidden">
+      <div class="recovery-title">
+        Treino em andamento
+      </div>
+      <div class="recovery-info" id="recoveryInfo"></div>
+      <div class="recovery-actions">
+        <button class="btn btn-primary" id="continueBtn">
+          Continuar treino
+        </button>
+        <button class="btn btn-ghost" id="newWorkoutBtn">
+          Começar novo
+        </button>
+      </div>
+    </section>
+    <!-- Formulário -->
+    <section class="card">
+      <h2 id="formTitle">
+        Adicionar exercício
+      </h2>
+      <form id="exerciseForm">
+        <div class="form-grid">
+          <div class="full">
+            <label for="exerciseSelect">
+              Exercício
+            </label>
+            <select id="exerciseSelect" required>
+              <option value="">
+                Selecione um exercício
+              </option>
+            </select>
+          </div>
+          <div>
+            <label for="setsInput">
+              Séries
+            </label>
+            <input id="setsInput" type="number" min="1" max="99" value="3" required>
+          </div>
+          <div>
+            <label for="repsInput">
+              Repetições
+            </label>
+            <input id="repsInput" type="number" min="1" max="999" value="10" required>
+          </div>
+          <div class="full">
+            <label for="restSelect">
+              Intervalo
+            </label>
+            <select id="restSelect" required>
+              <option value="15">
+                15 segundos
+              </option>
+              <option value="30" selected>
+                30 segundos
+              </option>
+              <option value="45">
+                45 segundos
+              </option>
+              <option value="60">
+                60 segundos
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitExerciseBtn">
+            Adicionar exercício
+          </button>
+          <button type="button" class="btn btn-ghost hidden" id="cancelEditBtn">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-ghost" id="customExerciseBtn">
+            + Exercício personalizado
+          </button>
+        </div>
+      </form>
+    </section>
+    <!-- Lista do treino -->
+    <section class="card">
+      <h2>Seu treino</h2>
+      <div id="workoutList" class="workout-list"></div>
+      <div id="emptyWorkout" class="empty">
+        Nenhum exercício adicionado ainda.
+      </div>
+      <div class="bottom-actions">
+        <button class="btn btn-primary full-btn" id="startWorkoutBtn">
+          ▶ Iniciar treino
+        </button>
+        <button class="btn" id="clearWorkoutBtn">
+          Limpar treino
+        </button>
+        <button class="btn" id="workoutNameBtn">
+          Nome do treino
+        </button>
+      </div>
+    </section>
+    <!-- Dados -->
+    <section class="card">
+      <h2>Dados</h2>
+      <div class="tools">
+        <button class="btn btn-small" id="exportBtn">
+          Exportar treino
+        </button>
+        <button class="btn btn-small" id="importBtn">
+          Importar treino
+        </button>
+        <input type="file" id="importFile" accept=".json,application/json" class="hidden">
+      </div>
+    </section>
+  </main>
+  <!-- =====================================================
+       TELA DE EXECUÇÃO
+  ====================================================== -->
+  <main class="app hidden" id="workoutScreen">
+    <div class="workout-topbar">
+      <div class="workout-title">
+        <strong id="workoutNameDisplay">
+          Meu treino
+        </strong>
+        <span>
+          Em execução
+        </span>
+      </div>
+      <button class="pause-btn" id="pauseBtn" aria-label="Pausar treino">
+        ⏸
+      </button>
+    </div>
+    <!-- Progresso -->
+    <div class="progress-container">
+      <div class="progress-label">
+        <span id="progressExerciseLabel">
+          Exercício 1 de 1
+        </span>
+        <strong id="progressPercentage">
+          0% concluído
+        </strong>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+    <!-- Exercício atual -->
+    <div class="current-exercise">
+      <div class="label">
+        EXERCÍCIO ATUAL
+      </div>
+      <h2 id="currentExerciseName">
+        Flexão
+      </h2>
+    </div>
+    <div class="set-counter">
+      <strong id="currentSetDisplay">
+        Série 1
+      </strong>
+      <span id="totalSetsDisplay">
+        de 3
+      </span>
+    </div>
+    <div class="reps-display">
+      <div class="number" id="currentRepsDisplay">
+        10
+      </div>
+      <div class="caption">
+        REPETIÇÕES
+      </div>
+    </div>
+    <div class="execution-timer">
+      Tempo de execução
+      <strong id="executionTimer">
+        00:00
+      </strong>
+    </div>
+    <div class="next-exercise" id="nextExerciseBox"></div>
+    <button class="main-action" id="completeSetBtn">
+      ✓ Série concluída
+    </button>
+    <button class="secondary-action" id="skipSetBtn">
+      Pular série
+    </button>
+  </main>
+  <!-- =====================================================
+       TELA DE DESCANSO
+  ====================================================== -->
+  <main class="app hidden" id="restScreen">
+    <div class="workout-topbar">
+      <div class="workout-title">
+        <strong id="restWorkoutName">
+          Meu treino
+        </strong>
+        <span>
+          Intervalo
+        </span>
+      </div>
+      <button class="pause-btn" id="restPauseBtn" aria-label="Pausar treino">
+        ⏸
+      </button>
+    </div>
+    <div class="rest-screen-content">
+      <div class="rest-label">
+        DESCANSO
+      </div>
+      <div class="rest-timer" id="restTimer">
+        30
+      </div>
+      <div class="rest-next" id="restNextText">
+        Próxima série
+      </div>
+      <button class="btn btn-primary" id="skipRestBtn">
+        Pular descanso
+      </button>
+    </div>
+  </main>
+  <!-- =====================================================
+       TELA FINAL
+  ====================================================== -->
+  <main class="app hidden" id="finishScreen">
+    <div class="finish-content">
+      <div class="finish-icon">
+        ✓
+      </div>
+      <h1>
+        Treino concluído!
+      </h1>
+      <p>
+        Excelente trabalho. Treino finalizado.
+      </p>
+      <button class="btn btn-primary" id="finishBackBtn">
+        Voltar para o início
+      </button>
+    </div>
+  </main>
+  <!-- =====================================================
+       MODAL DE CONFIRMAÇÃO / AVISO
+  ====================================================== -->
+  <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h3 id="modalTitle">
+        Confirmação
+      </h3>
+      <p id="modalMessage"></p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="modalCancelBtn">
+          Cancelar
+        </button>
+        <button class="btn btn-primary" id="modalConfirmBtn">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- =====================================================
+       MODAL DE NOME DO TREINO
+  ====================================================== -->
+  <div class="modal-overlay" id="nameModalOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="nameModalTitle">
+      <h3 id="nameModalTitle">
+        Nome do treino
+      </h3>
+      <p>
+        Escolha um nome para identificar este treino.
+      </p>
+      <form id="nameForm" class="modal-form">
+        <div class="field">
+          <label for="workoutNameInput">
+            Nome
+          </label>
+          <input id="workoutNameInput" type="text" maxlength="80" placeholder="Ex.: Treino A" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="closeNameModalBtn">
+            Cancelar
+          </button>
+
+          <button type="submit" class="btn btn-primary">
+            Salvar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- =====================================================
+       MODAL DE EXERCÍCIO PERSONALIZADO
+  ====================================================== -->
+  <div class="modal-overlay" id="customModalOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="customModalTitle">
+      <h3 id="customModalTitle">
+        Exercício personalizado
+      </h3>
+      <form id="customExerciseForm" class="modal-form">
+        <div class="field">
+          <label for="customName">
+            Nome do exercício
+          </label>
+          <input id="customName" type="text" maxlength="80" placeholder="Ex.: Flexão arqueiro" required>
+        </div>
+        <div class="field">
+          <label for="customSets">
+            Séries
+          </label>
+          <input id="customSets" type="number" min="1" max="99" value="3" required>
+        </div>
+        <div class="field">
+          <label for="customReps">
+            Repetições
+          </label>
+          <input id="customReps" type="number" min="1" max="999" value="10" required>
+        </div>
+        <div class="field">
+          <label for="customRest">
+            Intervalo
+          </label>
+          <select id="customRest" required>
+            <option value="15">
+              15 segundos
+            </option>
+            <option value="30" selected>
+              30 segundos
+            </option>
+            <option value="45">
+              45 segundos
+            </option>
+            <option value="60">
+              60 segundos
+            </option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="closeCustomModalBtn">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Adicionar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- =====================================================
+       MODAL DE PAUSA
+  ====================================================== -->
+  <div class="modal-overlay" id="pauseModalOverlay" aria-hidden="true">
+
+    <div class="modal pause-modal" role="dialog" aria-modal="true">
+
+      <h3>
+        Treino pausado
+      </h3>
+
+      <p>
+        O cronômetro está pausado.
+        O que deseja fazer?
+      </p>
+
+      <div class="pause-buttons">
+
+        <button class="btn btn-primary" id="resumeBtn">
+          Continuar treino
+        </button>
+
+        <button class="btn btn-danger" id="endWorkoutBtn">
+          Encerrar treino
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+    /* =========================================================
+       CONFIGURAÇÕES
+    ========================================================= */
+
+    const WORKOUT_STORAGE =
+      "calisthenics_workout";
+
+    const SESSION_STORAGE =
+      "calisthenics_session";
+
+
+    const PREDEFINED_EXERCISES = [
+      "Flexão",
+      "Flexão diamante",
+      "Barra fixa",
+      "Barra supinada",
+      "Paralelas",
+      "Agachamento",
+      "Avanço",
+      "Abdominal",
+      "Abdominal infra",
+      "Elevação de pernas",
+      "Prancha"
+    ];
+
+
+    /* =========================================================
+       ESTADO
+    ========================================================= */
+
+    let workout = {
+      name: "Meu treino",
+      exercises: []
+    };
+
+
+    let editingIndex = null;
+
+
+    let workoutState = {
+      exerciseIndex: 0,
+      currentSet: 1,
+      status: "working",
+      restTimer: 0,
+      executionSeconds: 0,
+      restNextText: "",
+      restType: null
+    };
+
+
+    let executionInterval = null;
+    let restInterval = null;
+
+
+    let modalResolver = null;
+    let lastFocusedElement = null;
+
+
+    /* =========================================================
+       ELEMENTOS
+    ========================================================= */
+
+    const builderScreen =
+      document.getElementById("builderScreen");
+
+    const workoutScreen =
+      document.getElementById("workoutScreen");
+
+    const restScreen =
+      document.getElementById("restScreen");
+
+    const finishScreen =
+      document.getElementById("finishScreen");
+
+
+    const exerciseForm =
+      document.getElementById("exerciseForm");
+
+    const exerciseSelect =
+      document.getElementById("exerciseSelect");
+
+    const setsInput =
+      document.getElementById("setsInput");
+
+    const repsInput =
+      document.getElementById("repsInput");
+
+    const restSelect =
+      document.getElementById("restSelect");
+
+    const submitExerciseBtn =
+      document.getElementById("submitExerciseBtn");
+
+    const cancelEditBtn =
+      document.getElementById("cancelEditBtn");
+
+    const customExerciseBtn =
+      document.getElementById("customExerciseBtn");
+
+    const workoutList =
+      document.getElementById("workoutList");
+
+    const emptyWorkout =
+      document.getElementById("emptyWorkout");
+
+    const startWorkoutBtn =
+      document.getElementById("startWorkoutBtn");
+
+    const clearWorkoutBtn =
+      document.getElementById("clearWorkoutBtn");
+
+    const workoutNameBtn =
+      document.getElementById("workoutNameBtn");
+
+    const exportBtn =
+      document.getElementById("exportBtn");
+
+    const importBtn =
+      document.getElementById("importBtn");
+
+    const importFile =
+      document.getElementById("importFile");
+
+    const recoveryBox =
+      document.getElementById("recoveryBox");
+
+    const recoveryInfo =
+      document.getElementById("recoveryInfo");
+
+    const continueBtn =
+      document.getElementById("continueBtn");
+
+    const newWorkoutBtn =
+      document.getElementById("newWorkoutBtn");
+
+
+    /* =========================================================
+       MODAL GENÉRICO
+    ========================================================= */
+
+    const modalOverlay =
+      document.getElementById("modalOverlay");
+
+    const modalTitle =
+      document.getElementById("modalTitle");
+
+    const modalMessage =
+      document.getElementById("modalMessage");
+
+    const modalCancelBtn =
+      document.getElementById("modalCancelBtn");
+
+    const modalConfirmBtn =
+      document.getElementById("modalConfirmBtn");
+
+
+    function openModal({
+      title = "Confirmação",
+      message = "",
+      confirmText = "Confirmar",
+      cancelText = "Cancelar",
+      danger = false,
+      showCancel = true
+    }) {
+
+      return new Promise(resolve => {
+
+        modalResolver = resolve;
+
+        lastFocusedElement =
+          document.activeElement;
+
+        modalTitle.textContent =
+          title;
+
+        modalMessage.textContent =
+          message;
+
+        modalConfirmBtn.textContent =
+          confirmText;
+
+        modalCancelBtn.textContent =
+          cancelText;
+
+        modalCancelBtn.classList.toggle(
+          "hidden",
+          !showCancel
+        );
+
+        modalConfirmBtn.classList.toggle(
+          "btn-danger",
+          danger
+        );
+
+        modalConfirmBtn.classList.toggle(
+          "btn-primary",
+          !danger
+        );
+
+        modalOverlay.classList.add(
+          "visible"
+        );
+
+        modalOverlay.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+
+        setTimeout(() => {
+          modalConfirmBtn.focus();
+        }, 50);
+
+      });
+
+    }
+
+
+    function closeModal(result = false) {
+
+      modalOverlay.classList.remove(
+        "visible"
+      );
+
+      modalOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      const resolver =
+        modalResolver;
+
+      modalResolver = null;
+
+      if (resolver) {
+        resolver(result);
+      }
+
+      if (lastFocusedElement) {
+
+        try {
+          lastFocusedElement.focus();
+        } catch (error) { }
+
+      }
+
+      lastFocusedElement = null;
+
+    }
+
+
+    modalConfirmBtn.addEventListener(
+      "click",
+      () => closeModal(true)
+    );
+
+
+    modalCancelBtn.addEventListener(
+      "click",
+      () => closeModal(false)
+    );
+
+
+    modalOverlay.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target === modalOverlay
+        ) {
+          closeModal(false);
+        }
+
+      }
+    );
+
+
+    async function showMessage(
+      message,
+      title = "Atenção"
+    ) {
+
+      await openModal({
+        title,
+        message,
+        confirmText: "OK",
+        showCancel: false
+      });
+
+    }
+
+
+    async function showConfirm(
+      message,
+      options = {}
+    ) {
+
+      return await openModal({
+        title:
+          options.title ||
+          "Confirmação",
+
+        message,
+
+        confirmText:
+          options.confirmText ||
+          "Confirmar",
+
+        cancelText:
+          options.cancelText ||
+          "Cancelar",
+
+        danger:
+          options.danger ||
+          false,
+
+        showCancel: true
+      });
+
+    }
+
+
+    /* =========================================================
+       MODAL DE NOME
+    ========================================================= */
+
+    const nameModalOverlay =
+      document.getElementById(
+        "nameModalOverlay"
+      );
+
+    const nameForm =
+      document.getElementById("nameForm");
+
+    const workoutNameInput =
+      document.getElementById(
+        "workoutNameInput"
+      );
+
+    const closeNameModalBtn =
+      document.getElementById(
+        "closeNameModalBtn"
+      );
+
+
+    function openNameModal() {
+
+      workoutNameInput.value =
+        workout.name || "";
+
+      nameModalOverlay.classList.add(
+        "visible"
+      );
+
+      nameModalOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      setTimeout(() => {
+        workoutNameInput.focus();
+        workoutNameInput.select();
+      }, 50);
+
+    }
+
+
+    function closeNameModal() {
+
+      nameModalOverlay.classList.remove(
+        "visible"
+      );
+
+      nameModalOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+    }
+
+
+    workoutNameBtn.addEventListener(
+      "click",
+      openNameModal
+    );
+
+
+    closeNameModalBtn.addEventListener(
+      "click",
+      closeNameModal
+    );
+
+
+    nameModalOverlay.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target ===
+          nameModalOverlay
+        ) {
+          closeNameModal();
+        }
+
+      }
+    );
+
+
+    nameForm.addEventListener(
+      "submit",
+      event => {
+
+        event.preventDefault();
+
+        const name =
+          workoutNameInput.value.trim();
+
+        if (!name) {
+          showMessage(
+            "Informe um nome para o treino."
+          );
+          return;
+        }
+
+        workout.name = name;
+
+        saveWorkout();
+        updateWorkoutName();
+        closeNameModal();
+
+      }
+    );
+
+
+    /* =========================================================
+       MODAL PERSONALIZADO
+    ========================================================= */
+
+    const customModalOverlay =
+      document.getElementById(
+        "customModalOverlay"
+      );
+
+    const customExerciseForm =
+      document.getElementById(
+        "customExerciseForm"
+      );
+
+    const customName =
+      document.getElementById(
+        "customName"
+      );
+
+    const customSets =
+      document.getElementById(
+        "customSets"
+      );
+
+    const customReps =
+      document.getElementById(
+        "customReps"
+      );
+
+    const customRest =
+      document.getElementById(
+        "customRest"
+      );
+
+    const closeCustomModalBtn =
+      document.getElementById(
+        "closeCustomModalBtn"
+      );
+
+
+    function openCustomModal() {
+
+      customExerciseForm.reset();
+
+      customSets.value = 3;
+      customReps.value = 10;
+      customRest.value = 30;
+
+      customModalOverlay.classList.add(
+        "visible"
+      );
+
+      customModalOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      setTimeout(() => {
+        customName.focus();
+      }, 50);
+
+    }
+
+
+    function closeCustomModal() {
+
+      customModalOverlay.classList.remove(
+        "visible"
+      );
+
+      customModalOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+    }
+
+
+    customExerciseBtn.addEventListener(
+      "click",
+      openCustomModal
+    );
+
+
+    closeCustomModalBtn.addEventListener(
+      "click",
+      closeCustomModal
+    );
+
+
+    customModalOverlay.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target ===
+          customModalOverlay
+        ) {
+          closeCustomModal();
+        }
+
+      }
+    );
+
+
+    /* =========================================================
+       ESC
+    ========================================================= */
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key !== "Escape"
+        ) {
+          return;
+        }
+
+        if (
+          modalOverlay.classList.contains(
+            "visible"
+          )
+        ) {
+          closeModal(false);
+          return;
+        }
+
+        if (
+          nameModalOverlay.classList.contains(
+            "visible"
+          )
+        ) {
+          closeNameModal();
+          return;
+        }
+
+        if (
+          customModalOverlay.classList.contains(
+            "visible"
+          )
+        ) {
+          closeCustomModal();
+          return;
+        }
+
+      }
+    );
+
+
+    /* =========================================================
+       STORAGE
+    ========================================================= */
+
+    function saveWorkout() {
+
+      localStorage.setItem(
+        WORKOUT_STORAGE,
+        JSON.stringify(workout)
+      );
+
+    }
+
+
+    function loadWorkout() {
+
+      try {
+
+        const saved =
+          localStorage.getItem(
+            WORKOUT_STORAGE
+          );
+
+        if (!saved) {
+          return;
+        }
+
+        const parsed =
+          JSON.parse(saved);
+
+        if (
+          parsed &&
+          typeof parsed === "object" &&
+          Array.isArray(parsed.exercises)
+        ) {
+
+          workout = {
+            name:
+              parsed.name ||
+              "Meu treino",
+
+            exercises:
+              parsed.exercises
+          };
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Erro ao carregar treino:",
+          error
+        );
+
+      }
+
+    }
+
+
+    function saveSession() {
+
+      localStorage.setItem(
+        SESSION_STORAGE,
+        JSON.stringify({
+          workoutName:
+            workout.name,
+
+          ...workoutState
+        })
+      );
+
+    }
+
+
+    function clearSession() {
+
+      localStorage.removeItem(
+        SESSION_STORAGE
+      );
+
+    }
+
+
+    /* =========================================================
+       INICIALIZAÇÃO
+    ========================================================= */
+
+    function init() {
+
+      loadWorkout();
+
+      populateExerciseSelect();
+
+      renderWorkout();
+
+      checkForActiveSession();
+
+    }
+
+
+    function populateExerciseSelect() {
+
+      exerciseSelect.innerHTML = `
+        <option value="">
+          Selecione um exercício
+        </option>
+      `;
+
+      PREDEFINED_EXERCISES.forEach(
+        name => {
+
+          addExerciseOption(
+            name,
+            false
+          );
+
+        }
+      );
+
+      workout.exercises
+        .filter(
+          exercise =>
+            exercise.custom
+        )
+        .forEach(
+          exercise => {
+
+            addExerciseOption(
+              exercise.name,
+              true
+            );
+
+          }
+        );
+
+    }
+
+
+    function addExerciseOption(
+      name,
+      custom = false
+    ) {
+
+      const exists =
+        [...exerciseSelect.options]
+          .some(
+            option =>
+              option.value === name
+          );
+
+      if (exists) {
+        return;
+      }
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value = name;
+
+      option.textContent =
+        custom
+          ? `${name} (personalizado)`
+          : name;
+
+      exerciseSelect.appendChild(
+        option
+      );
+
+    }
+
+
+    /* =========================================================
+       FORMULÁRIO
+    ========================================================= */
+
+    exerciseForm.addEventListener(
+      "submit",
+      event => {
+
+        event.preventDefault();
+
+        const name =
+          exerciseSelect.value;
+
+        const sets =
+          Number(setsInput.value);
+
+        const reps =
+          Number(repsInput.value);
+
+        const rest =
+          Number(restSelect.value);
+
+
+        if (!name) {
+
+          showMessage(
+            "Selecione um exercício antes de continuar."
+          );
+
+          return;
+        }
+
+
+        if (
+          !Number.isInteger(sets) ||
+          sets < 1
+        ) {
+
+          showMessage(
+            "Informe uma quantidade válida de séries."
+          );
+
+          return;
+        }
+
+
+        if (
+          !Number.isInteger(reps) ||
+          reps < 1
+        ) {
+
+          showMessage(
+            "Informe uma quantidade válida de repetições."
+          );
+
+          return;
+        }
+
+
+        if (
+          ![15, 30, 45, 60]
+            .includes(rest)
+        ) {
+
+          showMessage(
+            "Selecione um intervalo válido."
+          );
+
+          return;
+        }
+
+
+        const custom =
+          !PREDEFINED_EXERCISES.includes(
+            name
+          );
+
+
+        const exercise = {
+
+          id:
+            editingIndex !== null
+              ? workout.exercises[
+                editingIndex
+              ].id
+              : crypto.randomUUID(),
+
+          name,
+
+          sets,
+
+          reps,
+
+          rest,
+
+          custom
+
+        };
+
+
+        if (
+          editingIndex !== null
+        ) {
+
+          workout.exercises[
+            editingIndex
+          ] = exercise;
+
+        } else {
+
+          workout.exercises.push(
+            exercise
+          );
+
+        }
+
+
+        saveWorkout();
+
+        populateExerciseSelect();
+
+        renderWorkout();
+
+        resetExerciseForm();
+
+      }
+    );
+
+
+    customExerciseForm.addEventListener(
+      "submit",
+      event => {
+
+        event.preventDefault();
+
+        const name =
+          customName.value.trim();
+
+        const sets =
+          Number(customSets.value);
+
+        const reps =
+          Number(customReps.value);
+
+        const rest =
+          Number(customRest.value);
+
+
+        if (!name) {
+
+          showMessage(
+            "Informe o nome do exercício."
+          );
+
+          return;
+        }
+
+
+        if (
+          !Number.isInteger(sets) ||
+          sets < 1
+        ) {
+
+          showMessage(
+            "Informe uma quantidade válida de séries."
+          );
+
+          return;
+        }
+
+
+        if (
+          !Number.isInteger(reps) ||
+          reps < 1
+        ) {
+
+          showMessage(
+            "Informe uma quantidade válida de repetições."
+          );
+
+          return;
+        }
+
+
+        addExerciseOption(
+          name,
+          true
+        );
+
+        exerciseSelect.value =
+          name;
+
+        setsInput.value =
+          sets;
+
+        repsInput.value =
+          reps;
+
+        restSelect.value =
+          rest;
+
+        closeCustomModal();
+
+        setTimeout(
+          () => {
+            exerciseForm.requestSubmit();
+          },
+          100
+        );
+
+      }
+    );
+
+
+    function resetExerciseForm() {
+
+      editingIndex = null;
+
+      exerciseForm.reset();
+
+      setsInput.value = 3;
+      repsInput.value = 10;
+      restSelect.value = 30;
+
+      submitExerciseBtn.textContent =
+        "Adicionar exercício";
+
+      cancelEditBtn.classList.add(
+        "hidden"
+      );
+
+      document.getElementById(
+        "formTitle"
+      ).textContent =
+        "Adicionar exercício";
+
+    }
+
+
+    cancelEditBtn.addEventListener(
+      "click",
+      resetExerciseForm
+    );
+
+
+    /* =========================================================
+       LISTA
+    ========================================================= */
+
+    function renderWorkout() {
+
+      workoutList.innerHTML = "";
+
+      emptyWorkout.classList.toggle(
+        "hidden",
+        workout.exercises.length > 0
+      );
+
+      startWorkoutBtn.disabled =
+        workout.exercises.length === 0;
+
+
+      workout.exercises.forEach(
+        (exercise, index) => {
+
+          const item =
+            document.createElement(
+              "div"
+            );
+
+          item.className =
+            "exercise-item";
+
+          item.draggable = true;
+
+          item.dataset.index =
+            index;
+
+
+          item.innerHTML = `
+
+            <div class="exercise-number">
+              ${index + 1}
+            </div>
+
+            <div class="exercise-info">
+
+              <div class="exercise-name">
+                ${escapeHtml(
+            exercise.name
+          )}
+				${exercise.custom
+              ? '<span class="custom-badge">PERSONALIZADO</span>'
+              : ''
+            }
+              </div>
+
+              <div class="exercise-details">
+                ${exercise.sets}
+                série${exercise.sets > 1 ? "s" : ""}
+                ×
+                ${exercise.reps}
+                repetição${exercise.reps > 1 ? "ões" : ""}
+                ·
+                ${exercise.rest}s descanso
+              </div>
+
+            </div>
+
+            <div class="exercise-actions">
+
+              <button
+                class="icon-btn"
+                title="Subir"
+                data-action="up"
+                data-index="${index}"
+                ${index === 0 ? "disabled" : ""}
+              >
+                ↑
+              </button>
+
+              <button
+                class="icon-btn"
+                title="Descer"
+                data-action="down"
+                data-index="${index}"
+                ${index ===
+              workout.exercises.length - 1
+              ? "disabled"
+              : ""
+            }
+              >
+                ↓
+              </button>
+
+              <button
+                class="icon-btn"
+                title="Editar"
+                data-action="edit"
+                data-index="${index}"
+              >
+                ✎
+              </button>
+
+              <button
+                class="icon-btn"
+                title="Excluir"
+                data-action="delete"
+                data-index="${index}"
+              >
+                ×
+              </button>
+
+            </div>
+
+          `;
+
+
+          workoutList.appendChild(
+            item
+          );
+
+        }
+      );
+
+
+      updateWorkoutName();
+
+      setupDragAndDrop();
+
+    }
+
+
+    workoutList.addEventListener(
+      "click",
+      event => {
+
+        const button =
+          event.target.closest(
+            "button"
+          );
+
+        if (!button) {
+          return;
+        }
+
+        const index =
+          Number(
+            button.dataset.index
+          );
+
+        const action =
+          button.dataset.action;
+
+
+        if (action === "up") {
+          moveExercise(
+            index,
+            index - 1
+          );
+        }
+
+
+        if (action === "down") {
+          moveExercise(
+            index,
+            index + 1
+          );
+        }
+
+
+        if (action === "edit") {
+          startEdit(index);
+        }
+
+
+        if (action === "delete") {
+          deleteExercise(index);
+        }
+
+      }
+    );
+
+
+    function moveExercise(
+      from,
+      to
+    ) {
+
+      if (
+        to < 0 ||
+        to >= workout.exercises.length
+      ) {
+        return;
+      }
+
+      const temp =
+        workout.exercises[from];
+
+      workout.exercises[from] =
+        workout.exercises[to];
+
+      workout.exercises[to] =
+        temp;
+
+      saveWorkout();
+
+      renderWorkout();
+
+    }
+
+
+    async function deleteExercise(
+      index
+    ) {
+
+      const exercise =
+        workout.exercises[index];
+
+      if (!exercise) {
+        return;
+      }
+
+
+      const confirmed =
+        await showConfirm(
+          `Deseja excluir "${exercise.name}" do treino?`,
+          {
+            title:
+              "Excluir exercício",
+
+            confirmText:
+              "Excluir",
+
+            danger:
+              true
+          }
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      workout.exercises.splice(
+        index,
+        1
+      );
+
+      saveWorkout();
+
+      renderWorkout();
+
+
+      if (
+        editingIndex === index
+      ) {
+        resetExerciseForm();
+      }
+
+    }
+
+
+    function startEdit(index) {
+
+      const exercise =
+        workout.exercises[index];
+
+      if (!exercise) {
+        return;
+      }
+
+
+      if (exercise.custom) {
+
+        addExerciseOption(
+          exercise.name,
+          true
+        );
+
+      }
+
+
+      exerciseSelect.value =
+        exercise.name;
+
+      setsInput.value =
+        exercise.sets;
+
+      repsInput.value =
+        exercise.reps;
+
+      restSelect.value =
+        exercise.rest;
+
+
+      editingIndex =
+        index;
+
+
+      submitExerciseBtn.textContent =
+        "Salvar";
+
+
+      cancelEditBtn.classList.remove(
+        "hidden"
+      );
+
+
+      document.getElementById(
+        "formTitle"
+      ).textContent =
+        "Editar exercício";
+
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    }
+
+
+    /* =========================================================
+       DRAG AND DROP
+    ========================================================= */
+
+    let draggedIndex = null;
+
+
+    function setupDragAndDrop() {
+
+      const items =
+        document.querySelectorAll(
+          ".exercise-item"
+        );
+
+
+      items.forEach(
+        item => {
+
+          item.addEventListener(
+            "dragstart",
+            () => {
+
+              draggedIndex =
+                Number(
+                  item.dataset.index
+                );
+
+              item.classList.add(
+                "dragging"
+              );
+
+            }
+          );
+
+
+          item.addEventListener(
+            "dragend",
+            () => {
+
+              item.classList.remove(
+                "dragging"
+              );
+
+              draggedIndex =
+                null;
+
+            }
+          );
+
+
+          item.addEventListener(
+            "dragover",
+            event => {
+
+              event.preventDefault();
+
+            }
+          );
+
+
+          item.addEventListener(
+            "drop",
+            event => {
+
+              event.preventDefault();
+
+              const targetIndex =
+                Number(
+                  item.dataset.index
+                );
+
+
+              if (
+                draggedIndex === null ||
+                draggedIndex === targetIndex
+              ) {
+                return;
+              }
+
+
+              const moved =
+                workout.exercises.splice(
+                  draggedIndex,
+                  1
+                )[0];
+
+
+              workout.exercises.splice(
+                targetIndex,
+                0,
+                moved
+              );
+
+
+              saveWorkout();
+
+              renderWorkout();
+
+            }
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       NOME
+    ========================================================= */
+
+    function updateWorkoutName() {
+
+      const name =
+        workout.name ||
+        "Meu treino";
+
+
+      document.getElementById(
+        "workoutNameDisplay"
+      ).textContent =
+        name;
+
+
+      document.getElementById(
+        "restWorkoutName"
+      ).textContent =
+        name;
+
+    }
+
+
+    /* =========================================================
+       LIMPAR TREINO
+    ========================================================= */
+
+    clearWorkoutBtn.addEventListener(
+      "click",
+      async () => {
+
+        if (
+          workout.exercises.length === 0
+        ) {
+
+          await showMessage(
+            "Não há exercícios para limpar."
+          );
+
+          return;
+        }
+
+
+        const confirmed =
+          await showConfirm(
+            "Todos os exercícios deste treino serão removidos. Essa ação não pode ser desfeita.",
+            {
+              title:
+                "Limpar treino",
+
+              confirmText:
+                "Limpar",
+
+              danger:
+                true
+            }
+          );
+
+
+        if (!confirmed) {
+          return;
+        }
+
+
+        workout.exercises = [];
+
+        saveWorkout();
+
+        renderWorkout();
+
+        resetExerciseForm();
+
+      }
+    );
+
+
+    /* =========================================================
+       INICIAR TREINO
+    ========================================================= */
+
+    startWorkoutBtn.addEventListener(
+      "click",
+      async () => {
+
+        if (
+          workout.exercises.length === 0
+        ) {
+
+          await showMessage(
+            "Adicione pelo menos um exercício antes de iniciar o treino."
+          );
+
+          return;
+        }
+
+
+        workoutState = {
+
+          exerciseIndex: 0,
+
+          currentSet: 1,
+
+          status: "working",
+
+          restTimer: 0,
+
+          executionSeconds: 0,
+
+          restNextText: "",
+
+          restType: null
+
+        };
+
+
+        saveSession();
+
+        showWorkoutScreen();
+
+        renderWorkoutExecution();
+
+        startExecutionTimer();
+
+      }
+    );
+
+
+    /* =========================================================
+       TELAS
+    ========================================================= */
+
+    function showScreen(screen) {
+
+      [
+        builderScreen,
+        workoutScreen,
+        restScreen,
+        finishScreen
+      ].forEach(
+        element => {
+
+          element.classList.add(
+            "hidden"
+          );
+
+        }
+      );
+
+
+      screen.classList.remove(
+        "hidden"
+      );
+
+
+      window.scrollTo({
+        top: 0,
+        behavior: "auto"
+      });
+
+    }
+
+
+    function showWorkoutScreen() {
+
+      showScreen(
+        workoutScreen
+      );
+
+    }
+
+
+    function showRestScreen() {
+
+      showScreen(
+        restScreen
+      );
+
+    }
+
+
+    /* =========================================================
+       PROGRESSO
+    ========================================================= */
+
+    function getTotalReps() {
+
+      return workout.exercises.reduce(
+        (total, exercise) => {
+
+          return total +
+            (
+              Number(exercise.sets) *
+              Number(exercise.reps)
+            );
+
+        },
+        0
+      );
+
+    }
+
+
+    function getCompletedReps() {
+
+      let completed = 0;
+
+
+      /*
+       * Exercícios totalmente concluídos.
+       */
+
+      for (
+        let i = 0;
+        i < workoutState.exerciseIndex;
+        i++
+      ) {
+
+        const exercise =
+          workout.exercises[i];
+
+        completed +=
+          exercise.sets *
+          exercise.reps;
+
+      }
+
+
+      /*
+       * Séries concluídas do exercício atual.
+       *
+       * currentSet começa em 1.
+       * Portanto:
+       * série 1 -> 0 séries concluídas
+       * série 2 -> 1 série concluída
+       * série 3 -> 2 séries concluídas
+       */
+
+      const currentExercise =
+        workout.exercises[
+        workoutState.exerciseIndex
+        ];
+
+
+      if (currentExercise) {
+
+        const completedSets =
+          Math.max(
+            0,
+            workoutState.currentSet - 1
+          );
+
+
+        completed +=
+          Math.min(
+            completedSets,
+            currentExercise.sets
+          ) *
+          currentExercise.reps;
+
+      }
+
+
+      return completed;
+
+    }
+
+
+    function updateProgress() {
+
+      const totalReps =
+        getTotalReps();
+
+      const completedReps =
+        getCompletedReps();
+
+
+      if (totalReps <= 0) {
+        return;
+      }
+
+
+      const percentage =
+        Math.min(
+          100,
+          Math.round(
+            (
+              completedReps /
+              totalReps
+            ) *
+            100
+          )
+        );
+
+
+      document.getElementById(
+        "progressBar"
+      ).style.width =
+        `${percentage}%`;
+
+
+      document.getElementById(
+        "progressPercentage"
+      ).textContent =
+        `${percentage}% concluído`;
+
+    }
+
+
+    /* =========================================================
+       RENDER EXECUÇÃO
+    ========================================================= */
+
+    function renderWorkoutExecution() {
+
+      const exercise =
+        workout.exercises[
+        workoutState.exerciseIndex
+        ];
+
+
+      if (!exercise) {
+
+        finishWorkout();
+
+        return;
+      }
+
+
+      const totalExercises =
+        workout.exercises.length;
+
+
+      const exerciseNumber =
+        workoutState.exerciseIndex + 1;
+
+
+      document.getElementById(
+        "currentExerciseName"
+      ).textContent =
+        exercise.name;
+
+
+      document.getElementById(
+        "currentSetDisplay"
+      ).textContent =
+        `Série ${workoutState.currentSet}`;
+
+
+      document.getElementById(
+        "totalSetsDisplay"
+      ).textContent =
+        `de ${exercise.sets}`;
+
+
+      document.getElementById(
+        "currentRepsDisplay"
+      ).textContent =
+        exercise.reps;
+
+
+      document.getElementById(
+        "progressExerciseLabel"
+      ).textContent =
+        `Exercício ${exerciseNumber} de ${totalExercises}`;
+
+
+      updateProgress();
+
+      renderNextExercise();
+
+      updateExecutionTimer();
+
+    }
+
+
+    function renderNextExercise() {
+
+      const box =
+        document.getElementById(
+          "nextExerciseBox"
+        );
+
+
+      const exercise =
+        workout.exercises[
+        workoutState.exerciseIndex
+        ];
+
+
+      if (!exercise) {
+        box.innerHTML = "";
+        return;
+      }
+
+
+      if (
+        workoutState.currentSet <
+        exercise.sets
+      ) {
+
+        box.innerHTML = `
+          Próximo:
+          <strong>
+            Série ${workoutState.currentSet + 1}
+          </strong>
+        `;
+
+        return;
+      }
+
+
+      const next =
+        workout.exercises[
+        workoutState.exerciseIndex + 1
+        ];
+
+
+      if (next) {
+
+        box.innerHTML = `
+          Próximo exercício:
+          <strong>
+            ${escapeHtml(next.name)}
+          </strong>
+        `;
+
+      } else {
+
+        box.innerHTML = `
+          Última série do treino
+        `;
+
+      }
+
+    }
+
+
+    /* =========================================================
+       CRONÔMETRO DE EXECUÇÃO
+    ========================================================= */
+
+    function startExecutionTimer() {
+
+      clearInterval(
+        executionInterval
+      );
+
+
+      executionInterval =
+        setInterval(
+          () => {
+
+            if (
+              workoutState.status !==
+              "working"
+            ) {
+              return;
+            }
+
+
+            workoutState.executionSeconds++;
+
+
+            updateExecutionTimer();
+
+            saveSession();
+
+          },
+          1000
+        );
+
+    }
+
+
+    function stopExecutionTimer() {
+
+      clearInterval(
+        executionInterval
+      );
+
+      executionInterval =
+        null;
+
+    }
+
+
+    function updateExecutionTimer() {
+
+      const total =
+        workoutState.executionSeconds;
+
+
+      const minutes =
+        Math.floor(
+          total / 60
+        )
+          .toString()
+          .padStart(2, "0");
+
+
+      const seconds =
+        (
+          total % 60
+        )
+          .toString()
+          .padStart(2, "0");
+
+
+      document.getElementById(
+        "executionTimer"
+      ).textContent =
+        `${minutes}:${seconds}`;
+
+    }
+
+
+    /* =========================================================
+       CONCLUSÃO DE SÉRIE
+    ========================================================= */
+
+    document.getElementById(
+      "completeSetBtn"
+    ).addEventListener(
+      "click",
+      completeSet
+    );
+
+
+    document.getElementById(
+      "skipSetBtn"
+    ).addEventListener(
+      "click",
+      async () => {
+
+        const confirmed =
+          await showConfirm(
+            "A série será considerada concluída e você passará para a próxima etapa.",
+            {
+              title:
+                "Pular série",
+
+              confirmText:
+                "Pular"
+            }
+          );
+
+
+        if (confirmed) {
+          completeSet();
+        }
+
+      }
+    );
+
+
+    function completeSet() {
+
+      const exercise =
+        workout.exercises[
+        workoutState.exerciseIndex
+        ];
+
+
+      if (!exercise) {
+
+        finishWorkout();
+
+        return;
+      }
+
+
+      stopExecutionTimer();
+
+
+      /*
+       * Caso ainda existam séries no exercício atual:
+       *
+       * 1. Avança currentSet.
+       * 2. Inicia descanso.
+       * 3. Depois do descanso continua no mesmo exercício.
+       */
+
+      if (
+        workoutState.currentSet <
+        exercise.sets
+      ) {
+
+        workoutState.currentSet++;
+
+        workoutState.executionSeconds = 0;
+
+        startRest(
+          exercise.rest,
+          `Próxima série de ${exercise.name}`,
+          "next_set"
+        );
+
+        return;
+      }
+
+
+      /*
+       * Exercício terminou.
+       *
+       * Se houver outro exercício:
+       * 1. Avança imediatamente o exerciseIndex.
+       * 2. Volta currentSet para 1.
+       * 3. Inicia o descanso.
+       * 4. Ao terminar o descanso, já estaremos
+       *    apontando para o novo exercício.
+       */
+
+      if (
+        workoutState.exerciseIndex <
+        workout.exercises.length - 1
+      ) {
+
+        workoutState.exerciseIndex++;
+
+        workoutState.currentSet = 1;
+
+        workoutState.executionSeconds = 0;
+
+
+        const nextExercise =
+          workout.exercises[
+          workoutState.exerciseIndex
+          ];
+
+
+        startRest(
+          exercise.rest,
+          `Próximo exercício: ${nextExercise.name}`,
+          "next_exercise"
+        );
+
+        return;
+      }
+
+
+      /*
+       * Última série do último exercício.
+       */
+
+      finishWorkout();
+
+    }
+
+
+    /* =========================================================
+       DESCANSO
+    ========================================================= */
+
+    function startRest(
+      seconds,
+      nextText,
+      restType
+    ) {
+
+      clearInterval(
+        restInterval
+      );
+
+
+      workoutState.status =
+        "resting";
+
+
+      workoutState.restTimer =
+        Number(seconds);
+
+
+      workoutState.restNextText =
+        nextText;
+
+
+      workoutState.restType =
+        restType;
+
+
+      saveSession();
+
+
+      showRestScreen();
+
+      renderRestScreen();
+
+
+      restInterval =
+        setInterval(
+          () => {
+
+            workoutState.restTimer--;
+
+            renderRestScreen();
+
+            saveSession();
+
+
+            if (
+              workoutState.restTimer <= 0
+            ) {
+
+              finishRest();
+
+            }
+
+          },
+          1000
+        );
+
+    }
+
+
+    function renderRestScreen() {
+
+      document.getElementById(
+        "restTimer"
+      ).textContent =
+        Math.max(
+          0,
+          workoutState.restTimer
+        );
+
+
+      /*
+       * Não usamos innerHTML para o texto
+       * principal, evitando problemas com nomes
+       * personalizados.
+       */
+
+      const nextElement =
+        document.getElementById(
+          "restNextText"
+        );
+
+
+      if (
+        workoutState.restType ===
+        "next_exercise"
+      ) {
+
+        const exercise =
+          workout.exercises[
+          workoutState.exerciseIndex
+          ];
+
+
+        if (exercise) {
+
+          nextElement.innerHTML =
+            `Próximo exercício:
+             <strong>
+               ${escapeHtml(exercise.name)}
+             </strong>`;
+
+        } else {
+
+          nextElement.textContent =
+            "Próximo exercício";
+
+        }
+
+      } else {
+
+        nextElement.innerHTML =
+          `Próxima série`;
+
+      }
+
+    }
+
+
+    function finishRest() {
+
+      clearInterval(
+        restInterval
+      );
+
+      restInterval = null;
+
+
+      playRestFinishedSound();
+
+      vibrate();
+
+
+      workoutState.status =
+        "working";
+
+
+      workoutState.restTimer =
+        0;
+
+
+      workoutState.executionSeconds =
+        0;
+
+
+      /*
+       * IMPORTANTE:
+       *
+       * O índice do exercício já foi avançado
+       * em completeSet() quando necessário.
+       *
+       * Portanto, aqui NÃO avançamos novamente.
+       *
+       * Isso corrige o problema que fazia o treino
+       * não passar corretamente para o próximo exercício.
+       */
+
+
+      if (
+        workoutState.exerciseIndex >=
+        workout.exercises.length
+      ) {
+
+        finishWorkout();
+
+        return;
+      }
+
+
+      workoutState.restType =
+        null;
+
+
+      saveSession();
+
+
+      showWorkoutScreen();
+
+      renderWorkoutExecution();
+
+      startExecutionTimer();
+
+    }
+
+
+    function skipRest() {
+
+      clearInterval(
+        restInterval
+      );
+
+      restInterval = null;
+
+      workoutState.restTimer =
+        0;
+
+      finishRest();
+
+    }
+
+
+    document.getElementById(
+      "skipRestBtn"
+    ).addEventListener(
+      "click",
+      skipRest
+    );
+
+
+    /* =========================================================
+       PAUSA
+    ========================================================= */
+
+    const pauseModalOverlay =
+      document.getElementById(
+        "pauseModalOverlay"
+      );
+
+
+    function openPauseMenu() {
+
+      stopExecutionTimer();
+
+
+      /*
+       * O descanso continua contando normalmente.
+       * No caso de pausa durante descanso, paramos o
+       * intervalo para realmente pausar o treino.
+       */
+
+      if (
+        workoutState.status ===
+        "resting"
+      ) {
+
+        clearInterval(
+          restInterval
+        );
+
+        restInterval = null;
+
+      }
+
+
+      pauseModalOverlay.classList.add(
+        "visible"
+      );
+
+
+      pauseModalOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+    }
+
+
+    function closePauseMenu() {
+
+      pauseModalOverlay.classList.remove(
+        "visible"
+      );
+
+
+      pauseModalOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+
+      if (
+        workoutState.status ===
+        "working"
+      ) {
+
+        startExecutionTimer();
+
+      }
+
+
+      if (
+        workoutState.status ===
+        "resting"
+      ) {
+
+        startRestTimerAfterPause();
+
+      }
+
+    }
+
+
+    function startRestTimerAfterPause() {
+
+      clearInterval(
+        restInterval
+      );
+
+
+      restInterval =
+        setInterval(
+          () => {
+
+            workoutState.restTimer--;
+
+            renderRestScreen();
+
+            saveSession();
+
+
+            if (
+              workoutState.restTimer <= 0
+            ) {
+
+              finishRest();
+
+            }
+
+          },
+          1000
+        );
+
+    }
+
+
+    document.getElementById(
+      "pauseBtn"
+    ).addEventListener(
+      "click",
+      openPauseMenu
+    );
+
+
+    document.getElementById(
+      "restPauseBtn"
+    ).addEventListener(
+      "click",
+      openPauseMenu
+    );
+
+
+    document.getElementById(
+      "resumeBtn"
+    ).addEventListener(
+      "click",
+      closePauseMenu
+    );
+
+
+    /*
+     * IMPORTANTE:
+     *
+     * Não existe mais confirmação aqui.
+     *
+     * O usuário já escolheu "Encerrar treino"
+     * dentro do modal de pausa, portanto a ação
+     * é executada diretamente.
+     */
+
+    document.getElementById(
+      "endWorkoutBtn"
+    ).addEventListener(
+      "click",
+      () => {
+
+        pauseModalOverlay.classList.remove(
+          "visible"
+        );
+
+        pauseModalOverlay.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+
+
+        stopExecutionTimer();
+
+        clearInterval(
+          restInterval
+        );
+
+        restInterval = null;
+
+
+        clearSession();
+
+
+        workoutState = {
+
+          exerciseIndex: 0,
+
+          currentSet: 1,
+
+          status: "working",
+
+          restTimer: 0,
+
+          executionSeconds: 0,
+
+          restNextText: "",
+
+          restType: null
+
+        };
+
+
+        showScreen(
+          builderScreen
+        );
+
+
+        renderWorkout();
+
+        checkForActiveSession();
+
+      }
+    );
+
+
+    /* =========================================================
+       FINALIZAÇÃO
+    ========================================================= */
+
+    function finishWorkout() {
+
+      stopExecutionTimer();
+
+      clearInterval(
+        restInterval
+      );
+
+      restInterval = null;
+
+
+      clearSession();
+
+
+      workoutState = {
+
+        exerciseIndex: 0,
+
+        currentSet: 1,
+
+        status: "working",
+
+        restTimer: 0,
+
+        executionSeconds: 0,
+
+        restNextText: "",
+
+        restType: null
+
+      };
+
+
+      showScreen(
+        finishScreen
+      );
+
+
+      vibrate();
+
+    }
+
+
+    document.getElementById(
+      "finishBackBtn"
+    ).addEventListener(
+      "click",
+      () => {
+
+        showScreen(
+          builderScreen
+        );
+
+        renderWorkout();
+
+      }
+    );
+
+
+    /* =========================================================
+       RECUPERAÇÃO
+    ========================================================= */
+
+    function checkForActiveSession() {
+
+      const saved =
+        localStorage.getItem(
+          SESSION_STORAGE
+        );
+
+
+      if (!saved) {
+
+        recoveryBox.classList.add(
+          "hidden"
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        const session =
+          JSON.parse(saved);
+
+
+        const exercise =
+          workout.exercises[
+          session.exerciseIndex
+          ];
+
+
+        if (
+          !session ||
+          !exercise
+        ) {
+
+          clearSession();
+
+          recoveryBox.classList.add(
+            "hidden"
+          );
+
+          return;
+
+        }
+
+
+        workoutState = {
+
+          exerciseIndex:
+            Number(
+              session.exerciseIndex
+            ),
+
+          currentSet:
+            Number(
+              session.currentSet || 1
+            ),
+
+          status:
+            session.status ||
+            "working",
+
+          restTimer:
+            Number(
+              session.restTimer || 0
+            ),
+
+          executionSeconds:
+            Number(
+              session.executionSeconds || 0
+            ),
+
+          restNextText:
+            session.restNextText ||
+            "",
+
+          restType:
+            session.restType ||
+            null
+
+        };
+
+
+        recoveryInfo.textContent =
+          `${exercise.name} · Série ${workoutState.currentSet} de ${exercise.sets}`;
+
+
+        recoveryBox.classList.remove(
+          "hidden"
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Erro ao recuperar sessão:",
+          error
+        );
+
+        clearSession();
+
+      }
+
+    }
+
+
+    continueBtn.addEventListener(
+      "click",
+      continueWorkout
+    );
+
+
+    function continueWorkout() {
+
+      recoveryBox.classList.add(
+        "hidden"
+      );
+
+
+      if (
+        workoutState.status ===
+        "resting"
+      ) {
+
+        showRestScreen();
+
+        renderRestScreen();
+
+        startRestTimerAfterPause();
+
+        return;
+
+      }
+
+
+      showWorkoutScreen();
+
+      renderWorkoutExecution();
+
+      startExecutionTimer();
+
+    }
+
+
+    newWorkoutBtn.addEventListener(
+      "click",
+      async () => {
+
+        const confirmed =
+          await showConfirm(
+            "O progresso do treino em andamento será descartado. O treino configurado continuará salvo.",
+            {
+              title:
+                "Começar novo treino",
+
+              confirmText:
+                "Começar novo",
+
+              danger:
+                true
+            }
+          );
+
+
+        if (!confirmed) {
+          return;
+        }
+
+
+        clearSession();
+
+
+        recoveryBox.classList.add(
+          "hidden"
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       EXPORTAR
+    ========================================================= */
+
+    exportBtn.addEventListener(
+      "click",
+      async () => {
+
+        if (
+          workout.exercises.length === 0
+        ) {
+
+          await showMessage(
+            "Adicione pelo menos um exercício antes de exportar."
+          );
+
+          return;
+        }
+
+
+        const data = {
+
+          version: 1,
+
+          exportedAt:
+            new Date().toISOString(),
+
+          workout
+
+        };
+
+
+        const blob =
+          new Blob(
+            [
+              JSON.stringify(
+                data,
+                null,
+                2
+              )
+            ],
+            {
+              type:
+                "application/json"
+            }
+          );
+
+
+        const url =
+          URL.createObjectURL(
+            blob
+          );
+
+
+        const link =
+          document.createElement(
+            "a"
+          );
+
+
+        link.href =
+          url;
+
+        link.download =
+          "meu-treino-calistenia.json";
+
+
+        document.body.appendChild(
+          link
+        );
+
+        link.click();
+
+        link.remove();
+
+
+        URL.revokeObjectURL(
+          url
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       IMPORTAR
+    ========================================================= */
+
+    importBtn.addEventListener(
+      "click",
+      () => {
+
+        importFile.click();
+
+      }
+    );
+
+
+    importFile.addEventListener(
+      "change",
+      event => {
+
+        const file =
+          event.target.files[0];
+
+
+        if (!file) {
+          return;
+        }
+
+
+        const reader =
+          new FileReader();
+
+
+        reader.onload =
+          async () => {
+
+            try {
+
+              const data =
+                JSON.parse(
+                  reader.result
+                );
+
+
+              const importedWorkout =
+                data.workout ||
+                data;
+
+
+              if (
+                !importedWorkout ||
+                !Array.isArray(
+                  importedWorkout.exercises
+                )
+              ) {
+
+                throw new Error(
+                  "Formato inválido."
+                );
+
+              }
+
+
+              const validExercises =
+                importedWorkout.exercises.every(
+                  exercise =>
+
+                    exercise &&
+                    typeof exercise.name ===
+                    "string" &&
+
+                    Number.isInteger(
+                      Number(exercise.sets)
+                    ) &&
+
+                    Number(exercise.sets) > 0 &&
+
+                    Number.isInteger(
+                      Number(exercise.reps)
+                    ) &&
+
+                    Number(exercise.reps) > 0 &&
+
+                    [15, 30, 45, 60]
+                      .includes(
+                        Number(
+                          exercise.rest
+                        )
+                      )
+
+                );
+
+
+              if (!validExercises) {
+
+                throw new Error(
+                  "Dados inválidos."
+                );
+
+              }
+
+
+              const confirmed =
+                await showConfirm(
+                  "O treino atual será substituído pelo treino importado.",
+                  {
+                    title:
+                      "Importar treino",
+
+                    confirmText:
+                      "Importar"
+                  }
+                );
+
+
+              if (!confirmed) {
+                return;
+              }
+
+
+              workout = {
+
+                name:
+                  importedWorkout.name ||
+                  "Meu treino",
+
+                exercises:
+                  importedWorkout.exercises
+                    .map(
+                      exercise => ({
+
+                        id:
+                          exercise.id ||
+                          crypto.randomUUID(),
+
+                        name:
+                          exercise.name.trim(),
+
+                        sets:
+                          Number(
+                            exercise.sets
+                          ),
+
+                        reps:
+                          Number(
+                            exercise.reps
+                          ),
+
+                        rest:
+                          Number(
+                            exercise.rest
+                          ),
+
+                        custom:
+                          Boolean(
+                            exercise.custom
+                          )
+
+                      })
+                    )
+
+              };
+
+
+              saveWorkout();
+
+              populateExerciseSelect();
+
+              renderWorkout();
+
+              resetExerciseForm();
+
+
+              await showMessage(
+                "Treino importado com sucesso.",
+                "Importação concluída"
+              );
+
+
+            } catch (error) {
+
+              console.error(
+                "Erro ao importar:",
+                error
+              );
+
+
+              await showMessage(
+                "Não foi possível importar o arquivo. Verifique se ele é um JSON válido exportado por este aplicativo.",
+                "Erro na importação"
+              );
+
+
+            } finally {
+
+              importFile.value = "";
+
+            }
+
+          };
+
+
+        reader.readAsText(file);
+
+      }
+    );
+
+
+    /* =========================================================
+       ÁUDIO
+    ========================================================= */
+
+    function playRestFinishedSound() {
+
+      try {
+
+        const AudioContext =
+          window.AudioContext ||
+          window.webkitAudioContext;
+
+
+        if (!AudioContext) {
+          return;
+        }
+
+
+        const audioContext =
+          new AudioContext();
+
+
+        const oscillator =
+          audioContext.createOscillator();
+
+
+        const gain =
+          audioContext.createGain();
+
+
+        oscillator.frequency.value =
+          880;
+
+
+        oscillator.type =
+          "sine";
+
+
+        gain.gain.setValueAtTime(
+          0.001,
+          audioContext.currentTime
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+          0.25,
+          audioContext.currentTime + 0.02
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioContext.currentTime + 0.35
+        );
+
+
+        oscillator.connect(gain);
+
+        gain.connect(
+          audioContext.destination
+        );
+
+
+        oscillator.start();
+
+
+        oscillator.stop(
+          audioContext.currentTime +
+          0.35
+        );
+
+
+      } catch (error) {
+
+        console.log(
+          "Áudio não disponível.",
+          error
+        );
+
+      }
+
+    }
+
+
+    function vibrate() {
+
+      if (
+        "vibrate" in navigator
+      ) {
+
+        navigator.vibrate(
+          [300, 150, 300]
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       SALVAR AO SAIR / OCULTAR
+    ========================================================= */
+
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+
+        if (
+          document.visibilityState ===
+          "hidden"
+        ) {
+
+          if (
+            workoutState.status ===
+            "working" ||
+            workoutState.status ===
+            "resting"
+          ) {
+
+            saveSession();
+
+          }
+
+        }
+
+      }
+    );
+
+
+    window.addEventListener(
+      "pagehide",
+      () => {
+
+        if (
+          workoutState.status ===
+          "working" ||
+          workoutState.status ===
+          "resting"
+        ) {
+
+          saveSession();
+
+        }
+
+      }
+    );
+
+
+    /* =========================================================
+       UTILITÁRIO
+    ========================================================= */
+
+    function escapeHtml(value) {
+
+      return String(value)
+        .replaceAll(
+          "&",
+          "&amp;"
+        )
+        .replaceAll(
+          "<",
+          "&lt;"
+        )
+        .replaceAll(
+          ">",
+          "&gt;"
+        )
+        .replaceAll(
+          '"',
+          "&quot;"
+        )
+        .replaceAll(
+          "'",
+          "&#039;"
+        );
+
+    }
+
+
+    /* =========================================================
+       START
+    ========================================================= */
+
+    init();
+
+  </script>
+
+</body>
+
+</html>
