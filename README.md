@@ -185,7 +185,7 @@ Não são utilizados frameworks ou bibliotecas externas obrigatórias.
 A estrutura atual é propositalmente simples:
 
 ```text
-calistenia-workout/
+Sequence-Training/
 │
 ├── index.html
 └── README.md
@@ -208,13 +208,13 @@ Essa abordagem facilita:
 ### Clonar o projeto
 
 ```bash
-git clone https://github.com/SEU_USUARIO/calistenia-workout.git
+git clone https://github.com/peedrinhoph/Sequence-Training.git
 ```
 
 Entrar no diretório:
 
 ```bash
-cd calistenia-workout
+cd Sequence-Training
 ```
 
 ### Executar
@@ -298,21 +298,104 @@ Exemplo:
 
 ```json
 {
-  "name": "Treino Superior",
-  "exercises": [
-    {
-      "name": "Flexão",
-      "sets": 4,
-      "reps": 15,
-      "rest": 60
-    },
-    {
-      "name": "Barra fixa",
-      "sets": 3,
-      "reps": 8,
-      "rest": 60
-    }
-  ]
+  "version": 2,
+  "exportedAt": "2026-09-07T20:07:47.480Z",
+  "workout": {
+    "name": "Meu treino",
+    "exercises": [
+      {
+        "id": "a485fad9-0ddb-4d34-b924-251b3ec5acba",
+        "name": "Flexão",
+        "sets": 3,
+        "reps": 12,
+        "rest": 15,
+        "weights": [
+          0,
+          0,
+          0
+        ],
+        "custom": false
+      },
+      {
+        "id": "8f25664f-36a7-4940-ac55-557b3a7a78f3",
+        "name": "Barra fixa",
+        "sets": 3,
+        "reps": 10,
+        "rest": 15,
+        "weights": [
+          0,
+          0,
+          0
+        ],
+        "custom": false
+      },
+      {
+        "id": "35f06977-aea0-40f5-84f6-7db4060d4480",
+        "name": "Agachamento",
+        "sets": 3,
+        "reps": 10,
+        "rest": 15,
+        "weights": [
+          0,
+          0,
+          0
+        ],
+        "custom": false
+      },
+      {
+        "id": "8d9a468c-45ec-43c9-97e2-1279abae26d6",
+        "name": "Abdominal",
+        "sets": 3,
+        "reps": 25,
+        "rest": 30,
+        "weights": [
+          0,
+          0,
+          0
+        ],
+        "custom": false
+      },
+      {
+        "id": "36afb0d2-bf44-4a78-be8d-b8eaf7a56819",
+        "name": "Abdominal infra",
+        "sets": 3,
+        "reps": 10,
+        "rest": 30,
+        "weights": [
+          0,
+          0,
+          0
+        ],
+        "custom": false
+      },
+      {
+        "id": "4a82a9e4-bf95-4d3f-bda0-3713560c71c2",
+        "name": "Abdominal Sentado",
+        "sets": 3,
+        "reps": 12,
+        "rest": 15,
+        "weights": [
+          0,
+          0,
+          0
+        ],
+        "custom": true
+      },
+      {
+        "id": "7c11cff7-03ae-407a-ad15-d8297c2f7053",
+        "name": "Prancha",
+        "sets": 3,
+        "reps": 1,
+        "rest": 30,
+        "weights": [
+          0,
+          0,
+          0
+        ],
+        "custom": false
+      }
+    ]
+  }
 }
 ```
 
