@@ -20,6 +20,17 @@
       --primary-dark: #65a30d;
       --danger: #ef4444;
       --success: #22c55e;
+      --modal-overlay: rgba(0, 0, 0, .72);
+    }
+
+    :root[data-theme="light"] {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --card2: #f1f5f9;
+      --border: #d1d5db;
+      --text: #111827;
+      --muted: #6b7280;
+      --modal-overlay: rgba(15, 23, 42, .45);
     }
 
     * {
@@ -198,8 +209,8 @@
     .recovery {
       margin-bottom: 16px;
       padding: 16px;
-      background: #17220d;
-      border: 1px solid #365314;
+      background: var(--card2);
+      border: 1px solid var(--border);
       border-radius: 14px;
     }
 
@@ -293,7 +304,7 @@
     }
 
     .icon-btn:hover {
-      background: #3a404b;
+      background: var(--border);
     }
 
     .icon-btn:disabled {
@@ -330,7 +341,7 @@
       font-size: 10px;
       padding: 2px 5px;
       border-radius: 4px;
-      background: #30351f;
+      background: var(--card2);
       color: var(--primary);
       margin-left: 5px;
     }
@@ -367,6 +378,14 @@
     .workout-title span {
       color: var(--muted);
       font-size: 13px;
+    }
+
+    .workout-total-time {
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
     .pause-btn {
@@ -614,7 +633,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: rgba(0, 0, 0, .72);
+      background: var(--modal-overlay);
       backdrop-filter: blur(5px);
       opacity: 0;
       pointer-events: none;
@@ -692,6 +711,80 @@
 
     .pause-buttons .btn {
       width: 100%;
+    }
+
+    /* ========================================
+       TEMA
+    ======================================== */
+
+    .theme-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* ========================================
+       HISTÓRICO
+    ======================================== */
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-item {
+      padding: 13px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .history-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .history-name {
+      font-weight: 700;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .history-date {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .history-duration {
+      color: var(--primary);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .history-details {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
     }
 
     /* ========================================
@@ -773,8 +866,13 @@
   <main class="app" id="builderScreen">
 
     <header>
-      <h1>Sequence Training</h1>
-      <p>Physical & Athletic Training</p>
+      <div class="header-row">
+        <div>
+          <h1>Sequence Training</h1>
+          <p>Physical & Athletic Training</p>
+        </div>
+        <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">☀️</button>
+      </div>
     </header>
     <!-- Recuperação de treino -->
     <section id="recoveryBox" class="recovery hidden">
@@ -891,6 +989,15 @@
         <input type="file" id="importFile" accept=".json,application/json" class="hidden">
       </div>
     </section>
+
+    <!-- Histórico -->
+    <section class="card">
+      <h2>Histórico de treinos</h2>
+      <div id="historyList" class="history-list"></div>
+      <div id="emptyHistory" class="empty">
+        Nenhum treino concluído ainda.
+      </div>
+    </section>
   </main>
   <!-- =====================================================
        TELA DE EXECUÇÃO
@@ -905,6 +1012,7 @@
           Em execução
         </span>
       </div>
+      <div class="workout-total-time" id="workoutTotalTime">00:00</div>
       <button class="pause-btn" id="pauseBtn" aria-label="Pausar treino">
         ⏸
       </button>
@@ -978,6 +1086,7 @@
           Intervalo
         </span>
       </div>
+      <div class="workout-total-time" id="restTotalTime">00:00</div>
       <button class="pause-btn" id="restPauseBtn" aria-label="Pausar treino">
         ⏸
       </button>
@@ -1172,6 +1281,12 @@
     const SESSION_STORAGE =
       "calisthenics_session";
 
+    const HISTORY_STORAGE =
+      "calisthenics_history";
+
+    const THEME_STORAGE =
+      "calisthenics_theme";
+
 
     const PREDEFINED_EXERCISES = [
       "Flexão",
@@ -1207,6 +1322,7 @@
       status: "working",
       restTimer: 0,
       executionSeconds: 0,
+      totalSeconds: 0,
       restNextText: "",
       restType: null
     };
@@ -1299,6 +1415,15 @@
 
     const newWorkoutBtn =
       document.getElementById("newWorkoutBtn");
+
+    const themeBtn =
+      document.getElementById("themeBtn");
+
+    const historyList =
+      document.getElementById("historyList");
+
+    const emptyHistory =
+      document.getElementById("emptyHistory");
 
 
     /* =========================================================
@@ -1861,6 +1986,8 @@
     function init() {
 
       loadWorkout();
+      loadTheme();
+      renderHistory();
 
       renderWeightInputs(
         weightsInputs,
@@ -2899,6 +3026,8 @@
 
           executionSeconds: 0,
 
+          totalSeconds: 0,
+
           restNextText: "",
 
           restType: null
@@ -3174,6 +3303,7 @@
       renderNextExercise();
 
       updateExecutionTimer();
+      updateTotalWorkoutTimer();
 
     }
 
@@ -3264,9 +3394,11 @@
 
 
             workoutState.executionSeconds++;
+            workoutState.totalSeconds++;
 
 
             updateExecutionTimer();
+            updateTotalWorkoutTimer();
 
             saveSession();
 
@@ -3285,6 +3417,40 @@
 
       executionInterval =
         null;
+
+    }
+
+
+    function updateTotalWorkoutTimer() {
+
+      const total =
+        Number(workoutState.totalSeconds || 0);
+
+      const minutes =
+        Math.floor(total / 60)
+          .toString()
+          .padStart(2, "0");
+
+      const seconds =
+        (total % 60)
+          .toString()
+          .padStart(2, "0");
+
+      const element =
+        document.getElementById("workoutTotalTime");
+
+      if (element) {
+        element.textContent =
+          `${minutes}:${seconds}`;
+      }
+
+      const restElement =
+        document.getElementById("restTotalTime");
+
+      if (restElement) {
+        restElement.textContent =
+          `${minutes}:${seconds}`;
+      }
 
     }
 
@@ -3496,8 +3662,10 @@
           () => {
 
             workoutState.restTimer--;
+            workoutState.totalSeconds++;
 
             renderRestScreen();
+            updateTotalWorkoutTimer();
 
             saveSession();
 
@@ -3636,6 +3804,7 @@
       showWorkoutScreen();
 
       renderWorkoutExecution();
+      updateTotalWorkoutTimer();
 
       startExecutionTimer();
 
@@ -3761,8 +3930,10 @@
           () => {
 
             workoutState.restTimer--;
+            workoutState.totalSeconds++;
 
             renderRestScreen();
+            updateTotalWorkoutTimer();
 
             saveSession();
 
@@ -3856,6 +4027,8 @@
 
           executionSeconds: 0,
 
+          totalSeconds: 0,
+
           restNextText: "",
 
           restType: null
@@ -3880,7 +4053,228 @@
        FINALIZAÇÃO
     ========================================================= */
 
+    function saveWorkoutToHistory() {
+
+      const history = loadHistory();
+
+      const completedReps =
+        getTotalReps();
+
+      const entry = {
+        id: crypto.randomUUID(),
+        workoutName: workout.name || "Meu treino",
+        completedAt: new Date().toISOString(),
+        durationSeconds: Number(workoutState.totalSeconds || 0),
+        totalReps: completedReps,
+        exercises: workout.exercises.map(exercise => ({
+          name: exercise.name,
+          sets: Number(exercise.sets),
+          reps: Number(exercise.reps),
+          weights: normalizeWeights(exercise)
+        }))
+      };
+
+      history.unshift(entry);
+
+      localStorage.setItem(
+        HISTORY_STORAGE,
+        JSON.stringify(history.slice(0, 100))
+      );
+
+      renderHistory();
+
+    }
+
+
+    function loadHistory() {
+
+      try {
+        const saved =
+          localStorage.getItem(HISTORY_STORAGE);
+
+        if (!saved) {
+          return [];
+        }
+
+        const parsed = JSON.parse(saved);
+
+        return Array.isArray(parsed)
+          ? parsed
+          : [];
+
+      } catch (error) {
+        console.error("Erro ao carregar histórico:", error);
+        return [];
+      }
+
+    }
+
+
+    function formatDuration(totalSeconds) {
+
+      const total = Math.max(
+        0,
+        Number(totalSeconds) || 0
+      );
+
+      const hours = Math.floor(total / 3600);
+      const minutes = Math.floor((total % 3600) / 60);
+      const seconds = total % 60;
+
+      if (hours > 0) {
+        return `${hours}h ${minutes.toString().padStart(2, "0")}min`;
+      }
+
+      return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+    }
+
+
+    function renderHistory() {
+
+      if (!historyList || !emptyHistory) {
+        return;
+      }
+
+      const history = loadHistory();
+
+      historyList.innerHTML = "";
+
+      emptyHistory.classList.toggle(
+        "hidden",
+        history.length > 0
+      );
+
+      history.forEach(entry => {
+
+        const item =
+          document.createElement("div");
+
+        item.className = "history-item";
+
+        const date =
+          new Date(entry.completedAt);
+
+        const dateText =
+          Number.isNaN(date.getTime())
+            ? "Data desconhecida"
+            : date.toLocaleString("pt-BR", {
+                dateStyle: "short",
+                timeStyle: "short"
+              });
+
+        const exercisesCount =
+          Array.isArray(entry.exercises)
+            ? entry.exercises.length
+            : 0;
+
+        item.innerHTML = `
+          <div class="history-main">
+            <div>
+              <div class="history-name">
+                ${escapeHtml(entry.workoutName || "Meu treino")}
+              </div>
+              <div class="history-date">
+                ${escapeHtml(dateText)}
+              </div>
+            </div>
+            <div class="history-duration">
+              ${escapeHtml(formatDuration(entry.durationSeconds))}
+            </div>
+          </div>
+          <div class="history-details">
+            ${exercisesCount} exercício${exercisesCount === 1 ? "" : "s"} ·
+            ${Number(entry.totalReps || 0)} repetições
+          </div>
+        `;
+
+        historyList.appendChild(item);
+
+      });
+
+    }
+
+
+    function clearHistory() {
+      localStorage.removeItem(HISTORY_STORAGE);
+      renderHistory();
+    }
+
+
+    /* =========================================================
+       TEMA
+    ========================================================= */
+
+    function applyTheme(theme) {
+
+      const normalized =
+        theme === "light"
+          ? "light"
+          : "dark";
+
+      document.documentElement.dataset.theme =
+        normalized;
+
+      localStorage.setItem(
+        THEME_STORAGE,
+        normalized
+      );
+
+      if (themeBtn) {
+        themeBtn.textContent =
+          normalized === "dark"
+            ? "☀️"
+            : "🌙";
+
+        themeBtn.setAttribute(
+          "aria-label",
+          normalized === "dark"
+            ? "Ativar tema claro"
+            : "Ativar tema escuro"
+        );
+      }
+
+    }
+
+
+    function loadTheme() {
+
+      const saved =
+        localStorage.getItem(THEME_STORAGE);
+
+      applyTheme(
+        saved === "light"
+          ? "light"
+          : "dark"
+      );
+
+    }
+
+
+    themeBtn.addEventListener(
+      "click",
+      () => {
+
+        const current =
+          document.documentElement.dataset.theme || "dark";
+
+        applyTheme(
+          current === "dark"
+            ? "light"
+            : "dark"
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       FINALIZAÇÃO
+    ========================================================= */
+
     function finishWorkout() {
+
+      saveWorkoutToHistory();
 
       stopExecutionTimer();
 
@@ -3905,6 +4299,8 @@
         restTimer: 0,
 
         executionSeconds: 0,
+
+        totalSeconds: 0,
 
         restNextText: "",
 
@@ -4016,6 +4412,11 @@
               session.executionSeconds || 0
             ),
 
+          totalSeconds:
+            Number(
+              session.totalSeconds || 0
+            ),
+
           restNextText:
             session.restNextText ||
             "",
@@ -4071,6 +4472,7 @@
         showRestScreen();
 
         renderRestScreen();
+        updateTotalWorkoutTimer();
 
         startRestTimerAfterPause();
 
