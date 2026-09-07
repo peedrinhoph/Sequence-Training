@@ -367,6 +367,9 @@
     }
 
     .pause-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 42px;
       height: 42px;
       border: 1px solid var(--border);
@@ -1952,15 +1955,15 @@
       const sets = Number(exercise.sets) || 0;
       const weights = Array.isArray(exercise.weights)
         ? exercise.weights.map(value => {
-            const number = Number(value);
-            return Number.isFinite(number) && number >= 0
-              ? number
-              : 0;
-          })
+          const number = Number(value);
+          return Number.isFinite(number) && number >= 0
+            ? number
+            : 0;
+        })
         : [];
 
       return Array.from(
-        { length: sets },
+        {length: sets},
         (_, index) => weights[index] ?? 0
       );
     }
@@ -3146,7 +3149,7 @@
 
       const currentWeight =
         normalizeWeights(exercise)[
-          workoutState.currentSet - 1
+        workoutState.currentSet - 1
         ] ?? 0;
 
       document.getElementById(
