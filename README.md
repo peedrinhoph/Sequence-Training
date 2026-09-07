@@ -11,7 +11,8 @@
 ---
 ## Acesse aqui
 [Sequence Training](https://peedrinhoph.github.io/Sequence-Training/)
----
+
+
 ## 📱 Sobre o projeto
 
 O **Sequence Training** é uma aplicação web leve e independente criada para facilitar a montagem e execução de treinos de calistenia.
