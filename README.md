@@ -472,7 +472,7 @@ Possíveis evoluções para versões futuras:
 * [x] Tempo total de treino.
 * [ ] Calendário de treinos.
 * [ ] Metas de treinamento.
-* [ ] PWA instalável.
+* [x] PWA instalável.
 * [ ] Funcionamento offline.
 * [ ] Backup automático.
 * [ ] Sincronização entre dispositivos.
@@ -492,7 +492,7 @@ Para contribuir:
 ```bash
 # Faça um fork do projeto
 
-# Clone o seu fork
+# Clone
 git clone https://github.com/peedrinhoph/Sequence-Training.git
 
 # Crie uma branch
