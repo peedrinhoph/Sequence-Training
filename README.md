@@ -1,2 +1,450 @@
-# Sequence-Training
-Monte sua sequência de treino e execute quando quiser.
+# 💪 Sequence Training
+
+> Aplicação web para criação, personalização e execução de treinos de calistenia diretamente pelo navegador.
+
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5\&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3\&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript\&logoColor=black)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
+[![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222222?logo=github)](https://pages.github.com/)
+[![No Backend](https://img.shields.io/badge/Backend-None-success)](#-arquitetura)
+
+---
+
+## 📱 Sobre o projeto
+
+O **Sequence Training** é uma aplicação web leve e independente criada para facilitar a montagem e execução de treinos de calistenia.
+
+A proposta é permitir que o usuário monte seu próprio treino, definindo:
+
+* Exercícios.
+* Séries.
+* Repetições.
+* Intervalos de descanso.
+* Ordem dos exercícios.
+
+Durante a execução, a aplicação controla automaticamente as séries, intervalos e progresso do treino.
+
+Tudo funciona **diretamente no navegador**, sem necessidade de conta, servidor ou banco de dados.
+
+---
+
+## ✨ Principais recursos
+
+### 🏋️ Montagem do treino
+
+* Exercícios pré-cadastrados.
+* Exercícios personalizados.
+* Configuração individual de séries, repetições e descanso.
+* Edição dos exercícios adicionados.
+* Exclusão de exercícios.
+* Reordenação dos exercícios.
+* Drag & drop para organização.
+* Nome personalizado para cada treino.
+
+### ⏱️ Execução
+
+Durante o treino, a aplicação apresenta:
+
+* Exercício atual.
+* Série atual.
+* Repetições.
+* Cronômetro de execução.
+* Intervalo de descanso.
+* Próximo exercício.
+* Barra de progresso.
+* Percentual de conclusão.
+
+Exemplo:
+
+```text
+17% concluído
+████░░░░░░░░░░░░░░░░
+```
+
+O progresso é calculado com base nas **repetições previstas e concluídas** ao longo de todo o treino.
+
+### 🔄 Continuidade do treino
+
+O estado do treino é salvo automaticamente no navegador.
+
+Se a página for atualizada ou fechada durante um treino, a aplicação pode identificar a sessão anterior e permitir que o usuário continue de onde parou.
+
+### ⏸️ Pausar e continuar
+
+O treino pode ser pausado a qualquer momento.
+
+Opções disponíveis:
+
+* Continuar treino.
+* Encerrar treino.
+
+### 🔔 Descanso
+
+Após a conclusão de uma série, o intervalo configurado é iniciado automaticamente.
+
+Ao terminar o descanso:
+
+* A próxima série é liberada.
+* O cronômetro de execução é iniciado.
+* O dispositivo pode vibrar.
+* Um sinal sonoro pode ser reproduzido.
+
+### 💾 Persistência local
+
+Os dados são armazenados utilizando a API:
+
+```javascript
+localStorage
+```
+
+Não existe banco de dados externo.
+
+### 📤 Exportação e importação
+
+Os treinos podem ser:
+
+* Exportados para JSON.
+* Importados posteriormente.
+
+Isso permite realizar backups ou transferir um treino para outro dispositivo.
+
+---
+
+## 🧩 Exercícios disponíveis
+
+A aplicação possui alguns exercícios pré-configurados:
+
+| Categoria | Exercícios                                     |
+| --------- | ---------------------------------------------- |
+| Empurrar  | Flexão, Flexão diamante, Paralelas             |
+| Puxar     | Barra fixa, Barra supinada                     |
+| Pernas    | Agachamento, Avanço                            |
+| Abdômen   | Abdominal, Abdominal infra, Elevação de pernas |
+| Isometria | Prancha                                        |
+
+Também é possível adicionar **qualquer exercício personalizado**.
+
+---
+
+## 🖥️ Interface
+
+A interface foi desenvolvida seguindo uma abordagem **mobile-first**, considerando principalmente o uso durante o treino.
+
+### Tela de montagem
+
+Permite configurar e organizar todos os exercícios antes de iniciar.
+
+### Tela de execução
+
+As informações mais importantes ficam em destaque para facilitar a visualização durante o exercício.
+
+### Tela de descanso
+
+Apresenta um cronômetro grande para indicar o tempo restante até a próxima série.
+
+> 📸 **Screenshots**
+>
+> Recomenda-se adicionar aqui imagens da aplicação, por exemplo:
+>
+> `docs/screenshots/montagem.png`
+>
+> `docs/screenshots/treino.png`
+>
+> `docs/screenshots/descanso.png`
+
+---
+
+## 🏗️ Arquitetura
+
+O projeto foi desenvolvido propositalmente sem backend.
+
+```text
+┌─────────────────────────────┐
+│          Browser            │
+│                             │
+│  ┌───────────────────────┐  │
+│  │        HTML            │  │
+│  │        CSS             │  │
+│  │     JavaScript         │  │
+│  └───────────┬───────────┘  │
+│              │              │
+│              ▼              │
+│       localStorage          │
+│                             │
+└─────────────────────────────┘
+```
+
+### Tecnologias
+
+* HTML5
+* CSS3
+* JavaScript Vanilla
+* LocalStorage API
+* File API
+* Web Audio API
+* Vibration API
+
+Não são utilizados frameworks ou bibliotecas externas obrigatórias.
+
+---
+
+## 📁 Estrutura do projeto
+
+A estrutura atual é propositalmente simples:
+
+```text
+calistenia-workout/
+│
+├── index.html
+└── README.md
+```
+
+Todo o aplicativo está concentrado no `index.html`.
+
+Essa abordagem facilita:
+
+* Desenvolvimento.
+* Manutenção.
+* Portabilidade.
+* Hospedagem.
+* Deploy no GitHub Pages.
+
+---
+
+## 🚀 Como executar
+
+### Clonar o projeto
+
+```bash
+git clone https://github.com/SEU_USUARIO/calistenia-workout.git
+```
+
+Entrar no diretório:
+
+```bash
+cd calistenia-workout
+```
+
+### Executar
+
+Como é uma aplicação estática, basta abrir:
+
+```text
+index.html
+```
+
+no navegador.
+
+Também é possível utilizar um servidor local:
+
+```bash
+python -m http.server 8000
+```
+
+Depois acesse:
+
+```text
+http://localhost:8000
+```
+
+---
+
+## 🌐 Deploy no GitHub Pages
+
+O projeto pode ser publicado gratuitamente utilizando o GitHub Pages.
+
+No repositório:
+
+```text
+Settings
+   ↓
+Pages
+   ↓
+Build and deployment
+   ↓
+Deploy from a branch
+```
+
+Selecione:
+
+```text
+Branch: main
+Folder: / (root)
+```
+
+Após o deploy, o aplicativo estará disponível através da URL fornecida pelo GitHub Pages.
+
+---
+
+## 🔐 Privacidade
+
+O aplicativo não possui backend e não envia os dados dos treinos para servidores externos.
+
+Os dados ficam armazenados localmente no navegador.
+
+Isso significa que o projeto não necessita de:
+
+* Cadastro.
+* Login.
+* Banco de dados.
+* API.
+* Servidor.
+
+### ⚠️ Importante
+
+Os dados armazenados no `localStorage` podem ser perdidos caso os dados do site sejam apagados pelo navegador.
+
+Por isso, recomenda-se utilizar a função de **Exportar treino** para manter um backup.
+
+---
+
+## 📦 Formato dos dados
+
+Os treinos podem ser representados em JSON.
+
+Exemplo:
+
+```json
+{
+  "name": "Treino Superior",
+  "exercises": [
+    {
+      "name": "Flexão",
+      "sets": 4,
+      "reps": 15,
+      "rest": 60
+    },
+    {
+      "name": "Barra fixa",
+      "sets": 3,
+      "reps": 8,
+      "rest": 60
+    }
+  ]
+}
+```
+
+Esse formato também facilita futuras integrações ou migrações para uma API.
+
+---
+
+## 🔄 Fluxo do treino
+
+```text
+┌──────────────────┐
+│ Criar treino     │
+└────────┬─────────┘
+         ↓
+┌──────────────────┐
+│ Adicionar        │
+│ exercícios       │
+└────────┬─────────┘
+         ↓
+┌──────────────────┐
+│ Configurar       │
+│ séries/reps      │
+└────────┬─────────┘
+         ↓
+┌──────────────────┐
+│ Organizar        │
+│ exercícios       │
+└────────┬─────────┘
+         ↓
+┌──────────────────┐
+│ Iniciar treino   │
+└────────┬─────────┘
+         ↓
+┌──────────────────┐
+│ Executar série   │
+└────────┬─────────┘
+         ↓
+┌──────────────────┐
+│ Série concluída  │
+└────────┬─────────┘
+         ↓
+┌──────────────────┐
+│ Descanso         │
+└────────┬─────────┘
+         ↓
+    Próxima série
+         │
+         └──────────────┐
+                        ↓
+              Próximo exercício
+                        │
+                        ↓
+                ┌──────────────┐
+                │ 100%         │
+                │ concluído    │
+                └──────────────┘
+```
+
+---
+
+## 🎯 Roadmap
+
+Possíveis evoluções para versões futuras:
+
+* [ ] Histórico de treinos.
+* [ ] Estatísticas de desempenho.
+* [ ] Gráficos de evolução.
+* [ ] Contagem de repetições acumuladas.
+* [ ] Tempo total de treino.
+* [ ] Calendário de treinos.
+* [ ] Metas de treinamento.
+* [ ] PWA instalável.
+* [ ] Funcionamento offline.
+* [ ] Backup automático.
+* [ ] Sincronização entre dispositivos.
+* [ ] Temas claro e escuro.
+* [ ] Biblioteca maior de exercícios.
+* [ ] Animações/demonstrações dos exercícios.
+* [ ] Sistema de usuários e sincronização em nuvem.
+
+---
+
+## 🤝 Contribuição
+
+Contribuições são bem-vindas.
+
+Para contribuir:
+
+```bash
+# Faça um fork do projeto
+
+# Clone o seu fork
+git clone https://github.com/peedrinhoph/Sequence-Training.git
+
+# Crie uma branch
+git checkout -b feature/minha-feature
+
+# Faça suas alterações
+
+# Commit
+git commit -m "feat: adiciona minha feature"
+
+# Push
+git push origin feature/minha-feature
+```
+
+Depois, abra um **Pull Request**.
+
+---
+
+## 📄 Licença
+
+Este projeto está disponível sob a licença definida no repositório.
+
+---
+
+## 👨‍💻 Autor
+
+**Pedro Henrique**
+
+Projeto desenvolvido com foco em uma experiência simples, rápida e prática para criação e execução de treinos de calistenia.
+
+---
+
+<p align="center">
+  Desenvolvido com HTML, CSS e JavaScript ❤️
+</p>
