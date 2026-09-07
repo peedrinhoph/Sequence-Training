@@ -118,6 +118,34 @@
       border-color: var(--primary);
     }
 
+    .weights-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .weight-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .weight-field label {
+      margin: 0;
+      min-width: 54px;
+    }
+
+    .weight-input {
+      height: 42px;
+    }
+
+    .weight-display {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
     .form-actions {
       display: flex;
       gap: 10px;
@@ -683,6 +711,10 @@
         grid-template-columns: 1fr;
       }
 
+      .weights-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
       .full {
         grid-column: auto;
       }
@@ -780,6 +812,12 @@
               Repetições
             </label>
             <input id="repsInput" type="number" min="1" max="999" value="10" required>
+          </div>
+          <div class="full">
+            <label>
+              Carga por série (kg)
+            </label>
+            <div id="weightsInputs" class="weights-grid"></div>
           </div>
           <div class="full">
             <label for="restSelect">
@@ -901,6 +939,9 @@
       </div>
       <div class="caption">
         REPETIÇÕES
+      </div>
+      <div class="weight-display" id="currentWeightDisplay">
+        Peso corporal
       </div>
     </div>
     <div class="execution-timer">
@@ -1043,6 +1084,12 @@
             Repetições
           </label>
           <input id="customReps" type="number" min="1" max="999" value="10" required>
+        </div>
+        <div class="field">
+          <label>
+            Carga por série (kg)
+          </label>
+          <div id="customWeightsInputs" class="weights-grid"></div>
         </div>
         <div class="field">
           <label for="customRest">
@@ -1194,6 +1241,9 @@
 
     const repsInput =
       document.getElementById("repsInput");
+
+    const weightsInputs =
+      document.getElementById("weightsInputs");
 
     const restSelect =
       document.getElementById("restSelect");
@@ -1570,6 +1620,11 @@
         "customReps"
       );
 
+    const customWeightsInputs =
+      document.getElementById(
+        "customWeightsInputs"
+      );
+
     const customRest =
       document.getElementById(
         "customRest"
@@ -1588,6 +1643,12 @@
       customSets.value = 3;
       customReps.value = 10;
       customRest.value = 30;
+
+      renderWeightInputs(
+        customWeightsInputs,
+        3,
+        [0, 0, 0]
+      );
 
       customModalOverlay.classList.add(
         "visible"
@@ -1733,7 +1794,19 @@
               "Meu treino",
 
             exercises:
-              parsed.exercises
+              parsed.exercises.map(
+                exercise => ({
+                  ...exercise,
+                  sets:
+                    Number(exercise.sets),
+                  reps:
+                    Number(exercise.reps),
+                  rest:
+                    Number(exercise.rest),
+                  weights:
+                    normalizeWeights(exercise)
+                })
+              )
           };
 
         }
@@ -1781,6 +1854,12 @@
     function init() {
 
       loadWorkout();
+
+      renderWeightInputs(
+        weightsInputs,
+        3,
+        [0, 0, 0]
+      );
 
       populateExerciseSelect();
 
@@ -1865,6 +1944,108 @@
 
 
     /* =========================================================
+       CARGA POR SÉRIE
+    ========================================================= */
+
+    function normalizeWeights(exercise) {
+      const sets = Number(exercise.sets) || 0;
+      const weights = Array.isArray(exercise.weights)
+        ? exercise.weights.map(value => {
+            const number = Number(value);
+            return Number.isFinite(number) && number >= 0
+              ? number
+              : 0;
+          })
+        : [];
+
+      return Array.from(
+        { length: sets },
+        (_, index) => weights[index] ?? 0
+      );
+    }
+
+    function renderWeightInputs(
+      container,
+      sets,
+      values = []
+    ) {
+      container.innerHTML = "";
+
+      for (let i = 0; i < sets; i++) {
+        const field = document.createElement("div");
+        field.className = "weight-field";
+
+        const label = document.createElement("label");
+        label.textContent = `Série ${i + 1}`;
+
+        const input = document.createElement("input");
+        input.className = "weight-input";
+        input.type = "number";
+        input.min = "0";
+        input.step = "0.5";
+        input.inputMode = "decimal";
+        input.value = Number(values[i] ?? 0);
+        input.dataset.weightIndex = i;
+        input.setAttribute("aria-label", `Carga da série ${i + 1} em kg`);
+
+        field.appendChild(label);
+        field.appendChild(input);
+        container.appendChild(field);
+      }
+    }
+
+    function getWeightValues(container, sets) {
+      return Array.from(
+        container.querySelectorAll(".weight-input")
+      ).slice(0, sets).map(input => {
+        const value = Number(input.value);
+        return Number.isFinite(value) && value >= 0 ? value : 0;
+      });
+    }
+
+    setsInput.addEventListener(
+      "input",
+      () => {
+        const sets = Math.max(
+          1,
+          Math.min(99, Number(setsInput.value) || 1)
+        );
+
+        const currentValues = getWeightValues(
+          weightsInputs,
+          sets
+        );
+
+        renderWeightInputs(
+          weightsInputs,
+          sets,
+          currentValues
+        );
+      }
+    );
+
+    customSets.addEventListener(
+      "input",
+      () => {
+        const sets = Math.max(
+          1,
+          Math.min(99, Number(customSets.value) || 1)
+        );
+
+        const currentValues = getWeightValues(
+          customWeightsInputs,
+          sets
+        );
+
+        renderWeightInputs(
+          customWeightsInputs,
+          sets,
+          currentValues
+        );
+      }
+    );
+
+    /* =========================================================
        FORMULÁRIO
     ========================================================= */
 
@@ -1885,6 +2066,12 @@
 
         const rest =
           Number(restSelect.value);
+
+        const weights =
+          getWeightValues(
+            weightsInputs,
+            sets
+          );
 
 
         if (!name) {
@@ -1935,6 +2122,22 @@
           return;
         }
 
+        if (
+          weights.length !== sets ||
+          weights.some(
+            weight =>
+              !Number.isFinite(weight) ||
+              weight < 0
+          )
+        ) {
+
+          showMessage(
+            "Informe uma carga válida para cada série."
+          );
+
+          return;
+        }
+
 
         const custom =
           !PREDEFINED_EXERCISES.includes(
@@ -1958,6 +2161,8 @@
           reps,
 
           rest,
+
+          weights,
 
           custom
 
@@ -2011,6 +2216,12 @@
         const rest =
           Number(customRest.value);
 
+        const weights =
+          getWeightValues(
+            customWeightsInputs,
+            sets
+          );
+
 
         if (!name) {
 
@@ -2047,6 +2258,22 @@
           return;
         }
 
+        if (
+          weights.length !== sets ||
+          weights.some(
+            weight =>
+              !Number.isFinite(weight) ||
+              weight < 0
+          )
+        ) {
+
+          showMessage(
+            "Informe uma carga válida para cada série."
+          );
+
+          return;
+        }
+
 
         addExerciseOption(
           name,
@@ -2064,6 +2291,12 @@
 
         restSelect.value =
           rest;
+
+        renderWeightInputs(
+          weightsInputs,
+          sets,
+          weights
+        );
 
         closeCustomModal();
 
@@ -2087,6 +2320,12 @@
       setsInput.value = 3;
       repsInput.value = 10;
       restSelect.value = 30;
+
+      renderWeightInputs(
+        weightsInputs,
+        3,
+        [0, 0, 0]
+      );
 
       submitExerciseBtn.textContent =
         "Adicionar exercício";
@@ -2169,6 +2408,8 @@
                 repetiç${exercise.reps > 1 ? "ões" : "ão"}
                 ·
                 ${exercise.rest}s descanso
+                ·
+                ${normalizeWeights(exercise).map(weight => `${weight}kg`).join(" / ")}
               </div>
 
             </div>
@@ -2396,6 +2637,12 @@
 
       repsInput.value =
         exercise.reps;
+
+      renderWeightInputs(
+        weightsInputs,
+        exercise.sets,
+        normalizeWeights(exercise)
+      );
 
       restSelect.value =
         exercise.rest;
@@ -2895,6 +3142,18 @@
         "currentRepsDisplay"
       ).textContent =
         exercise.reps;
+
+      const currentWeight =
+        normalizeWeights(exercise)[
+          workoutState.currentSet - 1
+        ] ?? 0;
+
+      document.getElementById(
+        "currentWeightDisplay"
+      ).textContent =
+        currentWeight > 0
+          ? `+${currentWeight} kg`
+          : "Peso corporal";
 
 
       document.getElementById(
@@ -3880,7 +4139,7 @@
 
         const data = {
 
-          version: 1,
+          version: 2,
 
           exportedAt:
             new Date().toISOString(),
@@ -4028,7 +4287,22 @@
                         Number(
                           exercise.rest
                         )
+                      ) &&
+
+                    (
+                      exercise.weights === undefined ||
+                      (
+                        Array.isArray(exercise.weights) &&
+                        exercise.weights.length >= Number(exercise.sets) &&
+                        exercise.weights
+                          .slice(0, Number(exercise.sets))
+                          .every(
+                            weight =>
+                              Number.isFinite(Number(weight)) &&
+                              Number(weight) >= 0
+                          )
                       )
+                    )
 
                 );
 
@@ -4091,6 +4365,11 @@
                         rest:
                           Number(
                             exercise.rest
+                          ),
+
+                        weights:
+                          normalizeWeights(
+                            exercise
                           ),
 
                         custom:
