@@ -460,18 +460,18 @@ Esse formato também facilita futuras integrações ou migrações para uma API.
 
 Possíveis evoluções para versões futuras:
 
-* [ ] Histórico de treinos.
+* [x] Histórico de treinos.
 * [ ] Estatísticas de desempenho.
 * [ ] Gráficos de evolução.
 * [ ] Contagem de repetições acumuladas.
-* [ ] Tempo total de treino.
+* [x] Tempo total de treino.
 * [ ] Calendário de treinos.
 * [ ] Metas de treinamento.
 * [ ] PWA instalável.
 * [ ] Funcionamento offline.
 * [ ] Backup automático.
 * [ ] Sincronização entre dispositivos.
-* [ ] Temas claro e escuro.
+* [x] Temas claro e escuro.
 * [ ] Biblioteca maior de exercícios.
 * [ ] Animações/demonstrações dos exercícios.
 * [ ] Sistema de usuários e sincronização em nuvem.
