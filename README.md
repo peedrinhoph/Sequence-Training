@@ -10,7 +10,7 @@
 
 ---
 ## Acesse aqui
-[https://peedrinhoph.github.io/Sequence-Training/](Sequence Training)
+[Sequence Training](https://peedrinhoph.github.io/Sequence-Training/)
 ---
 ## 📱 Sobre o projeto
 
