@@ -143,14 +143,6 @@ As informações mais importantes ficam em destaque para facilitar a visualizaç
 Apresenta um cronômetro grande para indicar o tempo restante até a próxima série.
 
 > 📸 **Screenshots**
->
-> Recomenda-se adicionar aqui imagens da aplicação, por exemplo:
->
-> `docs/screenshots/montagem.png`
->
-> `docs/screenshots/treino.png`
->
-> `docs/screenshots/descanso.png`
 
 ---
 
