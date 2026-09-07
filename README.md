@@ -149,7 +149,6 @@ Apresenta um cronômetro grande para indicar o tempo restante até a próxima s�
 <img width="458" height="297" alt="Screenshot 2026-09-07 183945" src="https://github.com/user-attachments/assets/3dbd56b9-e916-4aa9-b95e-b1daf77b6655" />
 <img width="734" height="689" alt="Screenshot 2026-09-07 183906" src="https://github.com/user-attachments/assets/56b7147c-773b-4672-9952-db94f6dccfc7" />
 <img width="451" height="655" alt="Screenshot 2026-09-07 184048" src="https://github.com/user-attachments/assets/2be1a935-cafa-4fd8-b4fd-01e34711ffe9" />
-<img width="458" height="297" alt="Screenshot 2026-09-07 183945" src="https://github.com/user-attachments/assets/d285c4f3-aaff-4dd5-b698-6306353e9e5b" />
 ---
 
 ## 🏗️ Arquitetura
