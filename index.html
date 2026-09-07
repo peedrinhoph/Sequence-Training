@@ -5,7 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0f1115">
-
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Calistenia">
+  
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <title>Sequence Training by PHP</title>
 
   <style>
@@ -857,14 +863,22 @@
   </style>
 </head>
 
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js")
+        .then(registration => {
+          console.log("PWA: Service Worker registrado.", registration.scope);
+        })
+        .catch(error => {
+          console.error("PWA: erro ao registrar Service Worker:", error);
+        });
+    });
+  }
+</script>
+
 <body>
-
-  <!-- =====================================================
-       BUILDER
-  ====================================================== -->
-
   <main class="app" id="builderScreen">
-
     <header>
       <div class="header-row">
         <div>
