@@ -1197,6 +1197,7 @@
           <button type="button" class="btn btn-ghost" id="closeNameModalBtn">
             Cancelar
           </button>
+
           <button type="submit" class="btn btn-primary">
             Salvar
           </button>
@@ -1273,33 +1274,53 @@
        MODAL DE PAUSA
   ====================================================== -->
   <div class="modal-overlay" id="pauseModalOverlay" aria-hidden="true">
+
     <div class="modal pause-modal" role="dialog" aria-modal="true">
+
       <h3>
         Treino pausado
       </h3>
+
       <p>
         O cronômetro está pausado.
         O que deseja fazer?
       </p>
+
       <div class="pause-buttons">
+
         <button class="btn btn-primary" id="resumeBtn">
           Continuar treino
         </button>
+
         <button class="btn btn-danger" id="endWorkoutBtn">
           Encerrar treino
         </button>
+
       </div>
+
     </div>
+
   </div>
+
+
   <script>
     /* =========================================================
        CONFIGURAÇÕES
     ========================================================= */
 
-    const WORKOUT_STORAGE = "calisthenics_workout";
-    const SESSION_STORAGE = "calisthenics_session";
-    const HISTORY_STORAGE = "calisthenics_history";
-    const THEME_STORAGE = "calisthenics_theme";
+    const WORKOUT_STORAGE =
+      "calisthenics_workout";
+
+    const SESSION_STORAGE =
+      "calisthenics_session";
+
+    const HISTORY_STORAGE =
+      "calisthenics_history";
+
+    const THEME_STORAGE =
+      "calisthenics_theme";
+
+
     const PREDEFINED_EXERCISES = [
       "Flexão",
       "Flexão diamante",
@@ -1314,6 +1335,7 @@
       "Prancha"
     ];
 
+
     /* =========================================================
        ESTADO
     ========================================================= */
@@ -1323,7 +1345,9 @@
       exercises: []
     };
 
+
     let editingIndex = null;
+
 
     let workoutState = {
       exerciseIndex: 0,
@@ -1336,53 +1360,123 @@
       restType: null
     };
 
+
     let executionInterval = null;
     let restInterval = null;
+
+
     let modalResolver = null;
     let lastFocusedElement = null;
+
 
     /* =========================================================
        ELEMENTOS
     ========================================================= */
 
-    const builderScreen = document.getElementById("builderScreen");
-    const workoutScreen = document.getElementById("workoutScreen");
-    const restScreen = document.getElementById("restScreen");
-    const finishScreen = document.getElementById("finishScreen");
-    const exerciseForm = document.getElementById("exerciseForm");
-    const exerciseSelect = document.getElementById("exerciseSelect");
-    const setsInput = document.getElementById("setsInput");
-    const repsInput = document.getElementById("repsInput");
-    const weightsInputs = document.getElementById("weightsInputs");
-    const restSelect = document.getElementById("restSelect");
-    const submitExerciseBtn = document.getElementById("submitExerciseBtn");
-    const cancelEditBtn = document.getElementById("cancelEditBtn");
-    const customExerciseBtn = document.getElementById("customExerciseBtn");
-    const workoutList = document.getElementById("workoutList");
-    const emptyWorkout = document.getElementById("emptyWorkout");
-    const startWorkoutBtn = document.getElementById("startWorkoutBtn");
-    const clearWorkoutBtn = document.getElementById("clearWorkoutBtn");
-    const workoutNameBtn = document.getElementById("workoutNameBtn");
-    const exportBtn = document.getElementById("exportBtn");
-    const importBtn = document.getElementById("importBtn");
-    const importFile = document.getElementById("importFile");
-    const recoveryBox = document.getElementById("recoveryBox");
-    const recoveryInfo = document.getElementById("recoveryInfo");
-    const continueBtn = document.getElementById("continueBtn");
-    const newWorkoutBtn = document.getElementById("newWorkoutBtn");
-    const themeBtn = document.getElementById("themeBtn");
-    const historyList = document.getElementById("historyList");
-    const emptyHistory = document.getElementById("emptyHistory");
+    const builderScreen =
+      document.getElementById("builderScreen");
+
+    const workoutScreen =
+      document.getElementById("workoutScreen");
+
+    const restScreen =
+      document.getElementById("restScreen");
+
+    const finishScreen =
+      document.getElementById("finishScreen");
+
+
+    const exerciseForm =
+      document.getElementById("exerciseForm");
+
+    const exerciseSelect =
+      document.getElementById("exerciseSelect");
+
+    const setsInput =
+      document.getElementById("setsInput");
+
+    const repsInput =
+      document.getElementById("repsInput");
+
+    const weightsInputs =
+      document.getElementById("weightsInputs");
+
+    const restSelect =
+      document.getElementById("restSelect");
+
+    const submitExerciseBtn =
+      document.getElementById("submitExerciseBtn");
+
+    const cancelEditBtn =
+      document.getElementById("cancelEditBtn");
+
+    const customExerciseBtn =
+      document.getElementById("customExerciseBtn");
+
+    const workoutList =
+      document.getElementById("workoutList");
+
+    const emptyWorkout =
+      document.getElementById("emptyWorkout");
+
+    const startWorkoutBtn =
+      document.getElementById("startWorkoutBtn");
+
+    const clearWorkoutBtn =
+      document.getElementById("clearWorkoutBtn");
+
+    const workoutNameBtn =
+      document.getElementById("workoutNameBtn");
+
+    const exportBtn =
+      document.getElementById("exportBtn");
+
+    const importBtn =
+      document.getElementById("importBtn");
+
+    const importFile =
+      document.getElementById("importFile");
+
+    const recoveryBox =
+      document.getElementById("recoveryBox");
+
+    const recoveryInfo =
+      document.getElementById("recoveryInfo");
+
+    const continueBtn =
+      document.getElementById("continueBtn");
+
+    const newWorkoutBtn =
+      document.getElementById("newWorkoutBtn");
+
+    const themeBtn =
+      document.getElementById("themeBtn");
+
+    const historyList =
+      document.getElementById("historyList");
+
+    const emptyHistory =
+      document.getElementById("emptyHistory");
+
 
     /* =========================================================
        MODAL GENÉRICO
     ========================================================= */
 
-    const modalOverlay = document.getElementById("modalOverlay");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalMessage = document.getElementById("modalMessage");
-    const modalCancelBtn = document.getElementById("modalCancelBtn");
-    const modalConfirmBtn = document.getElementById("modalConfirmBtn");
+    const modalOverlay =
+      document.getElementById("modalOverlay");
+
+    const modalTitle =
+      document.getElementById("modalTitle");
+
+    const modalMessage =
+      document.getElementById("modalMessage");
+
+    const modalCancelBtn =
+      document.getElementById("modalCancelBtn");
+
+    const modalConfirmBtn =
+      document.getElementById("modalConfirmBtn");
 
 
     function openModal({
@@ -1395,47 +1489,71 @@
     }) {
 
       return new Promise(resolve => {
+
         modalResolver = resolve;
-        lastFocusedElement = document.activeElement;
-        modalTitle.textContent = title;
-        modalMessage.textContent = message;
-        modalConfirmBtn.textContent = confirmText;
-        modalCancelBtn.textContent = cancelText;
+
+        lastFocusedElement =
+          document.activeElement;
+
+        modalTitle.textContent =
+          title;
+
+        modalMessage.textContent =
+          message;
+
+        modalConfirmBtn.textContent =
+          confirmText;
+
+        modalCancelBtn.textContent =
+          cancelText;
+
         modalCancelBtn.classList.toggle(
           "hidden",
           !showCancel
         );
+
         modalConfirmBtn.classList.toggle(
           "btn-danger",
           danger
         );
+
         modalConfirmBtn.classList.toggle(
           "btn-primary",
           !danger
         );
+
         modalOverlay.classList.add(
           "visible"
         );
+
         modalOverlay.setAttribute(
           "aria-hidden",
           "false"
         );
+
         setTimeout(() => {
           modalConfirmBtn.focus();
         }, 50);
+
       });
+
     }
 
 
     function closeModal(result = false) {
+
       modalOverlay.classList.remove(
         "visible"
       );
+
       modalOverlay.setAttribute(
         "aria-hidden",
         "true"
       );
-      const resolver = modalResolver;
+
+      const resolver =
+        modalResolver;
+
       modalResolver = null;
 
       if (resolver) {
@@ -1443,85 +1561,121 @@
       }
 
       if (lastFocusedElement) {
+
         try {
           lastFocusedElement.focus();
-        } catch (error) { 
-          //
-        }
+        } catch (error) { }
+
       }
 
       lastFocusedElement = null;
+
     }
+
 
     modalConfirmBtn.addEventListener(
       "click",
       () => closeModal(true)
     );
 
+
     modalCancelBtn.addEventListener(
       "click",
       () => closeModal(false)
     );
 
+
     modalOverlay.addEventListener(
       "click",
       event => {
+
         if (
           event.target === modalOverlay
         ) {
           closeModal(false);
         }
+
       }
     );
+
 
     async function showMessage(
       message,
       title = "Atenção"
     ) {
+
       await openModal({
         title,
         message,
         confirmText: "OK",
         showCancel: false
       });
+
     }
+
 
     async function showConfirm(
       message,
       options = {}
     ) {
+
       return await openModal({
         title:
           options.title ||
           "Confirmação",
+
         message,
+
         confirmText:
           options.confirmText ||
           "Confirmar",
+
         cancelText:
           options.cancelText ||
           "Cancelar",
+
         danger:
           options.danger ||
           false,
+
         showCancel: true
       });
+
     }
+
 
     /* =========================================================
        MODAL DE NOME
     ========================================================= */
 
-    const nameModalOverlay = document.getElementById("nameModalOverlay");
-    const nameForm = document.getElementById("nameForm");
-    const workoutNameInput = document.getElementById("workoutNameInput");
-    const closeNameModalBtn = document.getElementById("closeNameModalBtn");
+    const nameModalOverlay =
+      document.getElementById(
+        "nameModalOverlay"
+      );
+
+    const nameForm =
+      document.getElementById("nameForm");
+
+    const workoutNameInput =
+      document.getElementById(
+        "workoutNameInput"
+      );
+
+    const closeNameModalBtn =
+      document.getElementById(
+        "closeNameModalBtn"
+      );
+
 
     function openNameModal() {
-      workoutNameInput.value = workout.name || "";
+
+      workoutNameInput.value =
+        workout.name || "";
+
       nameModalOverlay.classList.add(
         "visible"
       );
+
       nameModalOverlay.setAttribute(
         "aria-hidden",
         "false"
@@ -1531,40 +1685,59 @@
         workoutNameInput.focus();
         workoutNameInput.select();
       }, 50);
+
     }
 
+
     function closeNameModal() {
-      nameModalOverlay.classList.remove("visible");
-      nameModalOverlay.setAttribute("aria-hidden", "true");
+
+      nameModalOverlay.classList.remove(
+        "visible"
+      );
+
+      nameModalOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
     }
+
 
     workoutNameBtn.addEventListener(
       "click",
       openNameModal
     );
 
+
     closeNameModalBtn.addEventListener(
       "click",
       closeNameModal
     );
 
+
     nameModalOverlay.addEventListener(
       "click",
       event => {
+
         if (
           event.target ===
           nameModalOverlay
         ) {
           closeNameModal();
         }
+
       }
     );
+
 
     nameForm.addEventListener(
       "submit",
       event => {
+
         event.preventDefault();
-        const name = workoutNameInput.value.trim();
+
+        const name =
+          workoutNameInput.value.trim();
 
         if (!name) {
           showMessage(
@@ -1578,23 +1751,58 @@
         saveWorkout();
         updateWorkoutName();
         closeNameModal();
+
       }
     );
+
 
     /* =========================================================
        MODAL PERSONALIZADO
     ========================================================= */
 
-    const customModalOverlay = document.getElementById("customModalOverlay");
-    const customExerciseForm = document.getElementById("customExerciseForm");
-    const customName = document.getElementById("customName");
-    const customSets = document.getElementById("customSets");
-    const customReps = document.getElementById("customReps");
-    const customWeightsInputs = document.getElementById("customWeightsInputs");
-    const customRest = document.getElementById("customRest");
-    const closeCustomModalBtn = document.getElementById("closeCustomModalBtn");
+    const customModalOverlay =
+      document.getElementById(
+        "customModalOverlay"
+      );
+
+    const customExerciseForm =
+      document.getElementById(
+        "customExerciseForm"
+      );
+
+    const customName =
+      document.getElementById(
+        "customName"
+      );
+
+    const customSets =
+      document.getElementById(
+        "customSets"
+      );
+
+    const customReps =
+      document.getElementById(
+        "customReps"
+      );
+
+    const customWeightsInputs =
+      document.getElementById(
+        "customWeightsInputs"
+      );
+
+    const customRest =
+      document.getElementById(
+        "customRest"
+      );
+
+    const closeCustomModalBtn =
+      document.getElementById(
+        "closeCustomModalBtn"
+      );
+
 
     function openCustomModal() {
+
       customExerciseForm.reset();
 
       customSets.value = 3;
@@ -1619,37 +1827,50 @@
       setTimeout(() => {
         customName.focus();
       }, 50);
+
     }
 
+
     function closeCustomModal() {
-      customModalOverlay.classList.remove("visible");
+
+      customModalOverlay.classList.remove(
+        "visible"
+      );
+
       customModalOverlay.setAttribute(
         "aria-hidden",
         "true"
       );
+
     }
+
 
     customExerciseBtn.addEventListener(
       "click",
       openCustomModal
     );
 
+
     closeCustomModalBtn.addEventListener(
       "click",
       closeCustomModal
     );
 
+
     customModalOverlay.addEventListener(
       "click",
       event => {
+
         if (
           event.target ===
           customModalOverlay
         ) {
           closeCustomModal();
         }
+
       }
     );
+
 
     /* =========================================================
        ESC
@@ -1658,24 +1879,40 @@
     document.addEventListener(
       "keydown",
       event => {
-        if (event.key !== "Escape") {
+
+        if (
+          event.key !== "Escape"
+        ) {
           return;
         }
 
-        if (modalOverlay.classList.contains("visible")) {
+        if (
+          modalOverlay.classList.contains(
+            "visible"
+          )
+        ) {
           closeModal(false);
           return;
         }
 
-        if (nameModalOverlay.classList.contains("visible")) {
+        if (
+          nameModalOverlay.classList.contains(
+            "visible"
+          )
+        ) {
           closeNameModal();
           return;
         }
 
-        if (customModalOverlay.classList.contains("visible")) {
+        if (
+          customModalOverlay.classList.contains(
+            "visible"
+          )
+        ) {
           closeCustomModal();
           return;
         }
+
       }
     );
 
@@ -1685,27 +1922,37 @@
     ========================================================= */
 
     function saveWorkout() {
+
       localStorage.setItem(
         WORKOUT_STORAGE,
         JSON.stringify(workout)
       );
+
     }
 
+
     function loadWorkout() {
+
       try {
-        const saved = localStorage.getItem(WORKOUT_STORAGE);
+
+        const saved =
+          localStorage.getItem(
+            WORKOUT_STORAGE
+          );
 
         if (!saved) {
           return;
         }
 
-        const parsed = JSON.parse(saved);
+        const parsed =
+          JSON.parse(saved);
 
         if (
           parsed &&
           typeof parsed === "object" &&
           Array.isArray(parsed.exercises)
         ) {
+
           workout = {
             name:
               parsed.name ||
@@ -1726,29 +1973,44 @@
                 })
               )
           };
+
         }
+
       } catch (error) {
+
         console.error(
           "Erro ao carregar treino:",
           error
         );
+
       }
+
     }
 
+
     function saveSession() {
+
       localStorage.setItem(
         SESSION_STORAGE,
         JSON.stringify({
           workoutName:
             workout.name,
+
           ...workoutState
         })
       );
+
     }
 
+
     function clearSession() {
-      localStorage.removeItem(SESSION_STORAGE);
+
+      localStorage.removeItem(
+        SESSION_STORAGE
+      );
+
     }
+
 
     /* =========================================================
        INICIALIZAÇÃO
@@ -1767,11 +2029,16 @@
       );
 
       populateExerciseSelect();
+
       renderWorkout();
+
       checkForActiveSession();
+
     }
 
+
     function populateExerciseSelect() {
+
       exerciseSelect.innerHTML = `
         <option value="">
           Selecione um exercício
@@ -1780,10 +2047,12 @@
 
       PREDEFINED_EXERCISES.forEach(
         name => {
+
           addExerciseOption(
             name,
             false
           );
+
         }
       );
 
@@ -1794,18 +2063,23 @@
         )
         .forEach(
           exercise => {
+
             addExerciseOption(
               exercise.name,
               true
             );
+
           }
         );
+
     }
+
 
     function addExerciseOption(
       name,
       custom = false
     ) {
+
       const exists =
         [...exerciseSelect.options]
           .some(
@@ -1832,7 +2106,9 @@
       exerciseSelect.appendChild(
         option
       );
+
     }
+
 
     /* =========================================================
        CARGA POR SÉRIE
@@ -1943,19 +2219,30 @@
     exerciseForm.addEventListener(
       "submit",
       event => {
+
         event.preventDefault();
 
-        const name = exerciseSelect.value;
-        const sets = Number(setsInput.value);
-        const reps = Number(repsInput.value);
-        const rest = Number(restSelect.value);
+        const name =
+          exerciseSelect.value;
+
+        const sets =
+          Number(setsInput.value);
+
+        const reps =
+          Number(repsInput.value);
+
+        const rest =
+          Number(restSelect.value);
+
         const weights =
           getWeightValues(
             weightsInputs,
             sets
           );
 
+
         if (!name) {
+
           showMessage(
             "Selecione um exercício antes de continuar."
           );
@@ -1963,7 +2250,12 @@
           return;
         }
 
-        if (!Number.isInteger(sets) || sets < 1) {
+
+        if (
+          !Number.isInteger(sets) ||
+          sets < 1
+        ) {
+
           showMessage(
             "Informe uma quantidade válida de séries."
           );
@@ -1971,7 +2263,12 @@
           return;
         }
 
-        if (!Number.isInteger(reps) || reps < 1) {
+
+        if (
+          !Number.isInteger(reps) ||
+          reps < 1
+        ) {
+
           showMessage(
             "Informe uma quantidade válida de repetições."
           );
@@ -1979,7 +2276,12 @@
           return;
         }
 
-        if (![15, 30, 45, 60].includes(rest)) {
+
+        if (
+          ![15, 30, 45, 60]
+            .includes(rest)
+        ) {
+
           showMessage(
             "Selecione um intervalo válido."
           );
@@ -2003,54 +2305,93 @@
           return;
         }
 
-        const custom = !PREDEFINED_EXERCISES.includes(name);
+
+        const custom =
+          !PREDEFINED_EXERCISES.includes(
+            name
+          );
+
+
         const exercise = {
+
           id:
             editingIndex !== null
               ? workout.exercises[
                 editingIndex
               ].id
               : crypto.randomUUID(),
+
           name,
+
           sets,
+
           reps,
+
           rest,
+
           weights,
+
           custom
+
         };
 
-        if (editingIndex !== null) {
+
+        if (
+          editingIndex !== null
+        ) {
+
           workout.exercises[
             editingIndex
           ] = exercise;
+
         } else {
+
           workout.exercises.push(
             exercise
           );
+
         }
 
+
         saveWorkout();
+
         populateExerciseSelect();
+
         renderWorkout();
+
         resetExerciseForm();
+
       }
     );
+
 
     customExerciseForm.addEventListener(
       "submit",
       event => {
+
         event.preventDefault();
-        const name = customName.value.trim();
-        const sets = Number(customSets.value);
-        const reps = Number(customReps.value);
-        const rest = Number(customRest.value);
+
+        const name =
+          customName.value.trim();
+
+        const sets =
+          Number(customSets.value);
+
+        const reps =
+          Number(customReps.value);
+
+        const rest =
+          Number(customRest.value);
+
         const weights =
           getWeightValues(
             customWeightsInputs,
             sets
           );
 
+
         if (!name) {
+
           showMessage(
             "Informe o nome do exercício."
           );
@@ -2058,7 +2399,12 @@
           return;
         }
 
-        if (!Number.isInteger(sets) || sets < 1) {
+
+        if (
+          !Number.isInteger(sets) ||
+          sets < 1
+        ) {
+
           showMessage(
             "Informe uma quantidade válida de séries."
           );
@@ -2066,7 +2412,12 @@
           return;
         }
 
-        if (!Number.isInteger(reps) || reps < 1) {
+
+        if (
+          !Number.isInteger(reps) ||
+          reps < 1
+        ) {
+
           showMessage(
             "Informe uma quantidade válida de repetições."
           );
@@ -2090,15 +2441,23 @@
           return;
         }
 
+
         addExerciseOption(
           name,
           true
         );
 
-        exerciseSelect.value = name;
-        setsInput.value = sets;
-        repsInput.value = reps;
-        restSelect.value = rest;
+        exerciseSelect.value =
+          name;
+
+        setsInput.value =
+          sets;
+
+        repsInput.value =
+          reps;
+
+        restSelect.value =
+          rest;
 
         renderWeightInputs(
           weightsInputs,
@@ -2118,8 +2477,11 @@
       }
     );
 
+
     function resetExerciseForm() {
+
       editingIndex = null;
+
       exerciseForm.reset();
 
       setsInput.value = 3;
@@ -2132,47 +2494,79 @@
         [0, 0, 0]
       );
 
-      submitExerciseBtn.textContent = "Adicionar exercício";
+      submitExerciseBtn.textContent =
+        "Adicionar exercício";
 
-      cancelEditBtn.classList.add("hidden");
+      cancelEditBtn.classList.add(
+        "hidden"
+      );
 
-      document.getElementById("formTitle").textContent = "Adicionar exercício";
+      document.getElementById(
+        "formTitle"
+      ).textContent =
+        "Adicionar exercício";
+
     }
 
-    cancelEditBtn.addEventListener("click",resetExerciseForm);
+
+    cancelEditBtn.addEventListener(
+      "click",
+      resetExerciseForm
+    );
+
 
     /* =========================================================
        LISTA
     ========================================================= */
 
     function renderWorkout() {
+
       workoutList.innerHTML = "";
+
       emptyWorkout.classList.toggle(
         "hidden",
         workout.exercises.length > 0
       );
 
-      startWorkoutBtn.disabled = workout.exercises.length === 0;
+      startWorkoutBtn.disabled =
+        workout.exercises.length === 0;
+
 
       workout.exercises.forEach(
         (exercise, index) => {
+
           const item =
             document.createElement(
               "div"
             );
 
-          item.className = "exercise-item";
+          item.className =
+            "exercise-item";
+
           item.draggable = true;
-          item.dataset.index = index;
+
+          item.dataset.index =
+            index;
+
+
           item.innerHTML = `
+
             <div class="exercise-number">
               ${index + 1}
             </div>
+
             <div class="exercise-info">
+
               <div class="exercise-name">
-                ${escapeHtml(exercise.name)}
-				        ${exercise.custom ? '<span class="custom-badge">PERSONALIZADO</span>' : ''}
+                ${escapeHtml(
+            exercise.name
+          )}
+				${exercise.custom
+              ? '<span class="custom-badge">PERSONALIZADO</span>'
+              : ''
+            }
               </div>
+
               <div class="exercise-details">
                 ${exercise.sets}
                 série${exercise.sets > 1 ? "s" : ""}
@@ -2184,8 +2578,11 @@
                 ·
                 ${normalizeWeights(exercise).map(weight => `${weight}kg`).join(" / ")}
               </div>
+
             </div>
+
             <div class="exercise-actions">
+
               <button
                 class="icon-btn"
                 title="Subir"
@@ -2195,17 +2592,21 @@
               >
                 ↑
               </button>
+
               <button
                 class="icon-btn"
                 title="Descer"
                 data-action="down"
                 data-index="${index}"
                 ${index ===
-              workout.exercises.length - 1 ? "disabled" : ""
+              workout.exercises.length - 1
+              ? "disabled"
+              : ""
             }
               >
                 ↓
               </button>
+
               <button
                 class="icon-btn"
                 title="Editar"
@@ -2214,6 +2615,7 @@
               >
                 ✎
               </button>
+
               <button
                 class="icon-btn"
                 title="Excluir"
@@ -2222,21 +2624,31 @@
               >
                 ×
               </button>
+
             </div>
+
           `;
+
+
           workoutList.appendChild(
             item
           );
+
         }
       );
 
+
       updateWorkoutName();
+
       setupDragAndDrop();
+
     }
+
 
     workoutList.addEventListener(
       "click",
       event => {
+
         const button =
           event.target.closest(
             "button"
@@ -2246,8 +2658,14 @@
           return;
         }
 
-        const index = Number(button.dataset.index);
-        const action = button.dataset.action;
+        const index =
+          Number(
+            button.dataset.index
+          );
+
+        const action =
+          button.dataset.action;
+
 
         if (action === "up") {
           moveExercise(
@@ -2256,6 +2674,7 @@
           );
         }
 
+
         if (action === "down") {
           moveExercise(
             index,
@@ -2263,73 +2682,52 @@
           );
         }
 
+
         if (action === "edit") {
           startEdit(index);
         }
 
+
         if (action === "delete") {
           deleteExercise(index);
         }
+
       }
     );
+
 
     function moveExercise(
       from,
       to
     ) {
 
-      if (to < 0 || to >= workout.exercises.length) {
+      if (
+        to < 0 ||
+        to >= workout.exercises.length
+      ) {
         return;
       }
 
-      const temp = workout.exercises[from];
-      workout.exercises[from] = workout.exercises[to];
-      workout.exercises[to] = temp;
+      const temp =
+        workout.exercises[from];
+
+      workout.exercises[from] =
+        workout.exercises[to];
+
+      workout.exercises[to] =
+        temp;
 
       saveWorkout();
+
       renderWorkout();
+
     }
+
 
     async function deleteExercise(
       index
     ) {
-      const exercise = workout.exercises[index];
 
-      if (!exercise) {
-        return;
-      }
-
-      const confirmed =
-        await showConfirm(
-          `Deseja excluir "${exercise.name}" do treino?`,
-          {
-            title:
-              "Excluir exercício",
-            confirmText:
-              "Excluir",
-            danger:
-              true
-          }
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
-      workout.exercises.splice(
-        index,
-        1
-      );
-
-      saveWorkout();
-      renderWorkout();
-
-      if (editingIndex === index) {
-        resetExerciseForm();
-      }
-    }
-
-    function startEdit(index) {
       const exercise =
         workout.exercises[index];
 
@@ -2337,16 +2735,75 @@
         return;
       }
 
+
+      const confirmed =
+        await showConfirm(
+          `Deseja excluir "${exercise.name}" do treino?`,
+          {
+            title:
+              "Excluir exercício",
+
+            confirmText:
+              "Excluir",
+
+            danger:
+              true
+          }
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      workout.exercises.splice(
+        index,
+        1
+      );
+
+      saveWorkout();
+
+      renderWorkout();
+
+
+      if (
+        editingIndex === index
+      ) {
+        resetExerciseForm();
+      }
+
+    }
+
+
+    function startEdit(index) {
+
+      const exercise =
+        workout.exercises[index];
+
+      if (!exercise) {
+        return;
+      }
+
+
       if (exercise.custom) {
+
         addExerciseOption(
           exercise.name,
           true
         );
+
       }
 
-      exerciseSelect.value = exercise.name;
-      setsInput.value = exercise.sets;
-      repsInput.value = exercise.reps;
+
+      exerciseSelect.value =
+        exercise.name;
+
+      setsInput.value =
+        exercise.sets;
+
+      repsInput.value =
+        exercise.reps;
 
       renderWeightInputs(
         weightsInputs,
@@ -2354,78 +2811,123 @@
         normalizeWeights(exercise)
       );
 
-      restSelect.value = exercise.rest;
-      
-      editingIndex = index;
-      
-      submitExerciseBtn.textContent = "Salvar";
-      cancelEditBtn.classList.remove("hidden");
+      restSelect.value =
+        exercise.rest;
+
+
+      editingIndex =
+        index;
+
+
+      submitExerciseBtn.textContent =
+        "Salvar";
+
+
+      cancelEditBtn.classList.remove(
+        "hidden"
+      );
+
 
       document.getElementById(
         "formTitle"
-      ).textContent = "Editar exercício";
+      ).textContent =
+        "Editar exercício";
+
 
       window.scrollTo({
         top: 0,
         behavior: "smooth"
       });
+
     }
+
 
     /* =========================================================
        DRAG AND DROP
     ========================================================= */
 
     let draggedIndex = null;
+
+
     function setupDragAndDrop() {
-      const items = document.querySelectorAll(".exercise-item");
+
+      const items =
+        document.querySelectorAll(
+          ".exercise-item"
+        );
+
 
       items.forEach(
         item => {
+
           item.addEventListener(
             "dragstart",
             () => {
+
               draggedIndex =
                 Number(
                   item.dataset.index
                 );
+
               item.classList.add(
                 "dragging"
               );
+
             }
           );
+
 
           item.addEventListener(
             "dragend",
             () => {
+
               item.classList.remove(
                 "dragging"
               );
+
               draggedIndex =
                 null;
+
             }
           );
+
 
           item.addEventListener(
             "dragover",
             event => {
+
               event.preventDefault();
+
             }
           );
+
 
           item.addEventListener(
             "drop",
             event => {
+
               event.preventDefault();
+
               const targetIndex =
                 Number(
                   item.dataset.index
                 );
 
-              if (draggedIndex === null || draggedIndex === targetIndex) {
+
+              if (
+                draggedIndex === null ||
+                draggedIndex === targetIndex
+              ) {
                 return;
               }
 
-              const moved = workout.exercises.splice(draggedIndex, 1)[0];
+
+              const moved =
+                workout.exercises.splice(
+                  draggedIndex,
+                  1
+                )[0];
+
 
               workout.exercises.splice(
                 targetIndex,
@@ -2433,24 +2935,44 @@
                 moved
               );
 
+
               saveWorkout();
+
               renderWorkout();
+
             }
           );
+
         }
       );
+
     }
+
 
     /* =========================================================
        NOME
     ========================================================= */
 
     function updateWorkoutName() {
-      const name = workout.name || "Meu treino";
 
-      document.getElementById("workoutNameDisplay").textContent = name;
-      document.getElementById("restWorkoutName").textContent = name;
+      const name =
+        workout.name ||
+        "Meu treino";
+
+
+      document.getElementById(
+        "workoutNameDisplay"
+      ).textContent =
+        name;
+
+
+      document.getElementById(
+        "restWorkoutName"
+      ).textContent =
+        name;
+
     }
+
 
     /* =========================================================
        LIMPAR TREINO
@@ -2459,7 +2981,11 @@
     clearWorkoutBtn.addEventListener(
       "click",
       async () => {
-        if (workout.exercises.length === 0) {
+
+        if (
+          workout.exercises.length === 0
+        ) {
+
           await showMessage(
             "Não há exercícios para limpar."
           );
@@ -2467,29 +2993,39 @@
           return;
         }
 
+
         const confirmed =
           await showConfirm(
             "Todos os exercícios deste treino serão removidos. Essa ação não pode ser desfeita.",
             {
               title:
                 "Limpar treino",
+
               confirmText:
                 "Limpar",
+
               danger:
                 true
             }
           );
 
+
         if (!confirmed) {
           return;
         }
 
+
         workout.exercises = [];
+
         saveWorkout();
+
         renderWorkout();
+
         resetExerciseForm();
+
       }
     );
+
 
     /* =========================================================
        INICIAR TREINO
@@ -2498,7 +3034,11 @@
     startWorkoutBtn.addEventListener(
       "click",
       async () => {
-        if (workout.exercises.length === 0) {
+
+        if (
+          workout.exercises.length === 0
+        ) {
+
           await showMessage(
             "Adicione pelo menos um exercício antes de iniciar o treino."
           );
@@ -2506,31 +3046,46 @@
           return;
         }
 
+
         workoutState = {
+
           exerciseIndex: 0,
+
           currentSet: 1,
+
           status: "working",
+
           restTimer: 0,
+
           executionSeconds: 0,
+
           totalSeconds: 0,
+
           restNextText: "",
+
           restType: null
+
         };
 
-        playStartSound();
+
         saveSession();
+
         showWorkoutScreen();
+
         renderWorkoutExecution();
+
         startExecutionTimer();
-        playStartSound();
+
       }
     );
+
 
     /* =========================================================
        TELAS
     ========================================================= */
 
     function showScreen(screen) {
+
       [
         builderScreen,
         workoutScreen,
@@ -2538,60 +3093,93 @@
         finishScreen
       ].forEach(
         element => {
+
           element.classList.add(
             "hidden"
           );
+
         }
       );
+
 
       screen.classList.remove(
         "hidden"
       );
 
+
       window.scrollTo({
         top: 0,
         behavior: "auto"
       });
+
     }
 
+
     function showWorkoutScreen() {
+
       showScreen(
         workoutScreen
       );
+
     }
 
+
     function showRestScreen() {
+
       showScreen(
         restScreen
       );
+
     }
+
 
     /* =========================================================
        PROGRESSO
     ========================================================= */
 
     function getTotalReps() {
+
       return workout.exercises.reduce(
         (total, exercise) => {
+
           return total +
             (
               Number(exercise.sets) *
               Number(exercise.reps)
             );
+
         },
         0
       );
+
     }
 
+
     function getCompletedReps() {
+
       let completed = 0;
+
+
       /*
        * Exercícios totalmente concluídos.
        */
-      for (let i = 0; i < workoutState.exerciseIndex; i++) {
-        const exercise = workout.exercises[i];
-        completed += exercise.sets * exercise.reps;
+
+      for (
+        let i = 0;
+        i < workoutState.exerciseIndex;
+        i++
+      ) {
+
+        const exercise =
+          workout.exercises[i];
+
+        completed +=
+          exercise.sets *
+          exercise.reps;
+
       }
+
+
       /*
        * Séries concluídas do exercício atual.
        *
@@ -2601,81 +3189,183 @@
        * série 2 -> 1 série concluída
        * série 3 -> 2 séries concluídas
        */
-      const currentExercise = workout.exercises[workoutState.exerciseIndex];
+
+      const currentExercise =
+        workout.exercises[
+        workoutState.exerciseIndex
+        ];
+
 
       if (currentExercise) {
-        const completedSets = Math.max(0, workoutState.currentSet - 1);
+
+        const completedSets =
+          Math.max(
+            0,
+            workoutState.currentSet - 1
+          );
+
+
         completed +=
           Math.min(
             completedSets,
             currentExercise.sets
           ) *
           currentExercise.reps;
+
       }
 
+
       return completed;
+
     }
 
+
     function updateProgress() {
-      const totalReps = getTotalReps();
-      const completedReps = getCompletedReps();
+
+      const totalReps =
+        getTotalReps();
+
+      const completedReps =
+        getCompletedReps();
+
 
       if (totalReps <= 0) {
         return;
       }
 
+
       const percentage =
         Math.min(
           100,
-          Math.round((completedReps / totalReps) * 100)
+          Math.round(
+            (
+              completedReps /
+              totalReps
+            ) *
+            100
+          )
         );
 
-      document.getElementById("progressBar").style.width = `${percentage}%`;
-      document.getElementById("progressPercentage").textContent = `${percentage}% concluído`;
+
+      document.getElementById(
+        "progressBar"
+      ).style.width =
+        `${percentage}%`;
+
+
+      document.getElementById(
+        "progressPercentage"
+      ).textContent =
+        `${percentage}% concluído`;
+
     }
+
 
     /* =========================================================
        RENDER EXECUÇÃO
     ========================================================= */
 
     function renderWorkoutExecution() {
-      const exercise = workout.exercises[workoutState.exerciseIndex];
+
+      const exercise =
+        workout.exercises[
+        workoutState.exerciseIndex
+        ];
+
 
       if (!exercise) {
+
         finishWorkout();
 
         return;
       }
 
-      const totalExercises = workout.exercises.length;
-      const exerciseNumber = workoutState.exerciseIndex + 1;
 
-      document.getElementById("currentExerciseName").textContent = exercise.name;
-      document.getElementById("currentSetDisplay").textContent = `Série ${workoutState.currentSet}`;
-      document.getElementById("totalSetsDisplay").textContent = `de ${exercise.sets}`;
-      document.getElementById("currentRepsDisplay").textContent = exercise.reps;
+      const totalExercises =
+        workout.exercises.length;
 
-      const currentWeight = normalizeWeights(exercise)[workoutState.currentSet - 1] ?? 0;
 
-      document.getElementById("currentWeightDisplay").textContent = currentWeight > 0 ? `+${currentWeight} kg` : "Peso corporal";
-      document.getElementById("progressExerciseLabel").textContent = `Exercício ${exerciseNumber} de ${totalExercises}`;
+      const exerciseNumber =
+        workoutState.exerciseIndex + 1;
+
+
+      document.getElementById(
+        "currentExerciseName"
+      ).textContent =
+        exercise.name;
+
+
+      document.getElementById(
+        "currentSetDisplay"
+      ).textContent =
+        `Série ${workoutState.currentSet}`;
+
+
+      document.getElementById(
+        "totalSetsDisplay"
+      ).textContent =
+        `de ${exercise.sets}`;
+
+
+      document.getElementById(
+        "currentRepsDisplay"
+      ).textContent =
+        exercise.reps;
+
+      const currentWeight =
+        normalizeWeights(exercise)[
+        workoutState.currentSet - 1
+        ] ?? 0;
+
+      document.getElementById(
+        "currentWeightDisplay"
+      ).textContent =
+        currentWeight > 0
+          ? `+${currentWeight} kg`
+          : "Peso corporal";
+
+
+      document.getElementById(
+        "progressExerciseLabel"
+      ).textContent =
+        `Exercício ${exerciseNumber} de ${totalExercises}`;
+
 
       updateProgress();
+
       renderNextExercise();
+
       updateExecutionTimer();
       updateTotalWorkoutTimer();
+
     }
 
+
     function renderNextExercise() {
-      const box = document.getElementById("nextExerciseBox");
-      const exercise = workout.exercises[workoutState.exerciseIndex];
+
+      const box =
+        document.getElementById(
+          "nextExerciseBox"
+        );
+
+
+      const exercise =
+        workout.exercises[
+        workoutState.exerciseIndex
+        ];
+
 
       if (!exercise) {
         box.innerHTML = "";
         return;
       }
 
-      if (workoutState.currentSet < exercise.sets) {
+
+      if (
+        workoutState.currentSet <
+        exercise.sets
+      ) {
+
         box.innerHTML = `
           Próximo:
           <strong>
@@ -2686,30 +3376,48 @@
         return;
       }
 
-      const next = workout.exercises[workoutState.exerciseIndex + 1];
+
+      const next =
+        workout.exercises[
+        workoutState.exerciseIndex + 1
+        ];
+
 
       if (next) {
+
         box.innerHTML = `
           Próximo exercício:
           <strong>
             ${escapeHtml(next.name)}
           </strong>
         `;
+
       } else {
-        box.innerHTML = `Última série do treino`;
+
+        box.innerHTML = `
+          Última série do treino
+        `;
+
       }
+
     }
+
 
     /* =========================================================
        CRONÔMETRO DE EXECUÇÃO
     ========================================================= */
 
     function startExecutionTimer() {
-      clearInterval(executionInterval);
+
+      clearInterval(
+        executionInterval
+      );
+
 
       executionInterval =
         setInterval(
           () => {
+
             if (
               workoutState.status !==
               "working"
@@ -2717,47 +3425,98 @@
               return;
             }
 
+
             workoutState.executionSeconds++;
             workoutState.totalSeconds++;
+
 
             updateExecutionTimer();
             updateTotalWorkoutTimer();
 
             saveSession();
+
           },
           1000
         );
+
     }
+
 
     function stopExecutionTimer() {
-      clearInterval(executionInterval);
-      executionInterval = null;
+
+      clearInterval(
+        executionInterval
+      );
+
+      executionInterval =
+        null;
+
     }
+
 
     function updateTotalWorkoutTimer() {
-      const total = Number(workoutState.totalSeconds || 0);
-      const minutes = Math.floor(total / 60).toString().padStart(2, "0");
-      const seconds = (total % 60).toString().padStart(2, "0");
-      const element = document.getElementById("workoutTotalTime");
+
+      const total =
+        Number(workoutState.totalSeconds || 0);
+
+      const minutes =
+        Math.floor(total / 60)
+          .toString()
+          .padStart(2, "0");
+
+      const seconds =
+        (total % 60)
+          .toString()
+          .padStart(2, "0");
+
+      const element =
+        document.getElementById("workoutTotalTime");
 
       if (element) {
-        element.textContent = `${minutes}:${seconds}`;
+        element.textContent =
+          `${minutes}:${seconds}`;
       }
 
-      const restElement = document.getElementById("restTotalTime");
+      const restElement =
+        document.getElementById("restTotalTime");
 
       if (restElement) {
-        restElement.textContent = `${minutes}:${seconds}`;
+        restElement.textContent =
+          `${minutes}:${seconds}`;
       }
+
     }
+
 
     function updateExecutionTimer() {
-      const total = workoutState.executionSeconds;
-      const minutes = Math.floor(total / 60).toString().padStart(2, "0");
-      const seconds = (total % 60).toString().padStart(2, "0");
 
-      document.getElementById("executionTimer").textContent = `${minutes}:${seconds}`;
+      const total =
+        workoutState.executionSeconds;
+
+
+      const minutes =
+        Math.floor(
+          total / 60
+        )
+          .toString()
+          .padStart(2, "0");
+
+
+      const seconds =
+        (
+          total % 60
+        )
+          .toString()
+          .padStart(2, "0");
+
+
+      document.getElementById(
+        "executionTimer"
+      ).textContent =
+        `${minutes}:${seconds}`;
+
     }
+
 
     /* =========================================================
        CONCLUSÃO DE SÉRIE
@@ -2776,33 +3535,47 @@
     ).addEventListener(
       "click",
       async () => {
+
         const confirmed =
           await showConfirm(
             "A série será considerada concluída e você passará para a próxima etapa.",
             {
               title:
                 "Pular série",
+
               confirmText:
                 "Pular"
             }
           );
 
+
         if (confirmed) {
           completeSet();
         }
+
       }
     );
 
+
     function completeSet() {
-      const exercise = workout.exercises[workoutState.exerciseIndex];
+
+      const exercise =
+        workout.exercises[
+        workoutState.exerciseIndex
+        ];
+
 
       if (!exercise) {
+
         finishWorkout();
 
         return;
       }
 
+
       stopExecutionTimer();
+
+
       /*
        * Caso ainda existam séries no exercício atual:
        *
@@ -2810,8 +3583,14 @@
        * 2. Inicia descanso.
        * 3. Depois do descanso continua no mesmo exercício.
        */
-      if (workoutState.currentSet < exercise.sets) {
+
+      if (
+        workoutState.currentSet <
+        exercise.sets
+      ) {
+
         workoutState.currentSet++;
+
         workoutState.executionSeconds = 0;
 
         startRest(
@@ -2822,6 +3601,8 @@
 
         return;
       }
+
+
       /*
        * Exercício terminou.
        *
@@ -2829,14 +3610,27 @@
        * 1. Avança imediatamente o exerciseIndex.
        * 2. Volta currentSet para 1.
        * 3. Inicia o descanso.
-       * 4. Ao terminar o descanso, já estaremos apontando para o novo exercício.
+       * 4. Ao terminar o descanso, já estaremos
+       *    apontando para o novo exercício.
        */
-      if (workoutState.exerciseIndex < workout.exercises.length - 1) {
+
+      if (
+        workoutState.exerciseIndex <
+        workout.exercises.length - 1
+      ) {
+
         workoutState.exerciseIndex++;
+
         workoutState.currentSet = 1;
+
         workoutState.executionSeconds = 0;
 
-        const nextExercise = workout.exercises[workoutState.exerciseIndex];
+
+        const nextExercise =
+          workout.exercises[
+          workoutState.exerciseIndex
+          ];
+
 
         startRest(
           exercise.rest,
@@ -2846,11 +3640,16 @@
 
         return;
       }
+
+
       /*
        * Última série do último exercício.
        */
+
       finishWorkout();
+
     }
+
 
     /* =========================================================
        DESCANSO
@@ -2862,18 +3661,39 @@
       restType
     ) {
 
-      clearInterval(restInterval);
+      clearInterval(
+        restInterval
+      );
 
-      workoutState.status = "resting";
-      workoutState.restTimer = Number(seconds);
-      workoutState.restNextText = nextText;
-      workoutState.restType = restType;
+
+      workoutState.status =
+        "resting";
+
+
+      workoutState.restTimer =
+        Number(seconds);
+
+
+      workoutState.restNextText =
+        nextText;
+
+
+      workoutState.restType =
+        restType;
+
 
       saveSession();
+
+
       showRestScreen();
+
       renderRestScreen();
 
-      restInterval = setInterval(() => {
+
+      restInterval =
+        setInterval(
+          () => {
+
             workoutState.restTimer--;
             workoutState.totalSeconds++;
 
@@ -2882,51 +3702,107 @@
 
             saveSession();
 
-            if (workoutState.restTimer <= 0) {
+
+            if (
+              workoutState.restTimer <= 0
+            ) {
+
               finishRest();
+
             }
+
           },
           1000
         );
+
     }
 
+
     function renderRestScreen() {
+
       document.getElementById(
         "restTimer"
-      ).textContent = Math.max(0, workoutState.restTimer);
+      ).textContent =
+        Math.max(
+          0,
+          workoutState.restTimer
+        );
+
+
       /*
        * Não usamos innerHTML para o texto
        * principal, evitando problemas com nomes
        * personalizados.
        */
-      const nextElement = document.getElementById("restNextText");
 
-      if (workoutState.restType === "next_exercise") {
-        const exercise = workout.exercises[workoutState.exerciseIndex];
+      const nextElement =
+        document.getElementById(
+          "restNextText"
+        );
+
+
+      if (
+        workoutState.restType ===
+        "next_exercise"
+      ) {
+
+        const exercise =
+          workout.exercises[
+          workoutState.exerciseIndex
+          ];
+
 
         if (exercise) {
+
           nextElement.innerHTML =
             `Próximo exercício:
              <strong>
                ${escapeHtml(exercise.name)}
              </strong>`;
+
         } else {
+
           nextElement.textContent =
             "Próximo exercício";
+
         }
+
       } else {
+
         nextElement.innerHTML =
           `Próxima série`;
+
       }
+
     }
 
+
     function finishRest() {
-      clearInterval(restInterval);
+
+      clearInterval(
+        restInterval
+      );
+
       restInterval = null;
-      playFinishSound();
-      workoutState.status = "working";
-      workoutState.restTimer = 0;
-      workoutState.executionSeconds = 0;
+
+
+      playRestFinishedSound();
+
+      vibrate();
+
+
+      workoutState.status =
+        "working";
+
+
+      workoutState.restTimer =
+        0;
+
+
+      workoutState.executionSeconds =
+        0;
+
+
       /*
        * IMPORTANTE:
        *
@@ -2938,30 +3814,51 @@
        * Isso corrige o problema que fazia o treino
        * não passar corretamente para o próximo exercício.
        */
-      if (workoutState.exerciseIndex >= workout.exercises.length) {
+
+
+      if (
+        workoutState.exerciseIndex >=
+        workout.exercises.length
+      ) {
+
         finishWorkout();
-  
+
         return;
       }
 
-      workoutState.restType = null;
+
+      workoutState.restType =
+        null;
+
 
       saveSession();
 
+
       showWorkoutScreen();
+
       renderWorkoutExecution();
       updateTotalWorkoutTimer();
+
       startExecutionTimer();
+
     }
 
 
     function skipRest() {
-      clearInterval(restInterval);
+
+      clearInterval(
+        restInterval
+      );
+
       restInterval = null;
-      workoutState.restTimer = 0;
+
+      workoutState.restTimer =
+        0;
 
       finishRest();
+
     }
+
 
     document.getElementById(
       "skipRestBtn"
@@ -2969,6 +3866,7 @@
       "click",
       skipRest
     );
+
 
     /* =========================================================
        PAUSA
@@ -2979,42 +3877,91 @@
         "pauseModalOverlay"
       );
 
+
     function openPauseMenu() {
+
       stopExecutionTimer();
+
+
       /*
        * O descanso continua contando normalmente.
        * No caso de pausa durante descanso, paramos o
        * intervalo para realmente pausar o treino.
        */
-      if (workoutState.status === "resting") {
-        clearInterval(restInterval);
+
+      if (
+        workoutState.status ===
+        "resting"
+      ) {
+
+        clearInterval(
+          restInterval
+        );
 
         restInterval = null;
+
       }
 
-      pauseModalOverlay.classList.add("visible");
-      pauseModalOverlay.setAttribute("aria-hidden", "false");
+
+      pauseModalOverlay.classList.add(
+        "visible"
+      );
+
+
+      pauseModalOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
     }
+
 
     function closePauseMenu() {
-      pauseModalOverlay.classList.remove("visible");
-      pauseModalOverlay.setAttribute("aria-hidden", "true");
 
-      if (workoutState.status === "working") {
+      pauseModalOverlay.classList.remove(
+        "visible"
+      );
+
+
+      pauseModalOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+
+      if (
+        workoutState.status ===
+        "working"
+      ) {
+
         startExecutionTimer();
+
       }
 
-      if (workoutState.status === "resting") {
+
+      if (
+        workoutState.status ===
+        "resting"
+      ) {
+
         startRestTimerAfterPause();
+
       }
+
     }
 
+
     function startRestTimerAfterPause() {
+
       clearInterval(
         restInterval
       );
 
-      restInterval = setInterval(() => {
+
+      restInterval =
+        setInterval(
+          () => {
+
             workoutState.restTimer--;
             workoutState.totalSeconds++;
 
@@ -3023,12 +3970,19 @@
 
             saveSession();
 
-            if (workoutState.restTimer <= 0) {
+
+            if (
+              workoutState.restTimer <= 0
+            ) {
+
               finishRest();
+
             }
+
           },
           1000
         );
+
     }
 
 
@@ -3039,44 +3993,106 @@
       openPauseMenu
     );
 
-    document.getElementById("restPauseBtn").addEventListener("click", openPauseMenu);
-    document.getElementById("resumeBtn").addEventListener("click", closePauseMenu);
-    document.getElementById("endWorkoutBtn").addEventListener("click", () => {
+
+    document.getElementById(
+      "restPauseBtn"
+    ).addEventListener(
+      "click",
+      openPauseMenu
+    );
+
+
+    document.getElementById(
+      "resumeBtn"
+    ).addEventListener(
+      "click",
+      closePauseMenu
+    );
+
+
+    /*
+     * IMPORTANTE:
+     *
+     * Não existe mais confirmação aqui.
+     *
+     * O usuário já escolheu "Encerrar treino"
+     * dentro do modal de pausa, portanto a ação
+     * é executada diretamente.
+     */
+
+    document.getElementById(
+      "endWorkoutBtn"
+    ).addEventListener(
+      "click",
+      () => {
+
         pauseModalOverlay.classList.remove(
           "visible"
         );
+
         pauseModalOverlay.setAttribute(
           "aria-hidden",
           "true"
         );
 
+
         stopExecutionTimer();
-        clearInterval(restInterval);
+
+        clearInterval(
+          restInterval
+        );
+
         restInterval = null;
+
+
         clearSession();
 
+
         workoutState = {
+
           exerciseIndex: 0,
+
           currentSet: 1,
+
           status: "working",
+
           restTimer: 0,
+
           executionSeconds: 0,
+
           totalSeconds: 0,
+
           restNextText: "",
+
           restType: null
+
         };
 
-        showScreen(builderScreen);
+
+        showScreen(
+          builderScreen
+        );
+
+
         renderWorkout();
+
         checkForActiveSession();
+
       }
     );
+
+
     /* =========================================================
        FINALIZAÇÃO
     ========================================================= */
+
     function saveWorkoutToHistory() {
+
       const history = loadHistory();
-      const completedReps = getTotalReps();
+
+      const completedReps =
+        getTotalReps();
+
       const entry = {
         id: crypto.randomUUID(),
         workoutName: workout.name || "Meu treino",
@@ -3099,11 +4115,15 @@
       );
 
       renderHistory();
+
     }
 
+
     function loadHistory() {
+
       try {
-        const saved = localStorage.getItem(HISTORY_STORAGE);
+        const saved =
+          localStorage.getItem(HISTORY_STORAGE);
 
         if (!saved) {
           return [];
@@ -3111,16 +4131,25 @@
 
         const parsed = JSON.parse(saved);
 
-        return Array.isArray(parsed) ? parsed : [];
+        return Array.isArray(parsed)
+          ? parsed
+          : [];
 
       } catch (error) {
         console.error("Erro ao carregar histórico:", error);
         return [];
       }
+
     }
 
+
     function formatDuration(totalSeconds) {
-      const total = Math.max(0, Number(totalSeconds) || 0);
+
+      const total = Math.max(
+        0,
+        Number(totalSeconds) || 0
+      );
+
       const hours = Math.floor(total / 3600);
       const minutes = Math.floor((total % 3600) / 60);
       const seconds = total % 60;
@@ -3130,9 +4159,12 @@
       }
 
       return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
     }
 
+
     function renderHistory() {
+
       if (!historyList || !emptyHistory) {
         return;
       }
@@ -3147,11 +4179,15 @@
       );
 
       history.forEach(entry => {
-        const item = document.createElement("div");
-        
+
+        const item =
+          document.createElement("div");
+
         item.className = "history-item";
-        
-        const date = new Date(entry.completedAt);
+
+        const date =
+          new Date(entry.completedAt);
+
         const dateText =
           Number.isNaN(date.getTime())
             ? "Data desconhecida"
@@ -3160,7 +4196,10 @@
                 timeStyle: "short"
               });
 
-        const exercisesCount = Array.isArray(entry.exercises) ? entry.exercises.length : 0;
+        const exercisesCount =
+          Array.isArray(entry.exercises)
+            ? entry.exercises.length
+            : 0;
 
         item.innerHTML = `
           <div class="history-main">
@@ -3183,22 +4222,36 @@
         `;
 
         historyList.appendChild(item);
+
       });
+
     }
+
 
     function clearHistory() {
       localStorage.removeItem(HISTORY_STORAGE);
       renderHistory();
     }
+
+
     /* =========================================================
        TEMA
     ========================================================= */
+
     function applyTheme(theme) {
-      const normalized = theme === "light" ? "light" : "dark";
 
-      document.documentElement.dataset.theme = normalized;
+      const normalized =
+        theme === "light"
+          ? "light"
+          : "dark";
 
-      localStorage.setItem(THEME_STORAGE, normalized);
+      document.documentElement.dataset.theme =
+        normalized;
+
+      localStorage.setItem(
+        THEME_STORAGE,
+        normalized
+      );
 
       if (themeBtn) {
         themeBtn.textContent =
@@ -3206,107 +4259,249 @@
             ? "☀️"
             : "🌙";
 
-        themeBtn.setAttribute("aria-label", normalized === "dark" ? "Ativar tema claro" : "Ativar tema escuro");
+        themeBtn.setAttribute(
+          "aria-label",
+          normalized === "dark"
+            ? "Ativar tema claro"
+            : "Ativar tema escuro"
+        );
       }
+
     }
+
 
     function loadTheme() {
-      const saved = localStorage.getItem(THEME_STORAGE);
 
-      applyTheme(saved === "light" ? "light" : "dark");
+      const saved =
+        localStorage.getItem(THEME_STORAGE);
+
+      applyTheme(
+        saved === "light"
+          ? "light"
+          : "dark"
+      );
+
     }
 
-    themeBtn.addEventListener("click", () => {
-        const current = document.documentElement.dataset.theme || "dark";
-        applyTheme(current === "dark" ? "light" : "dark");
+
+    themeBtn.addEventListener(
+      "click",
+      () => {
+
+        const current =
+          document.documentElement.dataset.theme || "dark";
+
+        applyTheme(
+          current === "dark"
+            ? "light"
+            : "dark"
+        );
+
       }
     );
+
+
     /* =========================================================
        FINALIZAÇÃO
     ========================================================= */
+
     function finishWorkout() {
+
       saveWorkoutToHistory();
+
       stopExecutionTimer();
-      
-      clearInterval(restInterval);
+
+      clearInterval(
+        restInterval
+      );
 
       restInterval = null;
 
+
       clearSession();
 
+
       workoutState = {
+
         exerciseIndex: 0,
+
         currentSet: 1,
+
         status: "working",
+
         restTimer: 0,
+
         executionSeconds: 0,
+
         totalSeconds: 0,
+
         restNextText: "",
+
         restType: null
+
       };
 
-      showScreen(finishScreen);
+
+      showScreen(
+        finishScreen
+      );
+
+
+      vibrate();
+
     }
 
-    document.getElementById("finishBackBtn").addEventListener("click", () => {
-        showScreen(builderScreen);
+
+    document.getElementById(
+      "finishBackBtn"
+    ).addEventListener(
+      "click",
+      () => {
+
+        showScreen(
+          builderScreen
+        );
+
         renderWorkout();
+
       }
     );
+
+
     /* =========================================================
        RECUPERAÇÃO
     ========================================================= */
+
     function checkForActiveSession() {
-      const saved = localStorage.getItem(SESSION_STORAGE);
+
+      const saved =
+        localStorage.getItem(
+          SESSION_STORAGE
+        );
+
 
       if (!saved) {
-        recoveryBox.classList.add("hidden");
+
+        recoveryBox.classList.add(
+          "hidden"
+        );
 
         return;
+
       }
 
-      try {
-        const session = JSON.parse(saved);
-        const exercise = workout.exercises[session.exerciseIndex];
 
-        if (!session || !exercise) {
+      try {
+
+        const session =
+          JSON.parse(saved);
+
+
+        const exercise =
+          workout.exercises[
+          session.exerciseIndex
+          ];
+
+
+        if (
+          !session ||
+          !exercise
+        ) {
+
           clearSession();
+
           recoveryBox.classList.add(
             "hidden"
           );
 
           return;
+
         }
 
+
         workoutState = {
-          exerciseIndex: Number(session.exerciseIndex),
-          currentSet: Number(session.currentSet || 1),
-          status: session.status || "working",
-          restTimer: Number(session.restTimer || 0),
-          executionSeconds: Number(session.executionSeconds || 0),
-          totalSeconds: Number(session.totalSeconds || 0),
-          restNextText: session.restNextText || "",
-          restType: session.restType || null
+
+          exerciseIndex:
+            Number(
+              session.exerciseIndex
+            ),
+
+          currentSet:
+            Number(
+              session.currentSet || 1
+            ),
+
+          status:
+            session.status ||
+            "working",
+
+          restTimer:
+            Number(
+              session.restTimer || 0
+            ),
+
+          executionSeconds:
+            Number(
+              session.executionSeconds || 0
+            ),
+
+          totalSeconds:
+            Number(
+              session.totalSeconds || 0
+            ),
+
+          restNextText:
+            session.restNextText ||
+            "",
+
+          restType:
+            session.restType ||
+            null
+
         };
 
-        recoveryInfo.textContent = `${exercise.name} · Série ${workoutState.currentSet} de ${exercise.sets}`;
-        recoveryBox.classList.remove("hidden");
+
+        recoveryInfo.textContent =
+          `${exercise.name} · Série ${workoutState.currentSet} de ${exercise.sets}`;
+
+
+        recoveryBox.classList.remove(
+          "hidden"
+        );
+
+
       } catch (error) {
+
         console.error(
           "Erro ao recuperar sessão:",
           error
         );
 
         clearSession();
+
       }
+
     }
 
-    continueBtn.addEventListener("click", continueWorkout);
+
+    continueBtn.addEventListener(
+      "click",
+      continueWorkout
+    );
+
 
     function continueWorkout() {
-      recoveryBox.classList.add("hidden");
 
-      if (workoutState.status === "resting") {
+      recoveryBox.classList.add(
+        "hidden"
+      );
+
+
+      if (
+        workoutState.status ===
+        "resting"
+      ) {
+
         showRestScreen();
 
         renderRestScreen();
@@ -3315,42 +4510,67 @@
         startRestTimerAfterPause();
 
         return;
+
       }
 
+
       showWorkoutScreen();
+
       renderWorkoutExecution();
+
       startExecutionTimer();
+
     }
+
 
     newWorkoutBtn.addEventListener(
       "click",
       async () => {
+
         const confirmed =
           await showConfirm(
             "O progresso do treino em andamento será descartado. O treino configurado continuará salvo.",
             {
-              title: "Começar novo treino",
-              confirmText: "Começar novo",
-              danger: true
+              title:
+                "Começar novo treino",
+
+              confirmText:
+                "Começar novo",
+
+              danger:
+                true
             }
           );
+
 
         if (!confirmed) {
           return;
         }
 
+
         clearSession();
 
-        recoveryBox.classList.add("hidden");
+
+        recoveryBox.classList.add(
+          "hidden"
+        );
+
       }
     );
+
+
     /* =========================================================
        EXPORTAR
     ========================================================= */
+
     exportBtn.addEventListener(
       "click",
       async () => {
-        if (workout.exercises.length === 0) {
+
+        if (
+          workout.exercises.length === 0
+        ) {
+
           await showMessage(
             "Adicione pelo menos um exercício antes de exportar."
           );
@@ -3358,69 +4578,136 @@
           return;
         }
 
+
         const data = {
+
           version: 2,
-          exportedAt: new Date().toISOString(),
+
+          exportedAt:
+            new Date().toISOString(),
+
           workout
+
         };
+
 
         const blob =
           new Blob(
             [
-              JSON.stringify(data, null, 2)
+              JSON.stringify(
+                data,
+                null,
+                2
+              )
             ],
             {
-              type: "application/json"
+              type:
+                "application/json"
             }
           );
 
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
 
-        link.href = url;
-        link.download = "meu-treino-calistenia.json";
-        document.body.appendChild(link);
+        const url =
+          URL.createObjectURL(
+            blob
+          );
+
+
+        const link =
+          document.createElement(
+            "a"
+          );
+
+
+        link.href =
+          url;
+
+        link.download =
+          "meu-treino-calistenia.json";
+
+
+        document.body.appendChild(
+          link
+        );
 
         link.click();
+
         link.remove();
 
-        URL.revokeObjectURL(url);
+
+        URL.revokeObjectURL(
+          url
+        );
+
       }
     );
+
+
     /* =========================================================
        IMPORTAR
     ========================================================= */
-    importBtn.addEventListener("click", () => {
+
+    importBtn.addEventListener(
+      "click",
+      () => {
+
         importFile.click();
+
       }
     );
+
 
     importFile.addEventListener(
       "change",
       event => {
-        const file = event.target.files[0];
+
+        const file =
+          event.target.files[0];
+
 
         if (!file) {
           return;
         }
 
-        const reader = new FileReader();
+
+        const reader =
+          new FileReader();
+
 
         reader.onload =
           async () => {
-            try {
-              const data = JSON.parse(reader.result);
-              const importedWorkout = data.workout || data;
 
-              if (!importedWorkout || !Array.isArray(importedWorkout.exercises)) {
+            try {
+
+              const data =
+                JSON.parse(
+                  reader.result
+                );
+
+
+              const importedWorkout =
+                data.workout ||
+                data;
+
+
+              if (
+                !importedWorkout ||
+                !Array.isArray(
+                  importedWorkout.exercises
+                )
+              ) {
+
                 throw new Error(
                   "Formato inválido."
                 );
+
               }
+
 
               const validExercises =
                 importedWorkout.exercises.every(
                   exercise =>
+
                     exercise &&
                     typeof exercise.name ===
                     "string" &&
@@ -3437,11 +4724,14 @@
 
                     Number(exercise.reps) > 0 &&
 
-                    [15, 30, 45, 60].includes(
+                    [15, 30, 45, 60]
+                      .includes(
                         Number(
                           exercise.rest
                         )
-                      ) && (
+                      ) &&
+
+                    (
                       exercise.weights === undefined ||
                       (
                         Array.isArray(exercise.weights) &&
@@ -3455,208 +4745,317 @@
                           )
                       )
                     )
+
                 );
 
+
               if (!validExercises) {
+
                 throw new Error(
                   "Dados inválidos."
                 );
+
               }
 
-              const confirmed = await showConfirm(
+
+              const confirmed =
+                await showConfirm(
                   "O treino atual será substituído pelo treino importado.",
                   {
-                    title: "Importar treino",
-                    confirmText: "Importar"
+                    title:
+                      "Importar treino",
+
+                    confirmText:
+                      "Importar"
                   }
                 );
+
 
               if (!confirmed) {
                 return;
               }
 
+
               workout = {
-                name: importedWorkout.name || "Meu treino",
-                exercises: importedWorkout.exercises.map(
+
+                name:
+                  importedWorkout.name ||
+                  "Meu treino",
+
+                exercises:
+                  importedWorkout.exercises
+                    .map(
                       exercise => ({
-                        id: exercise.id || crypto.randomUUID(),
-                        name: exercise.name.trim(),
-                        sets: Number(exercise.sets),
-                        reps: Number(exercise.reps),
-                        rest: Number(exercise.rest),
-                        weights: normalizeWeights(exercise),
-                        custom: Boolean(exercise.custom)
+
+                        id:
+                          exercise.id ||
+                          crypto.randomUUID(),
+
+                        name:
+                          exercise.name.trim(),
+
+                        sets:
+                          Number(
+                            exercise.sets
+                          ),
+
+                        reps:
+                          Number(
+                            exercise.reps
+                          ),
+
+                        rest:
+                          Number(
+                            exercise.rest
+                          ),
+
+                        weights:
+                          normalizeWeights(
+                            exercise
+                          ),
+
+                        custom:
+                          Boolean(
+                            exercise.custom
+                          )
+
                       })
                     )
+
               };
 
+
               saveWorkout();
+
               populateExerciseSelect();
+
               renderWorkout();
+
               resetExerciseForm();
+
 
               await showMessage(
                 "Treino importado com sucesso.",
                 "Importação concluída"
               );
+
+
             } catch (error) {
+
               console.error(
                 "Erro ao importar:",
                 error
               );
 
+
               await showMessage(
                 "Não foi possível importar o arquivo. Verifique se ele é um JSON válido exportado por este aplicativo.",
                 "Erro na importação"
               );
+
+
             } finally {
+
               importFile.value = "";
+
             }
+
           };
 
+
         reader.readAsText(file);
+
       }
     );
+
+
     /* =========================================================
        ÁUDIO
     ========================================================= */
+
     function playRestFinishedSound() {
+
       try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
 
-        const audioContext = new AudioContext();
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
+        const AudioContext =
+          window.AudioContext ||
+          window.webkitAudioContext;
 
-        oscillator.frequency.value = 1046.5; // Dó agudo (C6) — mais penetrante que 880Hz
-        oscillator.type = "sine";
 
-        const now = audioContext.currentTime;
-        const peak = 0.6; // volume mais alto (era 0.25)
-
-        // Primeiro bipe
-        gain.gain.setValueAtTime(0.001, now);
-        gain.gain.exponentialRampToValueAtTime(peak, now + 0.01); // ataque mais rápido
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-
-        // Segundo bipe
-        gain.gain.setValueAtTime(0.001, now + 0.22);
-        gain.gain.exponentialRampToValueAtTime(peak, now + 0.23);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-
-        // Terceiro bipe (reforço extra)
-        gain.gain.setValueAtTime(0.001, now + 0.44);
-        gain.gain.exponentialRampToValueAtTime(peak, now + 0.45);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.62);
-
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-
-        oscillator.start();
-        oscillator.stop(now + 0.65);
-      } catch (error) {
-        console.log("Áudio não disponível.", error);
-      }
-    }
-
-    function playStartSound() {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-
-        const audioContext = new AudioContext();
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-
-        oscillator.frequency.value = 880; //Hz
-        oscillator.type = "sine";
-
-        const now = audioContext.currentTime;
-        const peak = 0.6; // volume mais alto (era 0.25)
-
-        gain.gain.setValueAtTime(0.001, now);
-        gain.gain.exponentialRampToValueAtTime(peak, now + 0.01); // ataque mais rápido
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-
-        oscillator.start();
-        oscillator.stop(now + 0.65);
-      } catch (error) {
-        console.log("Áudio não disponível.", error);
-      }
-    }
-
-    function playFinishSound() {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-
-        const audioContext = new AudioContext();
-        const now = audioContext.currentTime;
-
-        function beep(startTime, duration, frequency, peak = 0.6) {
-          const oscillator = audioContext.createOscillator();
-          const gain = audioContext.createGain();
-
-          oscillator.frequency.value = frequency;
-          oscillator.type = "square"; // mais "seco" e penetrante que sine
-
-          gain.gain.setValueAtTime(0.001, startTime);
-          gain.gain.exponentialRampToValueAtTime(peak, startTime + 0.01);
-          gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-
-          oscillator.connect(gain);
-          gain.connect(audioContext.destination);
-
-          oscillator.start(startTime);
-          oscillator.stop(startTime + duration + 0.02);
+        if (!AudioContext) {
+          return;
         }
 
-        // Três bipes curtos de "prepare" (mesma altura)
-        beep(now, 0.12, 880);
-        beep(now + 0.3, 0.12, 880);
-        beep(now + 0.6, 0.12, 880);
 
-        // Bipe final de "largada": mais longo e mais agudo
-        beep(now + 0.95, 0.5, 1320);
+        const audioContext =
+          new AudioContext();
+
+
+        const oscillator =
+          audioContext.createOscillator();
+
+
+        const gain =
+          audioContext.createGain();
+
+
+        oscillator.frequency.value =
+          880;
+
+
+        oscillator.type =
+          "sine";
+
+
+        gain.gain.setValueAtTime(
+          0.001,
+          audioContext.currentTime
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+          0.25,
+          audioContext.currentTime + 0.02
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioContext.currentTime + 0.35
+        );
+
+
+        oscillator.connect(gain);
+
+        gain.connect(
+          audioContext.destination
+        );
+
+
+        oscillator.start();
+
+
+        oscillator.stop(
+          audioContext.currentTime +
+          0.35
+        );
+
+
       } catch (error) {
-        console.log("Áudio não disponível.", error);
+
+        console.log(
+          "Áudio não disponível.",
+          error
+        );
+
       }
+
     }
+
+
+    function vibrate() {
+
+      if (
+        "vibrate" in navigator
+      ) {
+
+        navigator.vibrate(
+          [300, 150, 300]
+        );
+
+      }
+
+    }
+
+
     /* =========================================================
        SALVAR AO SAIR / OCULTAR
     ========================================================= */
+
     document.addEventListener(
       "visibilitychange",
       () => {
-        if (document.visibilityState === "hidden") {
-          if (workoutState.status === "working" || workoutState.status === "resting") {
+
+        if (
+          document.visibilityState ===
+          "hidden"
+        ) {
+
+          if (
+            workoutState.status ===
+            "working" ||
+            workoutState.status ===
+            "resting"
+          ) {
+
             saveSession();
+
           }
+
         }
+
       }
     );
 
-    window.addEventListener("pagehide", () => {
-        if (workoutState.status === "working" || workoutState.status === "resting") {
+
+    window.addEventListener(
+      "pagehide",
+      () => {
+
+        if (
+          workoutState.status ===
+          "working" ||
+          workoutState.status ===
+          "resting"
+        ) {
+
           saveSession();
+
         }
+
       }
     );
+
+
+    /* =========================================================
+       UTILITÁRIO
+    ========================================================= */
 
     function escapeHtml(value) {
+
       return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+        .replaceAll(
+          "&",
+          "&amp;"
+        )
+        .replaceAll(
+          "<",
+          "&lt;"
+        )
+        .replaceAll(
+          ">",
+          "&gt;"
+        )
+        .replaceAll(
+          '"',
+          "&quot;"
+        )
+        .replaceAll(
+          "'",
+          "&#039;"
+        );
+
     }
 
+
+    /* =========================================================
+       START
+    ========================================================= */
+
     init();
+
   </script>
+
 </body>
+
 </html>
