@@ -106,12 +106,6 @@
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
-    
-    .inputs-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
 
     .full {
       grid-column: 1 / -1;
@@ -213,6 +207,10 @@
       min-height: 36px;
       padding: 0 10px;
       font-size: 13px;
+    }
+    
+    .text-center {
+      text-align: center;
     }
 
     /* ========================================
@@ -826,6 +824,12 @@
       .weights-grid {
         grid-template-columns: 1fr 1fr;
       }
+      
+      .inputs-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px; 
+      }
 
       .full {
         grid-column: auto;
@@ -932,13 +936,13 @@
               <label for="setsInput">
                 Séries
               </label>
-              <input id="setsInput" type="number" inputmode="decimal" min="1" max="99" value="3" required>
+              <input class="text-center" id="setsInput" type="number" inputmode="decimal" min="1" max="99" value="3" required>
             </div>
             <div>
               <label for="repsInput">
                 Repetições
               </label>
-              <input id="repsInput" type="number" inputmode="decimal" min="1" max="999" value="10" required>
+              <input class="text-center" id="repsInput" type="number" inputmode="decimal" min="1" max="999" value="10" required>
             </div>
           </div>
           <div class="full">
@@ -1212,17 +1216,19 @@
           </label>
           <input id="customName" type="text" maxlength="80" placeholder="Ex.: Flexão arqueiro" required>
         </div>
-        <div class="field">
-          <label for="customSets">
-            Séries
-          </label>
-          <input id="customSets" type="number" inputmode="decimal" min="1" max="99" value="3" required>
-        </div>
-        <div class="field">
-          <label for="customReps">
-            Repetições
-          </label>
-          <input id="customReps" type="number" inputmode="decimal" min="1" max="999" value="10" required>
+        <div class="inputs-row">
+          <div class="field">
+            <label for="customSets">
+              Séries
+            </label>
+            <input class="text-center" id="customSets" type="number" inputmode="decimal" min="1" max="99" value="3" required>
+          </div>
+          <div class="field">
+            <label for="customReps">
+              Repetições
+            </label>
+            <input class="text-center" id="customReps" type="number" inputmode="decimal" min="1" max="999" value="10" required>
+          </div>
         </div>
         <div class="field">
           <label>
