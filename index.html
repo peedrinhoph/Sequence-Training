@@ -106,6 +106,12 @@
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
+    
+    .inputs-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
 
     .full {
       grid-column: 1 / -1;
@@ -921,17 +927,19 @@
               </option>
             </select>
           </div>
-          <div>
-            <label for="setsInput">
-              Séries
-            </label>
-            <input id="setsInput" type="number" inputmode="decimal" min="1" max="99" value="3" required>
-          </div>
-          <div>
-            <label for="repsInput">
-              Repetições
-            </label>
-            <input id="repsInput" type="number" inputmode="decimal" min="1" max="999" value="10" required>
+          <div class="inputs-row">
+            <div>
+              <label for="setsInput">
+                Séries
+              </label>
+              <input id="setsInput" type="number" inputmode="decimal" min="1" max="99" value="3" required>
+            </div>
+            <div>
+              <label for="repsInput">
+                Repetições
+              </label>
+              <input id="repsInput" type="number" inputmode="decimal" min="1" max="999" value="10" required>
+            </div>
           </div>
           <div class="full">
             <label>
