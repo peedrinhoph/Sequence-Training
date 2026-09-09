@@ -255,6 +255,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      margin-top: 10px;
     }
 
     .exercise-item {
@@ -805,6 +806,51 @@
     }
 
     /* ========================================
+       MEUS TREINOS
+    ======================================== */
+
+    .saved-workouts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .saved-workout-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .saved-workout-info {
+      min-width: 0;
+    }
+
+    .saved-workout-name {
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .saved-workout-details {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .saved-workout-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    /* ========================================
        MOBILE
     ======================================== */
 
@@ -875,6 +921,18 @@
       .modal-actions .btn {
         width: 100%;
       }
+
+      .saved-workout-item {
+        align-items: flex-start;
+      }
+
+      .saved-workout-actions {
+        flex-direction: column;
+      }
+
+      .saved-workout-actions .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -916,6 +974,33 @@
         </button>
         <button class="btn btn-ghost" id="newWorkoutBtn">
           Começar novo
+        </button>
+      </div>
+    </section>
+        <!-- Lista do treino -->
+    <section class="card">
+      <div class="header-row">
+        <h2>
+          Seu treino
+          <span id="loadedWorkoutName" class="custom-badge hidden"></span>
+        </h2>
+        <button class="btn btn-small" id="newSavedWorkoutBtn">
+          + Novo treino
+        </button>
+      </div>
+      <div id="workoutList" class="workout-list"></div>
+      <div id="emptyWorkout" class="empty">
+        Nenhum exercício adicionado ainda.
+      </div>
+      <div class="bottom-actions">
+        <button class="btn btn-primary full-btn" id="startWorkoutBtn">
+          ▶ Iniciar treino
+        </button>
+        <button class="btn" id="clearWorkoutBtn">
+          Limpar treino
+        </button>
+        <button class="btn" id="workoutNameBtn">
+          Salvar treino
         </button>
       </div>
     </section>
@@ -989,23 +1074,14 @@
         </div>
       </form>
     </section>
-    <!-- Lista do treino -->
+    <!-- Meus treinos -->
     <section class="card">
-      <h2>Seu treino</h2>
-      <div id="workoutList" class="workout-list"></div>
-      <div id="emptyWorkout" class="empty">
-        Nenhum exercício adicionado ainda.
+      <div class="header-row">
+        <h2>Meus treinos</h2>
       </div>
-      <div class="bottom-actions">
-        <button class="btn btn-primary full-btn" id="startWorkoutBtn">
-          ▶ Iniciar treino
-        </button>
-        <button class="btn" id="clearWorkoutBtn">
-          Limpar treino
-        </button>
-        <button class="btn" id="workoutNameBtn">
-          Nome do treino
-        </button>
+      <div id="savedWorkoutsList" class="saved-workouts-list"></div>
+      <div id="emptySavedWorkouts" class="empty">
+        Nenhum treino salvo ainda.
       </div>
     </section>
     <!-- Dados -->
@@ -1013,10 +1089,13 @@
       <h2>Dados</h2>
       <div class="tools">
         <button class="btn btn-small" id="exportBtn">
-          Exportar treino
+          Exportar treinos
         </button>
         <button class="btn btn-small" id="importBtn">
-          Importar treino
+          Importar treinos
+        </button>
+        <button class="btn btn-small" id="restoreBackupBtn">
+          Restaurar backup
         </button>
         <input type="file" id="importFile" accept=".json,application/json" class="hidden">
       </div>
@@ -1298,9 +1377,11 @@
     ========================================================= */
 
     const WORKOUT_STORAGE = "calisthenics_workout";
+    const WORKOUTS_STORAGE = "calisthenics_workouts";
     const SESSION_STORAGE = "calisthenics_session";
     const HISTORY_STORAGE = "calisthenics_history";
     const THEME_STORAGE = "calisthenics_theme";
+    const BACKUP_STORAGE = "calisthenics_backup";
     const PREDEFINED_EXERCISES = [
       "Flexão",
       "Flexão diamante",
@@ -1325,6 +1406,8 @@
     };
 
     let editingIndex = null;
+    let currentWorkoutId = null;
+    let savedWorkouts = [];
 
     let workoutState = {
       exerciseIndex: 0,
@@ -1364,8 +1447,12 @@
     const startWorkoutBtn = document.getElementById("startWorkoutBtn");
     const clearWorkoutBtn = document.getElementById("clearWorkoutBtn");
     const workoutNameBtn = document.getElementById("workoutNameBtn");
+    const newSavedWorkoutBtn = document.getElementById("newSavedWorkoutBtn");
+    const savedWorkoutsList = document.getElementById("savedWorkoutsList");
+    const emptySavedWorkouts = document.getElementById("emptySavedWorkouts");
     const exportBtn = document.getElementById("exportBtn");
     const importBtn = document.getElementById("importBtn");
+    const restoreBackupBtn = document.getElementById("restoreBackupBtn");
     const importFile = document.getElementById("importFile");
     const recoveryBox = document.getElementById("recoveryBox");
     const recoveryInfo = document.getElementById("recoveryInfo");
@@ -1563,7 +1650,7 @@
 
     nameForm.addEventListener(
       "submit",
-      event => {
+      async event => {
         event.preventDefault();
         const name = workoutNameInput.value.trim();
 
@@ -1576,9 +1663,28 @@
 
         workout.name = name;
 
+        // Fecha o modal de nome antes de abrir a mensagem de confirmação,
+        // evitando que os dois modais fiquem sobrepostos.
+        closeNameModal();
+
+        if (currentWorkoutId) {
+          updateSavedWorkout();
+          await showMessage(
+            "Treino atualizado com sucesso.",
+            "Treino salvo"
+          );
+        } else {
+          saveCurrentWorkoutAsNew();
+          await showMessage(
+            "Treino salvo com sucesso.",
+            "Treino salvo"
+          );
+        }
+
         saveWorkout();
         updateWorkoutName();
-        closeNameModal();
+        renderSavedWorkouts();
+        updateWorkoutNameButton();
       }
     );
 
@@ -1685,56 +1791,381 @@
        STORAGE
     ========================================================= */
 
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function normalizeWorkout(data) {
+      if (!data || typeof data !== "object" || !Array.isArray(data.exercises)) {
+        return null;
+      }
+
+      return {
+        name: data.name || "Meu treino",
+        exercises: data.exercises.map(exercise => ({
+          ...exercise,
+          id: exercise.id || crypto.randomUUID(),
+          name: String(exercise.name || "").trim(),
+          sets: Number(exercise.sets),
+          reps: Number(exercise.reps),
+          rest: Number(exercise.rest),
+          weights: normalizeWeights(exercise)
+        }))
+      };
+    }
+
+    function cloneWorkout(source) {
+      return JSON.parse(JSON.stringify(source));
+    }
+
     function saveWorkout() {
       localStorage.setItem(
         WORKOUT_STORAGE,
-        JSON.stringify(workout)
+        JSON.stringify({
+          ...workout,
+          currentWorkoutId
+        })
       );
     }
 
-    function loadWorkout() {
+    function saveSavedWorkouts() {
+      localStorage.setItem(
+        WORKOUTS_STORAGE,
+        JSON.stringify(savedWorkouts)
+      );
+    }
+
+    function getWorkoutComparable(source) {
+      return {
+        name: source?.name || "Meu treino",
+        exercises: Array.isArray(source?.exercises)
+          ? source.exercises.map(exercise => ({
+              id: exercise.id,
+              name: exercise.name,
+              sets: Number(exercise.sets),
+              reps: Number(exercise.reps),
+              rest: Number(exercise.rest),
+              weights: normalizeWeights(exercise),
+              custom: Boolean(exercise.custom)
+            }))
+          : []
+      };
+    }
+
+    function hasUnsavedChanges() {
+      if (!currentWorkoutId) {
+        return (
+          workout.name !== "Meu treino" ||
+          workout.exercises.length > 0
+        );
+      }
+
+      const saved = savedWorkouts.find(item => item.id === currentWorkoutId);
+
+      if (!saved) {
+        return true;
+      }
+
+      return JSON.stringify(getWorkoutComparable(workout)) !==
+        JSON.stringify(getWorkoutComparable(saved));
+    }
+
+    async function confirmLeavingCurrentEditor() {
+      if (!hasUnsavedChanges()) {
+        return true;
+      }
+
+      return await showConfirm(
+        "Existem alterações no treino atual que ainda não foram salvas. Se continuar, essas alterações permanecerão apenas como rascunho e poderão ser substituídas.",
+        {
+          title: "Alterações não salvas",
+          confirmText: "Continuar"
+        }
+      );
+    }
+
+    function createDataBackup(reason = "Proteção automática") {
       try {
-        const saved = localStorage.getItem(WORKOUT_STORAGE);
+        const backup = {
+          version: 1,
+          createdAt: new Date().toISOString(),
+          reason,
+          workout: cloneWorkout(workout),
+          currentWorkoutId,
+          savedWorkouts: savedWorkouts.map(cloneWorkoutForExport)
+        };
+
+        localStorage.setItem(BACKUP_STORAGE, JSON.stringify(backup));
+        return true;
+      } catch (error) {
+        console.error("Erro ao criar backup:", error);
+        return false;
+      }
+    }
+
+    function loadDataBackup() {
+      try {
+        const saved = localStorage.getItem(BACKUP_STORAGE);
 
         if (!saved) {
-          return;
+          return null;
         }
 
         const parsed = JSON.parse(saved);
 
         if (
-          parsed &&
-          typeof parsed === "object" &&
-          Array.isArray(parsed.exercises)
+          !parsed ||
+          !Array.isArray(parsed.savedWorkouts) ||
+          !parsed.workout
         ) {
-          workout = {
-            name:
-              parsed.name ||
-              "Meu treino",
-
-            exercises:
-              parsed.exercises.map(
-                exercise => ({
-                  ...exercise,
-                  sets:
-                    Number(exercise.sets),
-                  reps:
-                    Number(exercise.reps),
-                  rest:
-                    Number(exercise.rest),
-                  weights:
-                    normalizeWeights(exercise)
-                })
-              )
-          };
+          return null;
         }
+
+        return parsed;
       } catch (error) {
-        console.error(
-          "Erro ao carregar treino:",
-          error
-        );
+        console.error("Erro ao carregar backup:", error);
+        return null;
       }
     }
+
+    function loadSavedWorkouts() {
+      try {
+        const saved = localStorage.getItem(WORKOUTS_STORAGE);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            savedWorkouts = parsed
+              .map(item => {
+                const normalized = normalizeWorkout(item);
+                if (!normalized) return null;
+                return {
+                  id: item.id || crypto.randomUUID(),
+                  ...normalized,
+                  createdAt: item.createdAt || new Date().toISOString(),
+                  updatedAt: item.updatedAt || item.createdAt || new Date().toISOString()
+                };
+              })
+              .filter(Boolean);
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao carregar treinos salvos:", error);
+        savedWorkouts = [];
+      }
+    }
+
+    function loadWorkout() {
+      try {
+        const saved = localStorage.getItem(WORKOUT_STORAGE);
+        if (!saved) {
+          return;
+        }
+
+        const parsed = JSON.parse(saved);
+        const normalized = normalizeWorkout(parsed);
+
+        if (normalized) {
+          workout = normalized;
+          currentWorkoutId = parsed.currentWorkoutId || null;
+        }
+      } catch (error) {
+        console.error("Erro ao carregar treino:", error);
+      }
+    }
+
+    function saveCurrentWorkoutAsNew() {
+      const now = new Date().toISOString();
+      const saved = {
+        id: crypto.randomUUID(),
+        ...cloneWorkout(workout),
+        createdAt: now,
+        updatedAt: now
+      };
+
+      savedWorkouts.unshift(saved);
+      currentWorkoutId = saved.id;
+      saveSavedWorkouts();
+    }
+
+    function updateSavedWorkout() {
+      const index = savedWorkouts.findIndex(
+        item => item.id === currentWorkoutId
+      );
+
+      if (index === -1) {
+        currentWorkoutId = null;
+        saveCurrentWorkoutAsNew();
+        return;
+      }
+
+      savedWorkouts[index] = {
+        ...savedWorkouts[index],
+        ...cloneWorkout(workout),
+        id: currentWorkoutId,
+        updatedAt: new Date().toISOString()
+      };
+
+      saveSavedWorkouts();
+    }
+
+    function updateWorkoutNameButton() {
+      workoutNameBtn.textContent = currentWorkoutId
+        ? "Atualizar treino"
+        : "Salvar treino";
+    }
+
+    function renderSavedWorkouts() {
+      savedWorkoutsList.innerHTML = "";
+      emptySavedWorkouts.classList.toggle(
+        "hidden",
+        savedWorkouts.length > 0
+      );
+
+      savedWorkouts.forEach(saved => {
+        const item = document.createElement("div");
+        item.className = "saved-workout-item";
+        item.innerHTML = `
+          <div class="saved-workout-info">
+            <div class="saved-workout-name">${escapeHtml(saved.name)}</div>
+            <div class="saved-workout-details">
+              ${saved.exercises.length} exercício${saved.exercises.length !== 1 ? "s" : ""}
+            </div>
+          </div>
+          <div class="saved-workout-actions">
+            <button class="btn btn-small" data-action="view" data-id="${saved.id}">
+              Visualizar
+            </button>
+            <button class="btn btn-small" data-action="duplicate" data-id="${saved.id}">
+              Duplicar
+            </button>
+            <button class="icon-btn" title="Excluir treino" data-action="delete" data-id="${saved.id}">
+              ×
+            </button>
+          </div>
+        `;
+        savedWorkoutsList.appendChild(item);
+      });
+    }
+
+    async function loadSavedWorkout(id) {
+      const saved = savedWorkouts.find(item => item.id === id);
+      if (!saved) return;
+
+      if (saved.id !== currentWorkoutId) {
+        const canLeave = await confirmLeavingCurrentEditor();
+        if (!canLeave) return;
+      }
+
+      workout = cloneWorkout(saved);
+      currentWorkoutId = saved.id;
+      saveWorkout();
+      updateWorkoutName();
+      updateWorkoutNameButton();
+      populateExerciseSelect();
+      renderWorkout();
+      resetExerciseForm();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function duplicateSavedWorkout(id) {
+      const saved = savedWorkouts.find(item => item.id === id);
+      if (!saved) return;
+
+      const now = new Date().toISOString();
+      const duplicated = {
+        ...cloneWorkout(saved),
+        id: crypto.randomUUID(),
+        name: `${saved.name} (cópia)`,
+        createdAt: now,
+        updatedAt: now
+      };
+
+      savedWorkouts.unshift(duplicated);
+      saveSavedWorkouts();
+      renderSavedWorkouts();
+
+      await showMessage(
+        `O treino "${saved.name}" foi duplicado como "${duplicated.name}".`,
+        "Treino duplicado"
+      );
+    }
+
+    async function deleteSavedWorkout(id) {
+      const saved = savedWorkouts.find(item => item.id === id);
+      if (!saved) return;
+
+      const confirmed = await showConfirm(
+        `Deseja excluir o treino "${escapeHtml(saved.name)}"?`,
+        {
+          title: "Excluir treino",
+          confirmText: "Excluir",
+          danger: true
+        }
+      );
+
+      if (!confirmed) return;
+
+      savedWorkouts = savedWorkouts.filter(item => item.id !== id);
+      saveSavedWorkouts();
+
+      if (currentWorkoutId === id) {
+        currentWorkoutId = null;
+        updateWorkoutNameButton();
+      }
+
+      renderSavedWorkouts();
+    }
+
+    savedWorkoutsList.addEventListener("click", event => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+
+      const id = button.dataset.id;
+      const action = button.dataset.action;
+
+      if (action === "view") {
+        loadSavedWorkout(id);
+      } else if (action === "duplicate") {
+        duplicateSavedWorkout(id);
+      } else if (action === "delete") {
+        deleteSavedWorkout(id);
+      }
+    });
+
+    newSavedWorkoutBtn.addEventListener("click", async () => {
+      const canLeave = await confirmLeavingCurrentEditor();
+      if (!canLeave) return;
+
+      const confirmed = await showConfirm(
+        "O treino atual continuará salvo. Um novo treino vazio será aberto.",
+        {
+          title: "Novo treino",
+          confirmText: "Criar novo"
+        }
+      );
+
+      if (!confirmed) return;
+
+      createDataBackup("Antes de criar um novo treino");
+      clearSession();
+      currentWorkoutId = null;
+      workout = {
+        name: "Meu treino",
+        exercises: []
+      };
+
+      saveWorkout();
+      updateWorkoutNameButton();
+      populateExerciseSelect();
+      renderWorkout();
+      resetExerciseForm();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
 
     function saveSession() {
       localStorage.setItem(
@@ -1757,8 +2188,27 @@
 
     function init() {
 
+      loadSavedWorkouts();
       loadWorkout();
+
+      // Migra automaticamente o treino único das versões anteriores.
+      if (savedWorkouts.length === 0 && workout.exercises.length > 0) {
+        const now = new Date().toISOString();
+        const migrated = {
+          id: crypto.randomUUID(),
+          ...cloneWorkout(workout),
+          createdAt: now,
+          updatedAt: now
+        };
+        savedWorkouts = [migrated];
+        currentWorkoutId = migrated.id;
+        saveSavedWorkouts();
+        saveWorkout();
+      }
+
       loadTheme();
+      renderSavedWorkouts();
+      updateWorkoutNameButton();
       renderHistory();
 
       renderWeightInputs(
@@ -2448,9 +2898,13 @@
 
     function updateWorkoutName() {
       const name = workout.name || "Meu treino";
+      const loadedWorkoutName = document.getElementById("loadedWorkoutName");
 
       document.getElementById("workoutNameDisplay").textContent = name;
       document.getElementById("restWorkoutName").textContent = name;
+
+      loadedWorkoutName.textContent = name;
+      loadedWorkoutName.classList.toggle("hidden", !currentWorkoutId);
     }
 
     /* =========================================================
@@ -2485,6 +2939,7 @@
           return;
         }
 
+        createDataBackup("Antes de limpar o treino");
         workout.exercises = [];
         saveWorkout();
         renderWorkout();
@@ -2501,7 +2956,7 @@
       async () => {
         if (workout.exercises.length === 0) {
           await showMessage(
-            "Adicione pelo menos um exercício antes de iniciar o treino."
+            "Não há treino carregado para iniciar."
           );
 
           return;
@@ -3346,178 +3801,225 @@
       }
     );
     /* =========================================================
-       EXPORTAR
+       EXPORTAR / IMPORTAR TODOS OS TREINOS
     ========================================================= */
-    exportBtn.addEventListener(
-      "click",
-      async () => {
-        if (workout.exercises.length === 0) {
-          await showMessage(
-            "Adicione pelo menos um exercício antes de exportar."
-          );
 
-          return;
-        }
-
-        const data = {
-          version: 2,
-          exportedAt: new Date().toISOString(),
-          workout
-        };
-
-        const blob =
-          new Blob(
-            [
-              JSON.stringify(data, null, 2)
-            ],
-            {
-              type: "application/json"
-            }
-          );
-
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-
-        link.href = url;
-        link.download = "meu-treino-calistenia.json";
-        document.body.appendChild(link);
-
-        link.click();
-        link.remove();
-
-        URL.revokeObjectURL(url);
+    exportBtn.addEventListener("click", async () => {
+      if (savedWorkouts.length === 0) {
+        await showMessage(
+          "Salve pelo menos um treino antes de exportar."
+        );
+        return;
       }
-    );
-    /* =========================================================
-       IMPORTAR
-    ========================================================= */
+
+      const data = {
+        version: 3,
+        exportedAt: new Date().toISOString(),
+        workouts: savedWorkouts.map(cloneWorkoutForExport)
+      };
+
+      const blob = new Blob(
+        [JSON.stringify(data, null, 2)],
+        { type: "application/json" }
+      );
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "treinos-calistenia.json";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    function cloneWorkoutForExport(saved) {
+      return {
+        id: saved.id,
+        name: saved.name,
+        exercises: cloneWorkout(saved.exercises),
+        createdAt: saved.createdAt,
+        updatedAt: saved.updatedAt
+      };
+    }
+
     importBtn.addEventListener("click", () => {
-        importFile.click();
-      }
-    );
+      importFile.click();
+    });
 
-    importFile.addEventListener(
-      "change",
-      event => {
-        const file = event.target.files[0];
+    importFile.addEventListener("change", event => {
+      const file = event.target.files[0];
+      if (!file) return;
 
-        if (!file) {
-          return;
-        }
+      const reader = new FileReader();
 
-        const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const data = JSON.parse(reader.result);
+          let importedWorkouts = [];
 
-        reader.onload =
-          async () => {
-            try {
-              const data = JSON.parse(reader.result);
-              const importedWorkout = data.workout || data;
-
-              if (!importedWorkout || !Array.isArray(importedWorkout.exercises)) {
-                throw new Error(
-                  "Formato inválido."
-                );
-              }
-
-              const validExercises =
-                importedWorkout.exercises.every(
-                  exercise =>
-                    exercise &&
-                    typeof exercise.name ===
-                    "string" &&
-
-                    Number.isInteger(
-                      Number(exercise.sets)
-                    ) &&
-
-                    Number(exercise.sets) > 0 &&
-
-                    Number.isInteger(
-                      Number(exercise.reps)
-                    ) &&
-
-                    Number(exercise.reps) > 0 &&
-
-                    [15, 30, 45, 60].includes(
-                        Number(
-                          exercise.rest
-                        )
-                      ) && (
-                      exercise.weights === undefined ||
-                      (
-                        Array.isArray(exercise.weights) &&
-                        exercise.weights.length >= Number(exercise.sets) &&
-                        exercise.weights
-                          .slice(0, Number(exercise.sets))
-                          .every(
-                            weight =>
-                              Number.isFinite(Number(weight)) &&
-                              Number(weight) >= 0
-                          )
-                      )
-                    )
-                );
-
-              if (!validExercises) {
-                throw new Error(
-                  "Dados inválidos."
-                );
-              }
-
-              const confirmed = await showConfirm(
-                  "O treino atual será substituído pelo treino importado.",
-                  {
-                    title: "Importar treino",
-                    confirmText: "Importar"
-                  }
-                );
-
-              if (!confirmed) {
-                return;
-              }
-
-              workout = {
-                name: importedWorkout.name || "Meu treino",
-                exercises: importedWorkout.exercises.map(
-                      exercise => ({
-                        id: exercise.id || crypto.randomUUID(),
-                        name: exercise.name.trim(),
-                        sets: Number(exercise.sets),
-                        reps: Number(exercise.reps),
-                        rest: Number(exercise.rest),
-                        weights: normalizeWeights(exercise),
-                        custom: Boolean(exercise.custom)
-                      })
-                    )
-              };
-
-              saveWorkout();
-              populateExerciseSelect();
-              renderWorkout();
-              resetExerciseForm();
-
-              await showMessage(
-                "Treino importado com sucesso.",
-                "Importação concluída"
-              );
-            } catch (error) {
-              console.error(
-                "Erro ao importar:",
-                error
-              );
-
-              await showMessage(
-                "Não foi possível importar o arquivo. Verifique se ele é um JSON válido exportado por este aplicativo.",
-                "Erro na importação"
-              );
-            } finally {
-              importFile.value = "";
+          if (Array.isArray(data.workouts)) {
+            importedWorkouts = data.workouts;
+          } else {
+            // Compatibilidade com arquivos das versões anteriores.
+            const legacyWorkout = data.workout || data;
+            if (legacyWorkout && Array.isArray(legacyWorkout.exercises)) {
+              importedWorkouts = [legacyWorkout];
             }
-          };
+          }
 
-        reader.readAsText(file);
+          if (importedWorkouts.length === 0) {
+            throw new Error("Formato inválido.");
+          }
+
+          const normalized = importedWorkouts.map(item => {
+            const normalizedWorkout = normalizeWorkout(item);
+            if (!normalizedWorkout || normalizedWorkout.exercises.length === 0) {
+              throw new Error("Dados inválidos.");
+            }
+
+            return {
+              id: item.id || crypto.randomUUID(),
+              ...normalizedWorkout,
+              createdAt: item.createdAt || new Date().toISOString(),
+              updatedAt: item.updatedAt || item.createdAt || new Date().toISOString()
+            };
+          });
+
+          const confirmed = await showConfirm(
+            `A importação substituirá os ${savedWorkouts.length} treino${savedWorkouts.length !== 1 ? "s" : ""} salvo${savedWorkouts.length !== 1 ? "s" : ""} pelos ${normalized.length} treino${normalized.length !== 1 ? "s" : ""} do arquivo.`,
+            {
+              title: "Importar treinos",
+              confirmText: "Importar"
+            }
+          );
+
+          if (!confirmed) return;
+
+          createDataBackup("Antes de importar treinos");
+          savedWorkouts = normalized;
+          saveSavedWorkouts();
+
+          currentWorkoutId = savedWorkouts[0].id;
+          workout = cloneWorkout(savedWorkouts[0]);
+          saveWorkout();
+
+          populateExerciseSelect();
+          renderWorkout();
+          renderSavedWorkouts();
+          resetExerciseForm();
+          updateWorkoutNameButton();
+
+          await showMessage(
+            `${normalized.length} treino${normalized.length !== 1 ? "s" : ""} importado${normalized.length !== 1 ? "s" : ""} com sucesso.`,
+            "Importação concluída"
+          );
+        } catch (error) {
+          console.error("Erro ao importar:", error);
+          await showMessage(
+            "Não foi possível importar o arquivo. Verifique se ele é um JSON válido exportado por este aplicativo.",
+            "Erro na importação"
+          );
+        } finally {
+          importFile.value = "";
+        }
+      };
+
+      reader.readAsText(file);
+    });
+    restoreBackupBtn.addEventListener("click", async () => {
+      const backup = loadDataBackup();
+
+      if (!backup) {
+        await showMessage(
+          "Nenhum backup disponível para restauração.",
+          "Backup"
+        );
+        return;
       }
-    );
+
+      const backupDate = new Date(backup.createdAt);
+      const dateText = Number.isNaN(backupDate.getTime())
+        ? "data desconhecida"
+        : backupDate.toLocaleString("pt-BR", {
+            dateStyle: "short",
+            timeStyle: "short"
+          });
+
+      const confirmed = await showConfirm(
+        `O backup de ${dateText} substituirá os treinos salvos e o treino atual. Deseja continuar?`,
+        {
+          title: "Restaurar backup",
+          confirmText: "Restaurar"
+        }
+      );
+
+      if (!confirmed) return;
+
+      // Mantém uma cópia do estado atual antes de restaurar o backup.
+      createDataBackup("Antes de restaurar outro backup");
+
+      const normalizedWorkouts = backup.savedWorkouts
+        .map(item => {
+          const normalized = normalizeWorkout(item);
+          if (!normalized) return null;
+
+          return {
+            id: item.id || crypto.randomUUID(),
+            ...normalized,
+            createdAt: item.createdAt || new Date().toISOString(),
+            updatedAt: item.updatedAt || item.createdAt || new Date().toISOString()
+          };
+        })
+        .filter(Boolean);
+
+      const normalizedCurrent = normalizeWorkout(backup.workout);
+
+      if (!normalizedCurrent) {
+        await showMessage(
+          "O backup está corrompido ou incompleto.",
+          "Erro no backup"
+        );
+        return;
+      }
+
+      savedWorkouts = normalizedWorkouts;
+      currentWorkoutId = backup.currentWorkoutId || null;
+      workout = normalizedCurrent;
+
+      if (
+        currentWorkoutId &&
+        !savedWorkouts.some(item => item.id === currentWorkoutId)
+      ) {
+        currentWorkoutId = null;
+      }
+
+      saveSavedWorkouts();
+      saveWorkout();
+      clearSession();
+
+      populateExerciseSelect();
+      renderWorkout();
+      renderSavedWorkouts();
+      resetExerciseForm();
+      updateWorkoutNameButton();
+      checkForActiveSession();
+
+      await showMessage(
+        "Os dados do backup foram restaurados com sucesso.",
+        "Backup restaurado"
+      );
+    });
+
+    window.addEventListener("beforeunload", event => {
+      if (!hasUnsavedChanges()) {
+        return;
+      }
+
+      event.preventDefault();
+      event.returnValue = "";
+    });
+
     /* =========================================================
        ÁUDIO
     ========================================================= */
@@ -3627,37 +4129,7 @@
         console.log("Áudio não disponível.", error);
       }
     }
-    /* =========================================================
-       SALVAR AO SAIR / OCULTAR
-    ========================================================= */
-    document.addEventListener(
-      "visibilitychange",
-      () => {
-        if (document.visibilityState === "hidden") {
-          if (workoutState.status === "working" || workoutState.status === "resting") {
-            saveSession();
-          }
-        }
-      }
-    );
 
-    window.addEventListener("pagehide", () => {
-        if (workoutState.status === "working" || workoutState.status === "resting") {
-          saveSession();
-        }
-      }
-    );
-
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    init();
-  </script>
+</script>
 </body>
 </html>
