@@ -1385,6 +1385,36 @@
     </div>
   </div>
   <script>
+    // VARIÁVEL GLOBAL PARA ARMAZENAR O LOCK
+    let wakeLock = null;
+    // 1. Função para solicitar que a tela fique ligada
+    async function solicitarWakeLock() {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        console.log('Wake Lock ativo: a tela não vai apagar.');
+        // Opcional: Escutar se o sistema liberou o lock por conta própria (ex: bateria baixa)
+        wakeLock.addEventListener('release', () => {
+          console.log('Wake Lock foi liberado pelo sistema.');
+        });
+      } catch (err) {
+        console.error(`Erro ao ativar: ${err.name}, Mensagem: ${err.message}`);
+      }
+    }
+    // 2. Função para liberar manualmente (ex: quando o usuário sai da tela que precisava do bloqueio)
+    function liberarWakeLock() {
+      if (wakeLock !== null) {
+        wakeLock.release();
+        wakeLock = null;
+      }
+    }
+    // 3. SEGREDO: Reativar o bloqueio automaticamente se o usuário minimizar e reabrir o app
+    document.addEventListener('visibilitychange', async () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        await solicitarWakeLock();
+      }
+    });
+    // 4. Chame a função quando fizer sentido no seu app (ex: ao clicar em um botão "Iniciar")
+    // solicitarWakeLock();
     /* =========================================================
        CONFIGURAÇÕES
     ========================================================= */
@@ -2992,6 +3022,7 @@
         renderWorkoutExecution();
         startExecutionTimer();
         playStartSound();
+        solicitarWakeLock();
       }
     );
 
