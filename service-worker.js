@@ -5,7 +5,7 @@
    invalidar os arquivos armazenados pelo Service Worker.
    ========================================================= */
 
-const CACHE_VERSION = "2.1.0";
+const CACHE_VERSION = "2.1.1";
 const CACHE_PREFIX = "sequence-training-";
 const CACHE_NAME = `${CACHE_PREFIX}${CACHE_VERSION}`;
 
