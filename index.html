@@ -1411,36 +1411,69 @@
     </div>
   </div>
   <script>
-    // VARIÁVEL GLOBAL PARA ARMAZENAR O LOCK
+    // Wake Lock: mantém a tela ligada somente enquanto um treino está ativo.
     let wakeLock = null;
-    // 1. Função para solicitar que a tela fique ligada
+    let wakeLockEnabled = false;
+
     async function solicitarWakeLock() {
       try {
-        wakeLock = await navigator.wakeLock.request('screen');
-        console.log('Wake Lock ativo: a tela não vai apagar.');
-        // Opcional: Escutar se o sistema liberou o lock por conta própria (ex: bateria baixa)
-        wakeLock.addEventListener('release', () => {
-          console.log('Wake Lock foi liberado pelo sistema.');
+        if (!("wakeLock" in navigator)) {
+          console.warn("Wake Lock API não está disponível neste navegador/dispositivo.");
+          return;
+        }
+
+        // A API só permite solicitar o lock enquanto a página está visível.
+        if (document.visibilityState !== "visible") {
+          return;
+        }
+
+        // Evita solicitar novamente se já existe um lock ativo.
+        if (wakeLock && !wakeLock.released) {
+          return;
+        }
+
+        wakeLock = await navigator.wakeLock.request("screen");
+        console.log("Wake Lock ativo: a tela não vai apagar.");
+
+        wakeLock.addEventListener("release", () => {
+          console.log("Wake Lock foi liberado pelo sistema.");
+          wakeLock = null;
+
+          // Se o treino continua ativo, o lock será solicitado novamente
+          // quando o PWA voltar a ficar visível.
         });
       } catch (err) {
-        console.error(`Erro ao ativar: ${err.name}, Mensagem: ${err.message}`);
+        wakeLock = null;
+        console.error(
+          `Erro ao ativar Wake Lock: ${err.name}, Mensagem: ${err.message}`
+        );
       }
     }
-    // 2. Função para liberar manualmente (ex: quando o usuário sai da tela que precisava do bloqueio)
-    function liberarWakeLock() {
-      if (wakeLock !== null) {
-        wakeLock.release();
+
+    async function liberarWakeLock() {
+      wakeLockEnabled = false;
+
+      if (wakeLock) {
+        try {
+          await wakeLock.release();
+        } catch (err) {
+          console.warn("Erro ao liberar Wake Lock:", err);
+        }
+
         wakeLock = null;
       }
     }
-    // 3. SEGREDO: Reativar o bloqueio automaticamente se o usuário minimizar e reabrir o app
-    document.addEventListener('visibilitychange', async () => {
-      if (document.visibilityState === 'visible') {
+
+    // Se o sistema liberar o Wake Lock ao colocar o PWA em segundo plano,
+    // solicita novamente quando o usuário voltar para o aplicativo.
+    document.addEventListener("visibilitychange", async () => {
+      if (
+        document.visibilityState === "visible" &&
+        wakeLockEnabled
+      ) {
         await solicitarWakeLock();
       }
     });
-    // 4. Chame a função quando fizer sentido no seu app (ex: ao clicar em um botão "Iniciar")
-    // solicitarWakeLock();
     /* =========================================================
        CONFIGURAÇÕES
     ========================================================= */
@@ -3094,6 +3127,9 @@
         showWorkoutScreen();
         renderWorkoutExecution();
         startExecutionTimer();
+
+        // Ativa o Wake Lock explicitamente no momento em que o treino começa.
+        wakeLockEnabled = true;
         await solicitarWakeLock();
       }
     );
@@ -3612,7 +3648,7 @@
 
     document.getElementById("restPauseBtn").addEventListener("click", openPauseMenu);
     document.getElementById("resumeBtn").addEventListener("click", closePauseMenu);
-    document.getElementById("endWorkoutBtn").addEventListener("click", () => {
+    document.getElementById("endWorkoutBtn").addEventListener("click", async () => {
         pauseModalOverlay.classList.remove(
           "visible"
         );
@@ -3624,6 +3660,7 @@
         stopExecutionTimer();
         clearInterval(restInterval);
         restInterval = null;
+        await liberarWakeLock();
         clearSession();
 
         workoutState = {
@@ -3795,9 +3832,10 @@
     /* =========================================================
        FINALIZAÇÃO
     ========================================================= */
-    function finishWorkout() {
+    async function finishWorkout() {
       saveWorkoutToHistory();
       stopExecutionTimer();
+      await liberarWakeLock();
       
       clearInterval(restInterval);
 
@@ -3874,8 +3912,12 @@
 
     continueBtn.addEventListener("click", continueWorkout);
 
-    function continueWorkout() {
+    async function continueWorkout() {
       recoveryBox.classList.add("hidden");
+
+      // A sessão recuperada também precisa reativar o Wake Lock no PWA.
+      wakeLockEnabled = true;
+      await solicitarWakeLock();
 
       if (workoutState.status === "resting") {
         showRestScreen();
