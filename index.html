@@ -755,6 +755,19 @@
       gap: 12px;
     }
 
+    .header-row-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .exercise-modal {
+      max-width: 520px;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
+
     /* ========================================
        HISTÓRICO
     ======================================== */
@@ -922,6 +935,11 @@
         width: 100%;
       }
 
+      .header-row-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
       .saved-workout-item {
         align-items: flex-start;
       }
@@ -990,16 +1008,21 @@
         </button>
       </div>
     </section>
-        <!-- Lista do treino -->
+    <!-- Lista do treino -->
     <section class="card">
       <div class="header-row">
         <h2>
           Seu treino <br/>
           <span id="loadedWorkoutName" class="custom-badge hidden"></span>
         </h2>
-        <button class="btn btn-small" id="newSavedWorkoutBtn">
-          + Novo treino
-        </button>
+        <div class="header-row-actions">
+          <button class="btn btn-small" id="addExerciseBtn" type="button">
+            + Exercício
+          </button>
+          <button class="btn btn-small" id="newSavedWorkoutBtn">
+            + Novo treino
+          </button>
+        </div>
       </div>
       <div id="workoutList" class="workout-list"></div>
       <div id="emptyWorkout" class="empty">
@@ -1017,12 +1040,14 @@
         </button>
       </div>
     </section>
-    <!-- Formulário -->
-    <section class="card">
-      <h2 id="formTitle">
-        Adicionar exercício ao treino <span id="loadedWorkoutName" class="custom-badge hidden"></span>
-      </h2>
-      <form id="exerciseForm">
+    <!-- Modal de adicionar/editar exercício -->
+    <div class="modal-overlay" id="addExerciseModalOverlay" aria-hidden="true">
+      <div class="modal exercise-modal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+
+      <h3 id="formTitle">
+        Adicionar exercício ao treino
+      </h3>
+      <form id="exerciseForm" class="modal-form">
         <div class="form-grid">
           <div class="full">
             <label for="exerciseSelect">
@@ -1086,7 +1111,8 @@
           </button>
         </div>
       </form>
-    </section>
+      </div>
+    </div>
     <!-- Meus treinos -->
     <section class="card">
       <div class="header-row">
@@ -1409,7 +1435,7 @@
     }
     // 3. SEGREDO: Reativar o bloqueio automaticamente se o usuário minimizar e reabrir o app
     document.addEventListener('visibilitychange', async () => {
-      if (wakeLock !== null && document.visibilityState === 'visible') {
+      if (document.visibilityState === 'visible') {
         await solicitarWakeLock();
       }
     });
@@ -1476,6 +1502,8 @@
     const workoutScreen = document.getElementById("workoutScreen");
     const restScreen = document.getElementById("restScreen");
     const finishScreen = document.getElementById("finishScreen");
+    const addExerciseBtn = document.getElementById("addExerciseBtn");
+    const addExerciseModalOverlay = document.getElementById("addExerciseModalOverlay");
     const exerciseForm = document.getElementById("exerciseForm");
     const exerciseSelect = document.getElementById("exerciseSelect");
     const setsInput = document.getElementById("setsInput");
@@ -1732,6 +1760,41 @@
     );
 
     /* =========================================================
+       MODAL DE EXERCÍCIO
+    ========================================================= */
+
+    function openAddExerciseModal() {
+      resetExerciseForm();
+
+      addExerciseModalOverlay.classList.add("visible");
+      addExerciseModalOverlay.setAttribute("aria-hidden", "false");
+
+      setTimeout(() => {
+        exerciseSelect.focus();
+      }, 50);
+    }
+
+    function closeAddExerciseModal() {
+      addExerciseModalOverlay.classList.remove("visible");
+      addExerciseModalOverlay.setAttribute("aria-hidden", "true");
+      resetExerciseForm();
+    }
+
+    addExerciseBtn.addEventListener(
+      "click",
+      openAddExerciseModal
+    );
+
+    addExerciseModalOverlay.addEventListener(
+      "click",
+      event => {
+        if (event.target === addExerciseModalOverlay) {
+          closeAddExerciseModal();
+        }
+      }
+    );
+
+    /* =========================================================
        MODAL PERSONALIZADO
     ========================================================= */
 
@@ -1824,6 +1887,11 @@
 
         if (customModalOverlay.classList.contains("visible")) {
           closeCustomModal();
+          return;
+        }
+
+        if (addExerciseModalOverlay.classList.contains("visible")) {
+          closeAddExerciseModal();
           return;
         }
       }
@@ -2526,7 +2594,7 @@
         saveWorkout();
         populateExerciseSelect();
         renderWorkout();
-        resetExerciseForm();
+        closeAddExerciseModal();
       }
     );
 
@@ -2633,7 +2701,10 @@
       document.getElementById("formTitle").textContent = "Adicionar exercício";
     }
 
-    cancelEditBtn.addEventListener("click",resetExerciseForm);
+    cancelEditBtn.addEventListener(
+      "click",
+      closeAddExerciseModal
+    );
 
     /* =========================================================
        LISTA
@@ -2859,10 +2930,12 @@
         "formTitle"
       ).textContent = "Editar exercício";
 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
+      addExerciseModalOverlay.classList.add("visible");
+      addExerciseModalOverlay.setAttribute("aria-hidden", "false");
+
+      setTimeout(() => {
+        exerciseSelect.focus();
+      }, 50);
     }
 
     /* =========================================================
@@ -3021,8 +3094,7 @@
         showWorkoutScreen();
         renderWorkoutExecution();
         startExecutionTimer();
-        playStartSound();
-        solicitarWakeLock();
+        await solicitarWakeLock();
       }
     );
 
@@ -3454,7 +3526,6 @@
       startExecutionTimer();
     }
 
-
     function skipRest() {
       clearInterval(restInterval);
       restInterval = null;
@@ -3847,7 +3918,6 @@
     /* =========================================================
        EXPORTAR / IMPORTAR TODOS OS TREINOS
     ========================================================= */
-
     exportBtn.addEventListener("click", async () => {
       if (savedWorkouts.length === 0) {
         await showMessage(
