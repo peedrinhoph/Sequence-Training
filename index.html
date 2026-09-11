@@ -13,7 +13,7 @@
   <link rel="icon" type="images" href="./favicon.ico" />
   <link rel="manifest" href="./manifest.json">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
-  <title>Sequence Training by PHP</title>
+  <title>Sequence Training</title>
 
   <style>
     :root {
@@ -27,7 +27,8 @@
       --primary-dark: #65a30d;
       --danger: #ef4444;
       --success: #22c55e;
-      --info: #5100ff;
+      --info: #38bdf8;
+      --warning: #f59e0b;
       --modal-overlay: rgba(0, 0, 0, .72);
     }
 
@@ -201,17 +202,17 @@
     }
 
     .btn-danger {
-      background: var(--danger);
-      color: white;
+      background: var(--danger) !important;
+      color: white !important;
     }
 
     .btn-info {
-      background: var(--info);
-      color: white;
+      background: var(--info) !important;
+      color: white !important;
     }
-
-    .background-danger {
-      background: var(--danger) !important;
+    
+    .btn-warning {
+      background: var(--warning) !important;
       color: white !important;
     }
 
@@ -232,6 +233,12 @@
 
     .margin-top-reset {
       margin-top: 0px !important;
+    }
+
+    .alert-warning {
+        background-color: rgba(245, 158, 11, 0.1);
+        border-left: 4px solid var(--warning);
+        color: var(--text);
     }
 
     /* ========================================
@@ -1002,7 +1009,7 @@
     <header>
       <div class="header-row">
         <div>
-          <h1>Sequence Training by PHP</h1>
+          <h1>Sequence Training</h1>
           <p>Physical & Athletic Training</p>
         </div>
         <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">☀️</button>
@@ -1041,7 +1048,7 @@
       </div>
       <div class="bottom-actions margin-top-reset">
         <button class="btn btn-primary full-btn" id="startWorkoutBtn">
-          ▶ Iniciar treino
+          ▶ Iniciar
         </button>
       </div>
       <div id="workoutList" class="workout-list"></div>
@@ -2198,13 +2205,13 @@
             </div>
           </div>
           <div class="saved-workout-actions">
-            <button class="btn btn-small btn-ghost" data-action="view" data-id="${saved.id}">
+            <button class="btn btn-small btn-info" data-action="view" data-id="${saved.id}">
               Carregar
             </button>
             <button class="btn btn-small btn-ghost" data-action="duplicate" data-id="${saved.id}">
               Duplicar
             </button>
-            <button class="icon-btn background-danger" title="Excluir treino" data-action="delete" data-id="${saved.id}">
+            <button class="icon-btn btn-danger" title="Excluir treino" data-action="delete" data-id="${saved.id}">
               ×
             </button>
           </div>
@@ -2822,7 +2829,7 @@
                 ↓
               </button>
               <button
-                class="icon-btn"
+                class="icon-btn btn-info"
                 title="Editar"
                 data-action="edit"
                 data-index="${index}"
@@ -2830,7 +2837,7 @@
                 ✎
               </button>
               <button
-                class="icon-btn background-danger"
+                class="icon-btn btn-danger"
                 title="Excluir"
                 data-action="delete"
                 data-index="${index}"
