@@ -27,6 +27,7 @@
       --primary-dark: #65a30d;
       --danger: #ef4444;
       --success: #22c55e;
+      --info: #5100ff;
       --modal-overlay: rgba(0, 0, 0, .72);
     }
 
@@ -204,6 +205,16 @@
       color: white;
     }
 
+    .btn-info {
+      background: var(--info);
+      color: white;
+    }
+
+    .background-danger {
+      background: var(--danger) !important;
+      color: white !important;
+    }
+
     .btn-ghost {
       background: transparent;
       border: 1px solid var(--border);
@@ -217,6 +228,10 @@
     
     .text-center {
       text-align: center;
+    }
+
+    .margin-top-reset {
+      margin-top: 0px !important;
     }
 
     /* ========================================
@@ -400,7 +415,7 @@
 
     .workout-total-time {
       color: var(--primary);
-      font-size: 14px;
+      font-size: 20px;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
@@ -987,7 +1002,7 @@
     <header>
       <div class="header-row">
         <div>
-          <h1>Sequence Training</h1>
+          <h1>Sequence Training by PHP</h1>
           <p>Physical & Athletic Training</p>
         </div>
         <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">☀️</button>
@@ -1004,7 +1019,7 @@
           Continuar treino
         </button>
         <button class="btn btn-ghost" id="newWorkoutBtn">
-          Começar do início
+          Começar novo
         </button>
       </div>
     </section>
@@ -1016,7 +1031,7 @@
           <span id="loadedWorkoutName" class="custom-badge hidden"></span>
         </h2>
         <div class="header-row-actions">
-          <button class="btn btn-small" id="addExerciseBtn" type="button">
+          <button class="btn btn-small btn-info" id="addExerciseBtn" type="button">
             + Exercício
           </button>
           <button class="btn btn-small" id="newSavedWorkoutBtn">
@@ -1024,14 +1039,16 @@
           </button>
         </div>
       </div>
+      <div class="bottom-actions margin-top-reset">
+        <button class="btn btn-primary full-btn" id="startWorkoutBtn">
+          ▶ Iniciar treino
+        </button>
+      </div>
       <div id="workoutList" class="workout-list"></div>
       <div id="emptyWorkout" class="empty">
         Nenhum exercício adicionado ainda.
       </div>
       <div class="bottom-actions">
-        <button class="btn btn-primary full-btn" id="startWorkoutBtn">
-          ▶ Iniciar treino
-        </button>
         <button class="btn" id="clearWorkoutBtn">
           Limpar treino
         </button>
@@ -2181,13 +2198,13 @@
             </div>
           </div>
           <div class="saved-workout-actions">
-            <button class="btn btn-small" data-action="view" data-id="${saved.id}">
-              Visualizar
+            <button class="btn btn-small btn-ghost" data-action="view" data-id="${saved.id}">
+              Carregar
             </button>
-            <button class="btn btn-small" data-action="duplicate" data-id="${saved.id}">
+            <button class="btn btn-small btn-ghost" data-action="duplicate" data-id="${saved.id}">
               Duplicar
             </button>
-            <button class="icon-btn" title="Excluir treino" data-action="delete" data-id="${saved.id}">
+            <button class="icon-btn background-danger" title="Excluir treino" data-action="delete" data-id="${saved.id}">
               ×
             </button>
           </div>
@@ -2813,7 +2830,7 @@
                 ✎
               </button>
               <button
-                class="icon-btn"
+                class="icon-btn background-danger"
                 title="Excluir"
                 data-action="delete"
                 data-index="${index}"
@@ -3344,27 +3361,29 @@
 
     function updateTotalWorkoutTimer() {
       const total = Number(workoutState.totalSeconds || 0);
+      const hours = Math.floor(total / 3600).toString().padStart(2, "0");
       const minutes = Math.floor(total / 60).toString().padStart(2, "0");
       const seconds = (total % 60).toString().padStart(2, "0");
       const element = document.getElementById("workoutTotalTime");
 
       if (element) {
-        element.textContent = `${minutes}:${seconds}`;
+        element.textContent = `${hours}:${minutes}:${seconds}`;
       }
 
       const restElement = document.getElementById("restTotalTime");
 
       if (restElement) {
-        restElement.textContent = `${minutes}:${seconds}`;
+        restElement.textContent = `${hours}:${minutes}:${seconds}`;
       }
     }
 
     function updateExecutionTimer() {
       const total = workoutState.executionSeconds;
+      const hours = Math.floor(total / 3600).toString().padStart(2, "0");
       const minutes = Math.floor(total / 60).toString().padStart(2, "0");
       const seconds = (total % 60).toString().padStart(2, "0");
 
-      document.getElementById("executionTimer").textContent = `${minutes}:${seconds}`;
+      document.getElementById("executionTimer").textContent = `${hours}:${minutes}:${seconds}`;
     }
 
     /* =========================================================
