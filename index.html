@@ -1120,6 +1120,12 @@
               <option value="60">
                 60 segundos
               </option>
+              <option value="75">
+                75 segundos
+              </option>
+              <option value="90">
+                90 segundos
+              </option>
             </select>
           </div>
         </div>
@@ -1398,6 +1404,12 @@
             </option>
             <option value="60">
               60 segundos
+            </option>
+            <option value="75">
+              75 segundos
+            </option>
+            <option value="90">
+              90 segundos
             </option>
           </select>
         </div>
@@ -2598,7 +2610,7 @@
           return;
         }
 
-        if (![15, 30, 45, 60].includes(rest)) {
+        if (![15, 30, 45, 60, 75, 90].includes(rest)) {
           showMessage(
             "Selecione um intervalo válido."
           );
@@ -3368,29 +3380,27 @@
 
     function updateTotalWorkoutTimer() {
       const total = Number(workoutState.totalSeconds || 0);
-      const hours = Math.floor(total / 3600).toString().padStart(2, "0");
       const minutes = Math.floor(total / 60).toString().padStart(2, "0");
       const seconds = (total % 60).toString().padStart(2, "0");
       const element = document.getElementById("workoutTotalTime");
 
       if (element) {
-        element.textContent = `${hours}:${minutes}:${seconds}`;
+        element.textContent = `${minutes}:${seconds}`;
       }
 
       const restElement = document.getElementById("restTotalTime");
 
       if (restElement) {
-        restElement.textContent = `${hours}:${minutes}:${seconds}`;
+        restElement.textContent = `${minutes}:${seconds}`;
       }
     }
 
     function updateExecutionTimer() {
       const total = workoutState.executionSeconds;
-      const hours = Math.floor(total / 3600).toString().padStart(2, "0");
       const minutes = Math.floor(total / 60).toString().padStart(2, "0");
       const seconds = (total % 60).toString().padStart(2, "0");
 
-      document.getElementById("executionTimer").textContent = `${hours}:${minutes}:${seconds}`;
+      document.getElementById("executionTimer").textContent = `${minutes}:${seconds}`;
     }
 
     /* =========================================================
@@ -4205,12 +4215,41 @@
     /* =========================================================
        ÁUDIO
     ========================================================= */
+    let audioContext = null;
+
+    function getAudioContext() {
+      try {
+        const AudioContextClass =
+          window.AudioContext || window.webkitAudioContext;
+
+        if (!AudioContextClass) return null;
+
+        if (!audioContext) {
+          audioContext = new AudioContextClass();
+        }
+
+        if (audioContext.state === "suspended") {
+          audioContext.resume().catch(() => {});
+        }
+
+        return audioContext;
+      } catch (error) {
+        console.log("Áudio não disponível.", error);
+        return null;
+      }
+    }
+
+    // Libera o áudio durante uma interação do usuário.
+    // Isso evita que a política de autoplay do navegador bloqueie
+    // o som quando ele for disparado automaticamente pelo timer.
+    document.addEventListener("click", () => {
+      getAudioContext();
+    }, { passive: true });
+
     function playRestFinishedSound() {
       try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-
-        const audioContext = new AudioContext();
+        const audioContext = getAudioContext();
+        if (!audioContext) return;
         const oscillator = audioContext.createOscillator();
         const gain = audioContext.createGain();
 
@@ -4247,10 +4286,8 @@
 
     function playStartSound() {
       try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-
-        const audioContext = new AudioContext();
+        const audioContext = getAudioContext();
+        if (!audioContext) return;
         const oscillator = audioContext.createOscillator();
         const gain = audioContext.createGain();
 
@@ -4276,10 +4313,8 @@
 
     function playFinishSound() {
       try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-
-        const audioContext = new AudioContext();
+        const audioContext = getAudioContext();
+        if (!audioContext) return;
         const now = audioContext.currentTime;
 
         function beep(startTime, duration, frequency, peak = 0.6) {
