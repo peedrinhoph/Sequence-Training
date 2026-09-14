@@ -851,9 +851,7 @@
     }
 
     .saved-workout-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: grid;
       gap: 12px;
       padding: 13px;
       background: var(--card2);
@@ -883,6 +881,55 @@
       align-items: center;
       gap: 7px;
       flex-shrink: 0;
+    }
+
+    .saved-workouts-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .saved-workouts-count {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .saved-workouts-sort {
+      width: auto;
+      min-width: 170px;
+      height: 38px;
+    }
+
+    .saved-workout-info {
+      flex: 1;
+    }
+
+    .saved-workout-name {
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+
+    .saved-workout-details {
+      line-height: 1.5;
+    }
+
+    .saved-workout-last-use {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 560px) {
+      .saved-workouts-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .saved-workouts-sort {
+        width: 100%;
+      }
     }
 
     /* ========================================
@@ -960,10 +1007,6 @@
       .header-row-actions {
         flex-wrap: wrap;
         justify-content: flex-end;
-      }
-
-      .saved-workout-item {
-        align-items: flex-start;
       }
 
       .saved-workout-actions {
@@ -1147,6 +1190,15 @@
     <section class="card">
       <div class="header-row">
         <h2>Meus treinos</h2>
+      </div>
+      <div class="saved-workouts-toolbar">
+        <span class="saved-workouts-count" id="savedWorkoutsCount"></span>
+        <select id="savedWorkoutsSort" class="saved-workouts-sort" aria-label="Ordenar meus treinos">
+          <option value="lastUsed">Último uso</option>
+          <option value="nameAsc">Nome A → Z</option>
+          <option value="nameDesc">Nome Z → A</option>
+          <option value="createdDesc">Mais recentes</option>
+        </select>
       </div>
       <div id="savedWorkoutsList" class="saved-workouts-list"></div>
       <div id="emptySavedWorkouts" class="empty">
@@ -1590,6 +1642,8 @@
     const newSavedWorkoutBtn = document.getElementById("newSavedWorkoutBtn");
     const savedWorkoutsList = document.getElementById("savedWorkoutsList");
     const emptySavedWorkouts = document.getElementById("emptySavedWorkouts");
+    const savedWorkoutsCount = document.getElementById("savedWorkoutsCount");
+    const savedWorkoutsSort = document.getElementById("savedWorkoutsSort");
     const exportBtn = document.getElementById("exportBtn");
     const importBtn = document.getElementById("importBtn");
     const restoreBackupBtn = document.getElementById("restoreBackupBtn");
@@ -2199,35 +2253,123 @@
         : "Salvar treino";
     }
 
+    function getLastWorkoutExecution(saved) {
+      const history = loadHistory();
+      const targetName = String(saved.name || "Meu treino");
+
+      return history.find(entry =>
+        String(entry.workoutName || "Meu treino") === targetName
+      ) || null;
+    }
+
+    function formatRelativeDate(dateValue) {
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return "Data desconhecida";
+
+      const diffMinutes = Math.floor((Date.now() - date.getTime()) / 60000);
+
+      if (diffMinutes < 1) return "Agora";
+      if (diffMinutes < 60) return `Há ${diffMinutes} min`;
+
+      const diffHours = Math.floor(diffMinutes / 60);
+      if (diffHours < 24) return `Há ${diffHours}h`;
+
+      const diffDays = Math.floor(diffHours / 24);
+      if (diffDays === 1) return "Ontem";
+      if (diffDays < 30) return `Há ${diffDays} dias`;
+
+      return date.toLocaleDateString("pt-BR");
+    }
+
+    function getSavedWorkoutLastUsed(saved) {
+      const historyEntry = getLastWorkoutExecution(saved);
+      return historyEntry?.completedAt || saved.lastUsedAt || null;
+    }
+
+    function getSavedWorkoutSortTime(saved) {
+      const value = getSavedWorkoutLastUsed(saved);
+      const time = value ? new Date(value).getTime() : 0;
+      return Number.isNaN(time) ? 0 : time;
+    }
+
+    function getSortedSavedWorkouts() {
+      const sort = savedWorkoutsSort?.value || "lastUsed";
+      const workouts = [...savedWorkouts];
+
+      workouts.sort((a, b) => {
+        if (sort === "nameAsc") {
+          return String(a.name || "").localeCompare(
+            String(b.name || ""), "pt-BR", { sensitivity: "base" }
+          );
+        }
+
+        if (sort === "nameDesc") {
+          return String(b.name || "").localeCompare(
+            String(a.name || ""), "pt-BR", { sensitivity: "base" }
+          );
+        }
+
+        if (sort === "createdDesc") {
+          return (new Date(b.createdAt || 0).getTime() || 0) -
+                 (new Date(a.createdAt || 0).getTime() || 0);
+        }
+
+        return getSavedWorkoutSortTime(b) - getSavedWorkoutSortTime(a);
+      });
+
+      return workouts;
+    }
+
     function renderSavedWorkouts() {
       savedWorkoutsList.innerHTML = "";
-      emptySavedWorkouts.classList.toggle(
-        "hidden",
-        savedWorkouts.length > 0
-      );
 
-      savedWorkouts.forEach(saved => {
+      if (savedWorkoutsCount) {
+        const count = savedWorkouts.length;
+        savedWorkoutsCount.textContent =
+          `${count} treino${count === 1 ? "" : "s"} salvo${count === 1 ? "" : "s"}`;
+      }
+
+      emptySavedWorkouts.classList.toggle("hidden", savedWorkouts.length > 0);
+
+      getSortedSavedWorkouts().forEach(saved => {
         const item = document.createElement("div");
         item.className = "saved-workout-item";
+
+        const exercisesCount = Array.isArray(saved.exercises)
+          ? saved.exercises.length
+          : 0;
+
+        const lastUsedAt = getSavedWorkoutLastUsed(saved);
+        const lastUsedText = lastUsedAt
+          ? `Último treino: ${formatRelativeDate(lastUsedAt)}`
+          : "Ainda não executado";
+
         item.innerHTML = `
           <div class="saved-workout-info">
             <div class="saved-workout-name">${escapeHtml(saved.name)}</div>
             <div class="saved-workout-details">
-              ${saved.exercises.length} exercício${saved.exercises.length !== 1 ? "s" : ""}
+              ${exercisesCount} exercício${exercisesCount !== 1 ? "s" : ""}
+            </div>
+            <div class="saved-workout-last-use">
+              ${escapeHtml(lastUsedText)}
             </div>
           </div>
           <div class="saved-workout-actions">
+            <button class="btn btn-small btn-primary" data-action="train" data-id="${saved.id}">
+              ▶ Iniciar
+            </button>
             <button class="btn btn-small btn-info" data-action="view" data-id="${saved.id}">
-              Carregar
+              ✎ Editar
             </button>
-            <button class="btn btn-small btn-ghost" data-action="duplicate" data-id="${saved.id}">
-              Duplicar
+            <button class="btn btn-small btn-warning" data-action="duplicate" data-id="${saved.id}">
+              ⧉ Duplicar
             </button>
-            <button class="icon-btn btn-danger" title="Excluir treino" data-action="delete" data-id="${saved.id}">
-              ×
+            <button class="btn btn-small btn-danger" title="Excluir treino" data-action="delete" data-id="${saved.id}">
+              × Excluir
             </button>
           </div>
         `;
+
         savedWorkoutsList.appendChild(item);
       });
     }
@@ -2301,7 +2443,7 @@
       renderSavedWorkouts();
     }
 
-    savedWorkoutsList.addEventListener("click", event => {
+    savedWorkoutsList.addEventListener("click", async event => {
       const button = event.target.closest("button[data-action]");
       if (!button) return;
 
@@ -2309,13 +2451,31 @@
       const action = button.dataset.action;
 
       if (action === "view") {
-        loadSavedWorkout(id);
+        await loadSavedWorkout(id);
+      } else if (action === "train") {
+        const saved = savedWorkouts.find(item => item.id === id);
+        if (!saved) return;
+
+        const canLeave = await confirmLeavingCurrentEditor();
+        if (!canLeave) return;
+
+        workout = cloneWorkout(saved);
+        currentWorkoutId = saved.id;
+        saveWorkout();
+        updateWorkoutName();
+        updateWorkoutNameButton();
+        populateExerciseSelect();
+        renderWorkout();
+
+        startWorkoutBtn.click();
       } else if (action === "duplicate") {
-        duplicateSavedWorkout(id);
+        await duplicateSavedWorkout(id);
       } else if (action === "delete") {
-        deleteSavedWorkout(id);
+        await deleteSavedWorkout(id);
       }
     });
+
+    savedWorkoutsSort.addEventListener("change", renderSavedWorkouts);
 
     newSavedWorkoutBtn.addEventListener("click", async () => {
       const canLeave = await confirmLeavingCurrentEditor();
@@ -3736,6 +3896,17 @@
       };
 
       history.unshift(entry);
+
+      if (currentWorkoutId) {
+        const savedIndex = savedWorkouts.findIndex(
+          item => item.id === currentWorkoutId
+        );
+
+        if (savedIndex !== -1) {
+          savedWorkouts[savedIndex].lastUsedAt = entry.completedAt;
+          saveSavedWorkouts();
+        }
+      }
 
       localStorage.setItem(
         HISTORY_STORAGE,
