@@ -2217,9 +2217,9 @@
               <div class="library-exercise-meta">${escapeHtml(exercise.muscleGroup)}</div>
             </div>
             <div class="library-exercise-actions">
-              <button class="btn btn-small btn-primary" data-library-action="add" data-id="${escapeHtml(exercise.id)}">+ Adicionar</button>
+              <!--<button class="btn btn-small btn-primary" data-library-action="add" data-id="${escapeHtml(exercise.id)}">+ Adicionar</button>-->
               ${exercise.custom ? `
-                <button class="btn btn-small btn-danger" data-library-action="delete" data-id="${escapeHtml(exercise.id)}">× Excluir</button>
+                <button class="btn btn-small btn-danger" data-library-action="delete" data-id="${escapeHtml(exercise.id)}">×</button>
               ` : ""}
             </div>
           `;
