@@ -964,15 +964,6 @@
       gap: 6px;
       flex-shrink: 0;
     }
-    .library-badge {
-      display: inline-block;
-      margin-left: 5px;
-      padding: 2px 5px;
-      border-radius: 4px;
-      background: var(--card);
-      color: var(--primary);
-      font-size: 10px;
-    }
     .exercise-picker-toolbar {
       display: grid;
       grid-template-columns: 1fr 170px;
@@ -1142,6 +1133,25 @@
         </button>
       </div>
     </section>
+    <!-- Meus treinos -->
+    <section class="card">
+      <div class="header-row">
+        <h2>Meus treinos</h2>
+      </div>
+      <div class="saved-workouts-toolbar">
+        <span class="saved-workouts-count" id="savedWorkoutsCount"></span>
+        <select id="savedWorkoutsSort" class="saved-workouts-sort" aria-label="Ordenar meus treinos">
+          <option value="lastUsed">Último uso</option>
+          <option value="nameAsc">Nome A → Z</option>
+          <option value="nameDesc">Nome Z → A</option>
+          <option value="createdDesc">Mais recentes</option>
+        </select>
+      </div>
+      <div id="savedWorkoutsList" class="saved-workouts-list"></div>
+      <div id="emptySavedWorkouts" class="empty">
+        Nenhum treino salvo ainda.
+      </div>
+    </section>
     <!-- Lista do treino -->
     <section class="card">
       <div class="header-row">
@@ -1256,25 +1266,6 @@
       </form>
       </div>
     </div>
-    <!-- Meus treinos -->
-    <section class="card">
-      <div class="header-row">
-        <h2>Meus treinos</h2>
-      </div>
-      <div class="saved-workouts-toolbar">
-        <span class="saved-workouts-count" id="savedWorkoutsCount"></span>
-        <select id="savedWorkoutsSort" class="saved-workouts-sort" aria-label="Ordenar meus treinos">
-          <option value="lastUsed">Último uso</option>
-          <option value="nameAsc">Nome A → Z</option>
-          <option value="nameDesc">Nome Z → A</option>
-          <option value="createdDesc">Mais recentes</option>
-        </select>
-      </div>
-      <div id="savedWorkoutsList" class="saved-workouts-list"></div>
-      <div id="emptySavedWorkouts" class="empty">
-        Nenhum treino salvo ainda.
-      </div>
-    </section>
     <!-- Biblioteca de exercícios -->
     <section class="card">
       <div class="header-row">
@@ -1284,11 +1275,11 @@
             Exercícios disponíveis organizados por grupo muscular.
           </p>
         </div>
-        <!-- <div class="header-row-actions">
+        <div class="header-row-actions">
           <button type="button" class="btn btn-small btn-ghost" id="customExerciseBtn">
             + Novo
           </button>
-        </div> -->
+        </div>
       </div>
       <div class="library-toolbar">
         <input id="librarySearch" type="search" placeholder="🔎 Buscar exercício..." aria-label="Buscar exercício na biblioteca">
@@ -2212,14 +2203,13 @@
             <div class="library-exercise-info">
               <div class="library-exercise-name">
                 ${escapeHtml(exercise.name)}
-                ${exercise.custom ? '<span class="library-badge">PERSONALIZADO</span>' : ""}
+                ${exercise.custom ? '<span class="custom-badge">PERSONALIZADO</span>' : ""}
               </div>
-              <div class="library-exercise-meta">${escapeHtml(exercise.muscleGroup)}</div>
             </div>
             <div class="library-exercise-actions">
               <!--<button class="btn btn-small btn-primary" data-library-action="add" data-id="${escapeHtml(exercise.id)}">+ Adicionar</button>-->
               ${exercise.custom ? `
-                <button class="btn btn-small btn-danger" data-library-action="delete" data-id="${escapeHtml(exercise.id)}">×</button>
+                <button class="btn btn-small btn-ghost" data-library-action="delete" data-id="${escapeHtml(exercise.id)}">× Excluir</button>
               ` : ""}
             </div>
           `;
@@ -2619,7 +2609,9 @@
       populateExerciseSelect();
       renderWorkout();
       resetExerciseForm();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      //precisa pegar a posicao atual do scroll e colocar no top
+      //precisa scrolar até o inicio da lista Seu treino
+      window.scrollTo({ top: window.scrollY + 500, behavior: "smooth" });
     }
 
     async function duplicateSavedWorkout(id) {
