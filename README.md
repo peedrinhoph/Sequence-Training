@@ -696,9 +696,9 @@ A evolução do Sequence Training será feita priorizando primeiro **estabilidad
 * [x] Backup automático
 * [x] Restauração de backup
 * [x] Proteção contra alterações não salvas
-* [ ] Testes completos de persistência
-* [ ] Versionamento dos dados e sistema de migração
-* [ ] Melhorar gerenciamento de versões do Service Worker/cache
+* [x] Testes completos de persistência
+* [x] Versionamento dos dados e sistema de migração
+* [x] Melhorar gerenciamento de versões do Service Worker/cache
 
 ## 🟢 Fase 2 — Melhorar a criação dos treinos
 
@@ -710,11 +710,9 @@ A evolução do Sequence Training será feita priorizando primeiro **estabilidad
 * [x] Excluir treino
 * [x] Exercícios personalizados
 * [x] Carga individual por série
-* [ ] Melhorar interface de **Meus treinos**
-* [ ] Favoritar treinos
-* [ ] Ordenar treinos por nome ou último uso
-* [ ] Mostrar última execução
-* [ ] Mostrar duração média
+* [x] Melhorar interface de **Meus treinos**
+* [x] Ordenar treinos por nome ou último uso
+* [x] Mostrar última execução
 * [ ] Criar biblioteca de exercícios
 * [ ] Categorizar exercícios por grupo muscular
 * [ ] Melhorar cadastro de exercícios personalizados
