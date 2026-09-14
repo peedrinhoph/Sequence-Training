@@ -921,6 +921,75 @@
       font-size: 12px;
     }
 
+    /* ========================================
+       BIBLIOTECA DE EXERCÍCIOS
+    ======================================== */
+    .library-toolbar {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .library-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .library-group-title {
+      margin: 8px 0 4px;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .library-exercise-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .library-exercise-info { flex: 1; min-width: 0; }
+    .library-exercise-name { font-weight: 700; }
+    .library-exercise-meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .library-exercise-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .library-badge {
+      display: inline-block;
+      margin-left: 5px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: var(--card);
+      color: var(--primary);
+      font-size: 10px;
+    }
+    .exercise-picker-toolbar {
+      display: grid;
+      grid-template-columns: 1fr 170px;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 560px) {
+      .library-toolbar,
+      .exercise-picker-toolbar { grid-template-columns: 1fr; }
+      .library-exercise-item {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .library-exercise-actions { width: 100%; }
+      .library-exercise-actions .btn { flex: 1; }
+    }
+
     @media (max-width: 560px) {
       .saved-workouts-toolbar {
         align-items: stretch;
@@ -1110,21 +1179,25 @@
     <!-- Modal de adicionar/editar exercício -->
     <div class="modal-overlay" id="addExerciseModalOverlay" aria-hidden="true">
       <div class="modal exercise-modal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
-
       <h3 id="formTitle">
         Adicionar exercício ao treino
       </h3>
       <form id="exerciseForm" class="modal-form">
         <div class="form-grid">
           <div class="full">
-            <label for="exerciseSelect">
-              Exercício
-            </label>
-            <select id="exerciseSelect" required>
-              <option value="">
-                Selecione um exercício
-              </option>
-            </select>
+            <label for="exerciseCategoryFilter">Grupo muscular</label>
+            <select id="exerciseCategoryFilter" aria-label="Filtrar exercícios por grupo muscular"></select>
+          </div>
+          <div class="full">
+            <label for="exerciseSelect">Exercício</label>
+            <div style="display: flex; gap: 10px;">
+              <select id="exerciseSelect" required>
+                <option value="">
+                  Selecione um exercício
+                </option>
+              </select>
+              <button type="button" class="btn btn-ghost" id="customExerciseBtn">+</button>
+            </div>
           </div>
           <div class="inputs-row">
             <div>
@@ -1179,9 +1252,6 @@
           <button type="button" class="btn btn-ghost hidden" id="cancelEditBtn">
             Cancelar
           </button>
-          <button type="button" class="btn btn-ghost" id="customExerciseBtn">
-            + Exercício personalizado
-          </button>
         </div>
       </form>
       </div>
@@ -1204,6 +1274,28 @@
       <div id="emptySavedWorkouts" class="empty">
         Nenhum treino salvo ainda.
       </div>
+    </section>
+    <!-- Biblioteca de exercícios -->
+    <section class="card">
+      <div class="header-row">
+        <div>
+          <h2>Biblioteca de exercícios</h2>
+          <p style="margin: -8px 0 14px; color: var(--muted); font-size: 13px;">
+            Exercícios disponíveis organizados por grupo muscular.
+          </p>
+        </div>
+        <!-- <div class="header-row-actions">
+          <button type="button" class="btn btn-small btn-ghost" id="customExerciseBtn">
+            + Novo
+          </button>
+        </div> -->
+      </div>
+      <div class="library-toolbar">
+        <input id="librarySearch" type="search" placeholder="🔎 Buscar exercício..." aria-label="Buscar exercício na biblioteca">
+        <select id="libraryCategory" aria-label="Filtrar biblioteca por grupo muscular"></select>
+      </div>
+      <div id="exerciseLibraryList" class="library-list"></div>
+      <div id="emptyExerciseLibrary" class="empty hidden">Nenhum exercício encontrado.</div>
     </section>
     <!-- Dados -->
     <section class="card">
@@ -1420,50 +1512,9 @@
           </label>
           <input id="customName" type="text" maxlength="80" placeholder="Ex.: Flexão arqueiro" required>
         </div>
-        <div class="inputs-row">
-          <div class="field">
-            <label for="customSets">
-              Séries
-            </label>
-            <input class="text-center" id="customSets" type="number" inputmode="decimal" min="1" max="99" value="3" required>
-          </div>
-          <div class="field">
-            <label for="customReps">
-              Repetições
-            </label>
-            <input class="text-center" id="customReps" type="number" inputmode="decimal" min="1" max="999" value="10" required>
-          </div>
-        </div>
         <div class="field">
-          <label>
-            Carga por série (kg)
-          </label>
-          <div id="customWeightsInputs" class="weights-grid"></div>
-        </div>
-        <div class="field">
-          <label for="customRest">
-            Intervalo
-          </label>
-          <select id="customRest" required>
-            <option value="15">
-              15 segundos
-            </option>
-            <option value="30" selected>
-              30 segundos
-            </option>
-            <option value="45">
-              45 segundos
-            </option>
-            <option value="60">
-              60 segundos
-            </option>
-            <option value="75">
-              75 segundos
-            </option>
-            <option value="90">
-              90 segundos
-            </option>
-          </select>
+          <label for="customMuscleGroup">Grupo muscular</label>
+          <select id="customMuscleGroup" required></select>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-ghost" id="closeCustomModalBtn">
@@ -1572,19 +1623,28 @@
     const HISTORY_STORAGE = "calisthenics_history";
     const THEME_STORAGE = "calisthenics_theme";
     const BACKUP_STORAGE = "calisthenics_backup";
-    const PREDEFINED_EXERCISES = [
-      "Flexão",
-      "Flexão diamante",
-      "Barra fixa",
-      "Barra supinada",
-      "Paralelas",
-      "Agachamento",
-      "Avanço",
-      "Abdominal",
-      "Abdominal infra",
-      "Elevação de pernas",
-      "Prancha"
+    const EXERCISE_LIBRARY_STORAGE = "calisthenics_exercise_library";
+
+    const DEFAULT_EXERCISE_LIBRARY = [
+      { id: "flexao", name: "Flexão", muscleGroup: "Peito", custom: false },
+      { id: "flexao-diamante", name: "Flexão diamante", muscleGroup: "Tríceps", custom: false },
+      { id: "barra-fixa", name: "Barra fixa", muscleGroup: "Costas", custom: false },
+      { id: "barra-supinada", name: "Barra supinada", muscleGroup: "Costas / Bíceps", custom: false },
+      { id: "paralelas", name: "Paralelas", muscleGroup: "Peito / Tríceps", custom: false },
+      { id: "agachamento", name: "Agachamento", muscleGroup: "Pernas", custom: false },
+      { id: "avanco", name: "Avanço", muscleGroup: "Pernas / Glúteos", custom: false },
+      { id: "abdominal", name: "Abdominal", muscleGroup: "Abdômen", custom: false },
+      { id: "abdominal-infra", name: "Abdominal infra", muscleGroup: "Abdômen", custom: false },
+      { id: "elevacao-pernas", name: "Elevação de pernas", muscleGroup: "Abdômen", custom: false },
+      { id: "prancha", name: "Prancha", muscleGroup: "Abdômen", custom: false }
     ];
+
+    const MUSCLE_GROUPS = [
+      "Todos", "Peito", "Costas", "Ombros", "Bíceps", "Tríceps",
+      "Abdômen", "Pernas", "Glúteos", "Antebraços", "Corpo inteiro", "Outros"
+    ];
+
+    let exerciseLibrary = [];
 
     /* =========================================================
        ESTADO
@@ -1644,6 +1704,11 @@
     const emptySavedWorkouts = document.getElementById("emptySavedWorkouts");
     const savedWorkoutsCount = document.getElementById("savedWorkoutsCount");
     const savedWorkoutsSort = document.getElementById("savedWorkoutsSort");
+    const exerciseLibraryList = document.getElementById("exerciseLibraryList");
+    const emptyExerciseLibrary = document.getElementById("emptyExerciseLibrary");
+    const librarySearch = document.getElementById("librarySearch");
+    const libraryCategory = document.getElementById("libraryCategory");
+    const exerciseCategoryFilter = document.getElementById("exerciseCategoryFilter");
     const exportBtn = document.getElementById("exportBtn");
     const importBtn = document.getElementById("importBtn");
     const restoreBackupBtn = document.getElementById("restoreBackupBtn");
@@ -1924,29 +1989,15 @@
     const customModalOverlay = document.getElementById("customModalOverlay");
     const customExerciseForm = document.getElementById("customExerciseForm");
     const customName = document.getElementById("customName");
-    const customSets = document.getElementById("customSets");
-    const customReps = document.getElementById("customReps");
-    const customWeightsInputs = document.getElementById("customWeightsInputs");
-    const customRest = document.getElementById("customRest");
+    const customMuscleGroup = document.getElementById("customMuscleGroup");
     const closeCustomModalBtn = document.getElementById("closeCustomModalBtn");
 
     function openCustomModal() {
       customExerciseForm.reset();
-
-      customSets.value = 3;
-      customReps.value = 10;
-      customRest.value = 30;
-
-      renderWeightInputs(
-        customWeightsInputs,
-        3,
-        [0, 0, 0]
-      );
-
+      customMuscleGroup.value = "Outros";
       customModalOverlay.classList.add(
         "visible"
       );
-
       customModalOverlay.setAttribute(
         "aria-hidden",
         "false"
@@ -2034,6 +2085,178 @@
         .replace(/'/g, "&#039;");
     }
 
+
+    function normalizeExerciseLibrary(items) {
+      if (!Array.isArray(items)) return [];
+
+      return items.map(item => {
+        if (!item || typeof item !== "object") return null;
+        const name = String(item.name || "").trim();
+        const muscleGroup = String(item.muscleGroup || "Outros").trim() || "Outros";
+        if (!name) return null;
+
+        return {
+          id: item.id || crypto.randomUUID(),
+          name,
+          muscleGroup,
+          custom: Boolean(item.custom)
+        };
+      }).filter(Boolean);
+    }
+
+    function loadExerciseLibrary() {
+      try {
+        const saved = localStorage.getItem(EXERCISE_LIBRARY_STORAGE);
+
+        if (saved) {
+          exerciseLibrary = normalizeExerciseLibrary(JSON.parse(saved));
+        }
+
+        if (exerciseLibrary.length === 0) {
+          exerciseLibrary = normalizeExerciseLibrary(DEFAULT_EXERCISE_LIBRARY);
+          saveExerciseLibrary();
+        }
+      } catch (error) {
+        console.error("Erro ao carregar biblioteca de exercícios:", error);
+        exerciseLibrary = normalizeExerciseLibrary(DEFAULT_EXERCISE_LIBRARY);
+      }
+    }
+
+    function saveExerciseLibrary() {
+      localStorage.setItem(
+        EXERCISE_LIBRARY_STORAGE,
+        JSON.stringify(exerciseLibrary)
+      );
+    }
+
+    function getExerciseLibraryItemByName(name) {
+      const normalizedName = String(name || "").trim().toLocaleLowerCase("pt-BR");
+      return exerciseLibrary.find(item =>
+        item.name.toLocaleLowerCase("pt-BR") === normalizedName
+      ) || null;
+    }
+
+    function populateCategorySelect(select, includeAll = true) {
+      if (!select) return;
+
+      const currentValue = select.value;
+      select.innerHTML = "";
+
+      const groups = includeAll
+        ? MUSCLE_GROUPS
+        : MUSCLE_GROUPS.filter(group => group !== "Todos");
+
+      groups.forEach(group => {
+        const option = document.createElement("option");
+        option.value = group;
+        option.textContent = group;
+        select.appendChild(option);
+      });
+
+      if (groups.includes(currentValue)) {
+        select.value = currentValue;
+      }
+    }
+
+    function exerciseMatchesCategory(exercise, category) {
+      if (!category || category === "Todos") return true;
+
+      return String(exercise.muscleGroup || "Outros")
+        .split("/")
+        .map(part => part.trim())
+        .some(part => part === category);
+    }
+
+    function renderExerciseLibrary() {
+      if (!exerciseLibraryList) return;
+
+      const search = String(librarySearch?.value || "").trim().toLocaleLowerCase("pt-BR");
+      const category = libraryCategory?.value || "Todos";
+
+      const filtered = exerciseLibrary.filter(exercise => {
+        const matchesSearch =
+          !search ||
+          exercise.name.toLocaleLowerCase("pt-BR").includes(search) ||
+          exercise.muscleGroup.toLocaleLowerCase("pt-BR").includes(search);
+
+        return matchesSearch && exerciseMatchesCategory(exercise, category);
+      });
+
+      exerciseLibraryList.innerHTML = "";
+
+      if (emptyExerciseLibrary) {
+        emptyExerciseLibrary.classList.toggle("hidden", filtered.length > 0);
+      }
+
+      const grouped = new Map();
+
+      filtered
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name, "pt-BR", { sensitivity: "base" }))
+        .forEach(exercise => {
+          const group = exercise.muscleGroup || "Outros";
+          if (!grouped.has(group)) grouped.set(group, []);
+          grouped.get(group).push(exercise);
+        });
+
+      grouped.forEach((items, group) => {
+        const title = document.createElement("div");
+        title.className = "library-group-title";
+        title.textContent = group;
+        exerciseLibraryList.appendChild(title);
+
+        items.forEach(exercise => {
+          const item = document.createElement("div");
+          item.className = "library-exercise-item";
+          item.innerHTML = `
+            <div class="library-exercise-info">
+              <div class="library-exercise-name">
+                ${escapeHtml(exercise.name)}
+                ${exercise.custom ? '<span class="library-badge">PERSONALIZADO</span>' : ""}
+              </div>
+              <div class="library-exercise-meta">${escapeHtml(exercise.muscleGroup)}</div>
+            </div>
+            <div class="library-exercise-actions">
+              <button class="btn btn-small btn-primary" data-library-action="add" data-id="${escapeHtml(exercise.id)}">+ Adicionar</button>
+              ${exercise.custom ? `
+                <button class="btn btn-small btn-danger" data-library-action="delete" data-id="${escapeHtml(exercise.id)}">× Excluir</button>
+              ` : ""}
+            </div>
+          `;
+          exerciseLibraryList.appendChild(item);
+        });
+      });
+    }
+
+    function populateExerciseSelect() {
+      if (!exerciseSelect) return;
+
+      const currentValue = exerciseSelect.value;
+      const category = exerciseCategoryFilter?.value || "Todos";
+
+      exerciseSelect.innerHTML = `<option value="">Selecione um exercício</option>`;
+
+      exerciseLibrary
+        .filter(exercise => {
+          return exerciseMatchesCategory(exercise, category);
+        })
+        .sort((a, b) => a.name.localeCompare(b.name, "pt-BR", { sensitivity: "base" }))
+        .forEach(exercise => {
+          const option = document.createElement("option");
+          option.value = exercise.name;
+          option.textContent = exercise.custom
+            ? `${exercise.name} (personalizado)`
+            : exercise.name;
+          option.dataset.libraryId = exercise.id;
+          option.dataset.muscleGroup = exercise.muscleGroup;
+          exerciseSelect.appendChild(option);
+        });
+
+      if ([...exerciseSelect.options].some(option => option.value === currentValue)) {
+        exerciseSelect.value = currentValue;
+      }
+    }
+
     function normalizeWorkout(data) {
       if (!data || typeof data !== "object" || !Array.isArray(data.exercises)) {
         return null;
@@ -2048,7 +2271,9 @@
           sets: Number(exercise.sets),
           reps: Number(exercise.reps),
           rest: Number(exercise.rest),
-          weights: normalizeWeights(exercise)
+          weights: normalizeWeights(exercise),
+          libraryId: exercise.libraryId || getExerciseLibraryItemByName(exercise.name)?.id || null,
+          muscleGroup: exercise.muscleGroup || getExerciseLibraryItemByName(exercise.name)?.muscleGroup || "Outros"
         }))
       };
     }
@@ -2085,7 +2310,9 @@
               reps: Number(exercise.reps),
               rest: Number(exercise.rest),
               weights: normalizeWeights(exercise),
-              custom: Boolean(exercise.custom)
+              custom: Boolean(exercise.custom),
+              libraryId: exercise.libraryId || null,
+              muscleGroup: exercise.muscleGroup || "Outros"
             }))
           : []
       };
@@ -2131,7 +2358,8 @@
           reason,
           workout: cloneWorkout(workout),
           currentWorkoutId,
-          savedWorkouts: savedWorkouts.map(cloneWorkoutForExport)
+          savedWorkouts: savedWorkouts.map(cloneWorkoutForExport),
+          exerciseLibrary: cloneWorkout(exerciseLibrary)
         };
 
         localStorage.setItem(BACKUP_STORAGE, JSON.stringify(backup));
@@ -2443,6 +2671,50 @@
       renderSavedWorkouts();
     }
 
+
+    exerciseLibraryList.addEventListener("click", async event => {
+      const button = event.target.closest("button[data-library-action]");
+      if (!button) return;
+
+      const id = button.dataset.id;
+      const action = button.dataset.libraryAction;
+      const item = exerciseLibrary.find(exercise => exercise.id === id);
+      if (!item) return;
+
+      if (action === "add") {
+        openAddExerciseModal();
+        setTimeout(() => {
+          exerciseCategoryFilter.value = "Todos";
+          populateExerciseSelect();
+          exerciseSelect.value = item.name;
+          exerciseSelect.focus();
+        }, 60);
+        return;
+      }
+
+      if (action === "delete" && item.custom) {
+        const confirmed = await showConfirm(
+          `Deseja excluir "${item.name}" da biblioteca? Treinos que já utilizam este exercício não serão alterados.`,
+          {
+            title: "Excluir exercício",
+            confirmText: "Excluir",
+            danger: true
+          }
+        );
+
+        if (!confirmed) return;
+
+        exerciseLibrary = exerciseLibrary.filter(exercise => exercise.id !== id);
+        saveExerciseLibrary();
+        populateExerciseSelect();
+        renderExerciseLibrary();
+      }
+    });
+
+    librarySearch.addEventListener("input", renderExerciseLibrary);
+    libraryCategory.addEventListener("change", renderExerciseLibrary);
+    exerciseCategoryFilter.addEventListener("change", populateExerciseSelect);
+
     savedWorkoutsList.addEventListener("click", async event => {
       const button = event.target.closest("button[data-action]");
       if (!button) return;
@@ -2528,8 +2800,36 @@
 
     function init() {
 
+      loadExerciseLibrary();
       loadSavedWorkouts();
       loadWorkout();
+
+      // Migra exercícios personalizados antigos para a biblioteca.
+      workout.exercises.forEach(exercise => {
+        if (!getExerciseLibraryItemByName(exercise.name)) {
+          exerciseLibrary.push({
+            id: exercise.libraryId || crypto.randomUUID(),
+            name: exercise.name,
+            muscleGroup: exercise.muscleGroup || "Outros",
+            custom: true
+          });
+        }
+      });
+      saveExerciseLibrary();
+
+      savedWorkouts.forEach(saved => {
+        saved.exercises.forEach(exercise => {
+          if (!getExerciseLibraryItemByName(exercise.name)) {
+            exerciseLibrary.push({
+              id: exercise.libraryId || crypto.randomUUID(),
+              name: exercise.name,
+              muscleGroup: exercise.muscleGroup || "Outros",
+              custom: Boolean(exercise.custom)
+            });
+          }
+        });
+      });
+      saveExerciseLibrary();
 
       // Migra automaticamente o treino único das versões anteriores.
       if (savedWorkouts.length === 0 && workout.exercises.length > 0) {
@@ -2547,6 +2847,10 @@
       }
 
       loadTheme();
+      populateCategorySelect(libraryCategory, true);
+      populateCategorySelect(exerciseCategoryFilter, true);
+      populateCategorySelect(customMuscleGroup, false);
+      renderExerciseLibrary();
       renderSavedWorkouts();
       updateWorkoutNameButton();
       renderHistory();
@@ -2560,69 +2864,6 @@
       populateExerciseSelect();
       renderWorkout();
       checkForActiveSession();
-    }
-
-    function populateExerciseSelect() {
-      exerciseSelect.innerHTML = `
-        <option value="">
-          Selecione um exercício
-        </option>
-      `;
-
-      PREDEFINED_EXERCISES.forEach(
-        name => {
-          addExerciseOption(
-            name,
-            false
-          );
-        }
-      );
-
-      workout.exercises
-        .filter(
-          exercise =>
-            exercise.custom
-        )
-        .forEach(
-          exercise => {
-            addExerciseOption(
-              exercise.name,
-              true
-            );
-          }
-        );
-    }
-
-    function addExerciseOption(
-      name,
-      custom = false
-    ) {
-      const exists =
-        [...exerciseSelect.options]
-          .some(
-            option =>
-              option.value === name
-          );
-
-      if (exists) {
-        return;
-      }
-
-      const option =
-        document.createElement(
-          "option"
-        );
-
-      option.value = name;
-
-      option.textContent =
-        custom
-          ? `${name} (personalizado)`
-          : name;
-
-      exerciseSelect.appendChild(
-        option
-      );
     }
 
     /* =========================================================
@@ -2706,27 +2947,6 @@
       }
     );
 
-    customSets.addEventListener(
-      "input",
-      () => {
-        const sets = Math.max(
-          1,
-          Math.min(99, Number(customSets.value) || 1)
-        );
-
-        const currentValues = getWeightValues(
-          customWeightsInputs,
-          sets
-        );
-
-        renderWeightInputs(
-          customWeightsInputs,
-          sets,
-          currentValues
-        );
-      }
-    );
-
     /* =========================================================
        FORMULÁRIO
     ========================================================= */
@@ -2794,7 +3014,9 @@
           return;
         }
 
-        const custom = !PREDEFINED_EXERCISES.includes(name);
+        const libraryItem = getExerciseLibraryItemByName(name);
+        const custom = Boolean(libraryItem?.custom);
+
         const exercise = {
           id:
             editingIndex !== null
@@ -2807,7 +3029,9 @@
           reps,
           rest,
           weights,
-          custom
+          custom,
+          libraryId: libraryItem?.id || null,
+          muscleGroup: libraryItem?.muscleGroup || "Outros"
         };
 
         if (editingIndex !== null) {
@@ -2829,17 +3053,9 @@
 
     customExerciseForm.addEventListener(
       "submit",
-      event => {
+      async event => {
         event.preventDefault();
         const name = customName.value.trim();
-        const sets = Number(customSets.value);
-        const reps = Number(customReps.value);
-        const rest = Number(customRest.value);
-        const weights =
-          getWeightValues(
-            customWeightsInputs,
-            sets
-          );
 
         if (!name) {
           showMessage(
@@ -2849,69 +3065,47 @@
           return;
         }
 
-        if (!Number.isInteger(sets) || sets < 1) {
-          showMessage(
-            "Informe uma quantidade válida de séries."
-          );
+        const muscleGroup = customMuscleGroup.value || "Outros";
+        let libraryItem = getExerciseLibraryItemByName(name);
 
+        if (libraryItem && !libraryItem.custom) {
+          await showMessage(
+            "Já existe um exercício padrão com esse nome na biblioteca.",
+            "Exercício já cadastrado"
+          );
           return;
         }
 
-        if (!Number.isInteger(reps) || reps < 1) {
-          showMessage(
-            "Informe uma quantidade válida de repetições."
-          );
-
-          return;
+        if (libraryItem) {
+          libraryItem.muscleGroup = muscleGroup;
+        } else {
+          libraryItem = {
+            id: crypto.randomUUID(),
+            name,
+            muscleGroup,
+            custom: true
+          };
+          exerciseLibrary.push(libraryItem);
         }
 
-        if (
-          weights.length !== sets ||
-          weights.some(
-            weight =>
-              !Number.isFinite(weight) ||
-              weight < 0
-          )
-        ) {
+        saveExerciseLibrary();
+        renderExerciseLibrary();
+        populateExerciseSelect();
 
-          showMessage(
-            "Informe uma carga válida para cada série."
-          );
-
-          return;
-        }
-
-        addExerciseOption(
-          name,
-          true
-        );
-
+        exerciseCategoryFilter.value = "Todos";
+        populateExerciseSelect();
         exerciseSelect.value = name;
-        setsInput.value = sets;
-        repsInput.value = reps;
-        restSelect.value = rest;
-
-        renderWeightInputs(
-          weightsInputs,
-          sets,
-          weights
-        );
 
         closeCustomModal();
-
-        setTimeout(
-          () => {
-            exerciseForm.requestSubmit();
-          },
-          100
-        );
-
       }
     );
 
     function resetExerciseForm() {
       editingIndex = null;
       exerciseForm.reset();
+
+      if (exerciseCategoryFilter) exerciseCategoryFilter.value = "Todos";
+      populateExerciseSelect();
 
       setsInput.value = 3;
       repsInput.value = 10;
@@ -2977,6 +3171,8 @@
                 ${exercise.rest}s descanso
                 ·
                 ${normalizeWeights(exercise).map(weight => `${weight}kg`).join(" / ")}
+                ·
+                ${escapeHtml(exercise.muscleGroup || getExerciseLibraryItemByName(exercise.name)?.muscleGroup || "Outros")}
               </div>
             </div>
             <div class="exercise-actions">
@@ -3131,13 +3327,8 @@
         return;
       }
 
-      if (exercise.custom) {
-        addExerciseOption(
-          exercise.name,
-          true
-        );
-      }
-
+      exerciseCategoryFilter.value = "Todos";
+      populateExerciseSelect();
       exerciseSelect.value = exercise.name;
       setsInput.value = exercise.sets;
       repsInput.value = exercise.reps;
@@ -4176,9 +4367,10 @@
       }
 
       const data = {
-        version: 3,
+        version: 4,
         exportedAt: new Date().toISOString(),
-        workouts: savedWorkouts.map(cloneWorkoutForExport)
+        workouts: savedWorkouts.map(cloneWorkoutForExport),
+        exerciseLibrary: cloneWorkout(exerciseLibrary)
       };
 
       const blob = new Blob(
@@ -4235,6 +4427,10 @@
             throw new Error("Formato inválido.");
           }
 
+          const importedLibrary = Array.isArray(data.exerciseLibrary)
+            ? normalizeExerciseLibrary(data.exerciseLibrary)
+            : null;
+
           const normalized = importedWorkouts.map(item => {
             const normalizedWorkout = normalizeWorkout(item);
             if (!normalizedWorkout || normalizedWorkout.exercises.length === 0) {
@@ -4262,6 +4458,11 @@
           createDataBackup("Antes de importar treinos");
           savedWorkouts = normalized;
           saveSavedWorkouts();
+
+          exerciseLibrary = importedLibrary && importedLibrary.length > 0
+            ? importedLibrary
+            : normalizeExerciseLibrary(DEFAULT_EXERCISE_LIBRARY);
+          saveExerciseLibrary();
 
           currentWorkoutId = savedWorkouts[0].id;
           workout = cloneWorkout(savedWorkouts[0]);
@@ -4350,6 +4551,14 @@
       currentWorkoutId = backup.currentWorkoutId || null;
       workout = normalizedCurrent;
 
+      exerciseLibrary = Array.isArray(backup.exerciseLibrary)
+        ? normalizeExerciseLibrary(backup.exerciseLibrary)
+        : normalizeExerciseLibrary(DEFAULT_EXERCISE_LIBRARY);
+
+      if (exerciseLibrary.length === 0) {
+        exerciseLibrary = normalizeExerciseLibrary(DEFAULT_EXERCISE_LIBRARY);
+      }
+
       if (
         currentWorkoutId &&
         !savedWorkouts.some(item => item.id === currentWorkoutId)
@@ -4358,10 +4567,12 @@
       }
 
       saveSavedWorkouts();
+      saveExerciseLibrary();
       saveWorkout();
       clearSession();
 
       populateExerciseSelect();
+      renderExerciseLibrary();
       renderWorkout();
       renderSavedWorkouts();
       resetExerciseForm();
