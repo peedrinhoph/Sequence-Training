@@ -1070,7 +1070,7 @@
       }
 
       .saved-workout-actions {
-        flex-direction: column;
+        flex-direction: row;
       }
 
       .saved-workout-actions .btn {
@@ -1168,16 +1168,15 @@
           </button>
         </div>
       </div>
-      <div class="bottom-actions margin-top-reset">
-        <button class="btn btn-primary full-btn" id="startWorkoutBtn">
-          ▶ Iniciar
-        </button>
       </div>
       <div id="workoutList" class="workout-list"></div>
       <div id="emptyWorkout" class="empty">
         Nenhum exercício adicionado ainda.
       </div>
       <div class="bottom-actions">
+        <button class="btn btn-primary full-btn" id="startWorkoutBtn">
+          ▶ Iniciar
+        </button>
         <button class="btn" id="clearWorkoutBtn">
           Limpar treino
         </button>
@@ -1276,7 +1275,7 @@
           </p>
         </div>
         <div class="header-row-actions">
-          <button type="button" class="btn btn-small btn-ghost" id="customExerciseBtn">
+          <button type="button" class="btn btn-small btn-ghost" id="customExerciseBibliotecaBtn">
             + Novo
           </button>
         </div>
@@ -1685,6 +1684,7 @@
     const submitExerciseBtn = document.getElementById("submitExerciseBtn");
     const cancelEditBtn = document.getElementById("cancelEditBtn");
     const customExerciseBtn = document.getElementById("customExerciseBtn");
+    const customExerciseBibliotecaBtn = document.getElementById("customExerciseBibliotecaBtn");
     const workoutList = document.getElementById("workoutList");
     const emptyWorkout = document.getElementById("emptyWorkout");
     const startWorkoutBtn = document.getElementById("startWorkoutBtn");
@@ -2007,10 +2007,9 @@
       );
     }
 
-    customExerciseBtn.addEventListener(
-      "click",
-      openCustomModal
-    );
+    [customExerciseBtn, customExerciseBibliotecaBtn].forEach(btn => {
+      btn.addEventListener("click", openCustomModal);
+    });
 
     closeCustomModalBtn.addEventListener(
       "click",
