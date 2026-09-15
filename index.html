@@ -922,63 +922,107 @@
     }
 
     /* ========================================
-       BIBLIOTECA DE EXERCÍCIOS
+    BIBLIOTECA DE EXERCÍCIOS
     ======================================== */
     .library-toolbar {
       display: grid;
-      grid-template-columns: 1fr 180px;
-      gap: 10px;
-      margin-bottom: 12px;
+      grid-template-columns: 1fr 160px;
+      gap: 8px;
+      margin-bottom: 8px;
     }
+
     .library-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 4px;
     }
+
     .library-group-title {
-      margin: 8px 0 4px;
+      margin: 6px 0 3px;
       color: var(--primary);
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .04em;
     }
+
     .library-exercise-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px;
+      gap: 8px;
+      padding: 7px 9px;
       background: var(--card2);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 7px;
+      min-height: 38px;
     }
-    .library-exercise-info { flex: 1; min-width: 0; }
-    .library-exercise-name { font-weight: 700; }
+
+    .library-exercise-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .library-exercise-name {
+      font-weight: 600;
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
     .library-exercise-meta {
-      margin-top: 4px;
+      margin-top: 1px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 10px;
+      line-height: 1.2;
     }
+
     .library-exercise-actions {
       display: flex;
-      gap: 6px;
+      align-items: center;
+      gap: 4px;
       flex-shrink: 0;
     }
+
+    .library-exercise-actions .btn {
+      padding: 5px 8px;
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    /* Busca/filtro dentro do modal de exercício */
     .exercise-picker-toolbar {
       display: grid;
-      grid-template-columns: 1fr 170px;
-      gap: 10px;
-      margin-bottom: 10px;
+      grid-template-columns: 1fr 150px;
+      gap: 8px;
+      margin-bottom: 8px;
     }
+
     @media (max-width: 560px) {
       .library-toolbar,
-      .exercise-picker-toolbar { grid-template-columns: 1fr; }
-      .library-exercise-item {
-        align-items: flex-start;
-        flex-direction: column;
+      .exercise-picker-toolbar {
+        grid-template-columns: 1fr;
       }
-      .library-exercise-actions { width: 100%; }
-      .library-exercise-actions .btn { flex: 1; }
+
+      .library-exercise-item {
+        gap: 6px;
+        padding: 6px 8px;
+      }
+
+      .library-exercise-name {
+        font-size: 12px;
+      }
+
+      .library-exercise-meta {
+        font-size: 9px;
+      }
+
+      .library-exercise-actions {
+        gap: 3px;
+      }
+
+      .library-exercise-actions .btn {
+        padding: 5px 7px;
+        font-size: 10px;
+      }
     }
 
     @media (max-width: 560px) {
@@ -991,7 +1035,6 @@
         width: 100%;
       }
     }
-
     /* ========================================
        MOBILE
     ======================================== */
@@ -2202,14 +2245,14 @@
             <div class="library-exercise-info">
               <div class="library-exercise-name">
                 ${escapeHtml(exercise.name)}
-                ${exercise.custom ? '<span class="custom-badge">PERSONALIZADO</span>' : ""}
               </div>
             </div>
             <div class="library-exercise-actions">
               <!--<button class="btn btn-small btn-primary" data-library-action="add" data-id="${escapeHtml(exercise.id)}">+ Adicionar</button>-->
-              ${exercise.custom ? `
-                <button class="btn btn-small btn-ghost" data-library-action="delete" data-id="${escapeHtml(exercise.id)}">× Excluir</button>
-              ` : ""}
+              ${exercise.custom
+                ? `<button class="icon-btn btn-danger" data-library-action="delete" data-id="${escapeHtml(exercise.id)}">×</button>`
+                : ""
+              }
             </div>
           `;
           exerciseLibraryList.appendChild(item);
@@ -2573,16 +2616,16 @@
           </div>
           <div class="saved-workout-actions">
             <button class="btn btn-small btn-primary" data-action="train" data-id="${saved.id}">
-              ▶ Iniciar
+              Iniciar
             </button>
             <button class="btn btn-small btn-info" data-action="view" data-id="${saved.id}">
-              ✎ Editar
+              Editar
             </button>
             <button class="btn btn-small btn-warning" data-action="duplicate" data-id="${saved.id}">
-              ⧉ Duplicar
+              Duplicar
             </button>
             <button class="btn btn-small btn-danger" title="Excluir treino" data-action="delete" data-id="${saved.id}">
-              × Excluir
+              Excluir
             </button>
           </div>
         `;
