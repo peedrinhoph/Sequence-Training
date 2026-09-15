@@ -713,9 +713,9 @@ A evolução do Sequence Training será feita priorizando primeiro **estabilidad
 * [x] Melhorar interface de **Meus treinos**
 * [x] Ordenar treinos por nome ou último uso
 * [x] Mostrar última execução
-* [ ] Criar biblioteca de exercícios
-* [ ] Categorizar exercícios por grupo muscular
-* [ ] Melhorar cadastro de exercícios personalizados
+* [x] Criar biblioteca de exercícios
+* [x] Categorizar exercícios por grupo muscular
+* [x] Melhorar cadastro de exercícios personalizados
 
 ## 🟡 Fase 3 — Evoluir a execução do treino
 
@@ -728,10 +728,7 @@ A evolução do Sequence Training será feita priorizando primeiro **estabilidad
 * [x] Indicação do próximo exercício
 * [x] Sinais sonoros
 * [x] Suporte à vibração
-* [ ] Criar modo de execução mais focado no treino
-* [ ] Melhorar visualização de série, repetições e carga
 * [ ] Controles de `+15s` e `-15s` no descanso
-* [ ] Melhorar feedback visual e sonoro
 * [ ] Melhorar indicação da próxima série/exercício
 
 ## 🟡 Fase 4 — Evoluir o histórico

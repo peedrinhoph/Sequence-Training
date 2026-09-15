@@ -1691,6 +1691,9 @@
     let editingIndex = null;
     let currentWorkoutId = null;
     let savedWorkouts = [];
+    //Inicializa a execução do treino com o estado inicial
+    let workoutExecution = null;
+    let executionWorkoutId = null;
 
     let workoutState = {
       exerciseIndex: 0,
@@ -2515,9 +2518,20 @@
 
     function getLastWorkoutExecution(saved) {
       const history = loadHistory();
-      const targetName = String(saved.name || "Meu treino");
+
+      if (saved?.id) {
+        const byId = history.find(entry => entry.workoutId === saved.id);
+
+        if (byId) {
+          return byId;
+        }
+      }
+
+      // Compatibilidade com históricos antigos que não possuem workoutId.
+      const targetName = String(saved?.name || "Meu treino");
 
       return history.find(entry =>
+        !entry.workoutId &&
         String(entry.workoutName || "Meu treino") === targetName
       ) || null;
     }
@@ -2694,6 +2708,8 @@
 
       if (!confirmed) return;
 
+      createDataBackup(`Antes de excluir o treino "${saved.name}"`);
+
       savedWorkouts = savedWorkouts.filter(item => item.id !== id);
       saveSavedWorkouts();
 
@@ -2762,18 +2778,8 @@
         const saved = savedWorkouts.find(item => item.id === id);
         if (!saved) return;
 
-        const canLeave = await confirmLeavingCurrentEditor();
-        if (!canLeave) return;
-
-        workout = cloneWorkout(saved);
-        currentWorkoutId = saved.id;
-        saveWorkout();
-        updateWorkoutName();
-        updateWorkoutNameButton();
-        populateExerciseSelect();
-        renderWorkout();
-
-        startWorkoutBtn.click();
+        //Nova chamada para iniciar o treino diretamente, sem precisar carregar o treino no editor
+        await startWorkoutExecution(saved, saved.id);
       } else if (action === "duplicate") {
         await duplicateSavedWorkout(id);
       } else if (action === "delete") {
@@ -2817,8 +2823,9 @@
       localStorage.setItem(
         SESSION_STORAGE,
         JSON.stringify({
-          workoutName:
-            workout.name,
+          // workoutName: workout.name,
+          workoutId: executionWorkoutId,
+          workout: cloneWorkout(workoutExecution),
           ...workoutState
         })
       );
@@ -3521,39 +3528,57 @@
        INICIAR TREINO
     ========================================================= */
 
-    startWorkoutBtn.addEventListener(
-      "click",
-      async () => {
-        if (workout.exercises.length === 0) {
-          await showMessage(
-            "Não há treino carregado para iniciar."
-          );
-
-          return;
-        }
-
-        workoutState = {
-          exerciseIndex: 0,
-          currentSet: 1,
-          status: "working",
-          restTimer: 0,
-          executionSeconds: 0,
-          totalSeconds: 0,
-          restNextText: "",
-          restType: null
-        };
-
-        playStartSound();
-        saveSession();
-        showWorkoutScreen();
-        renderWorkoutExecution();
-        startExecutionTimer();
-
-        // Ativa o Wake Lock explicitamente no momento em que o treino começa.
-        wakeLockEnabled = true;
-        await solicitarWakeLock();
+    async function startWorkoutExecution(sourceWorkout, sourceWorkoutId = null) {
+      if (!sourceWorkout || !sourceWorkout.exercises?.length) {
+        await showMessage("Não há treino carregado para iniciar.");
+        return;
       }
-    );
+
+      workoutExecution = cloneWorkout(sourceWorkout);
+      executionWorkoutId = sourceWorkoutId;
+
+      workoutState = {
+        exerciseIndex: 0,
+        currentSet: 1,
+        status: "working",
+        restTimer: 0,
+        executionSeconds: 0,
+        totalSeconds: 0,
+        restNextText: "",
+        restType: null
+      };
+
+      playStartSound();
+      saveSession();
+      showWorkoutScreen();
+      renderWorkoutExecution();
+      startExecutionTimer();
+
+      wakeLockEnabled = true;
+      await solicitarWakeLock();
+    }
+
+    async function saveEditorBeforeExecution() {
+      if (currentWorkoutId) {
+        updateSavedWorkout();
+      } else {
+        saveCurrentWorkoutAsNew();
+      }
+
+      saveWorkout();
+      renderSavedWorkouts();
+      updateWorkoutNameButton();
+    }
+
+    startWorkoutBtn.addEventListener("click", async () => {
+      if (!workout.exercises.length) {
+        await showMessage("Não há treino carregado para iniciar.");
+        return;
+      }
+
+      await saveEditorBeforeExecution();
+      await startWorkoutExecution(workout, currentWorkoutId);
+    });
 
     /* =========================================================
        TELAS
@@ -3600,7 +3625,7 @@
     ========================================================= */
 
     function getTotalReps() {
-      return workout.exercises.reduce(
+      return workoutExecution.exercises.reduce(
         (total, exercise) => {
           return total +
             (
@@ -3618,7 +3643,7 @@
        * Exercícios totalmente concluídos.
        */
       for (let i = 0; i < workoutState.exerciseIndex; i++) {
-        const exercise = workout.exercises[i];
+        const exercise = workoutExecution.exercises[i];
         completed += exercise.sets * exercise.reps;
       }
       /*
@@ -3630,7 +3655,7 @@
        * série 2 -> 1 série concluída
        * série 3 -> 2 séries concluídas
        */
-      const currentExercise = workout.exercises[workoutState.exerciseIndex];
+      const currentExercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
       if (currentExercise) {
         const completedSets = Math.max(0, workoutState.currentSet - 1);
@@ -3668,7 +3693,7 @@
     ========================================================= */
 
     function renderWorkoutExecution() {
-      const exercise = workout.exercises[workoutState.exerciseIndex];
+      const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
       if (!exercise) {
         finishWorkout();
@@ -3676,12 +3701,12 @@
         return;
       }
 
-      const totalExercises = workout.exercises.length;
+      const totalExercises = workoutExecution.exercises.length;
       const exerciseNumber = workoutState.exerciseIndex + 1;
 
       document.getElementById("currentExerciseName").textContent = exercise.name;
       document.getElementById("currentSetDisplay").textContent = `Série ${workoutState.currentSet}`;
-      document.getElementById("totalSetsDisplay").textContent = `de ${exercise.sets}`;
+      document.getElementById("totalSetsDisplay").textContent = `/ ${exercise.sets}`;
       document.getElementById("currentRepsDisplay").textContent = exercise.reps;
 
       const currentWeight = normalizeWeights(exercise)[workoutState.currentSet - 1] ?? 0;
@@ -3697,7 +3722,7 @@
 
     function renderNextExercise() {
       const box = document.getElementById("nextExerciseBox");
-      const exercise = workout.exercises[workoutState.exerciseIndex];
+      const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
       if (!exercise) {
         box.innerHTML = "";
@@ -3715,7 +3740,7 @@
         return;
       }
 
-      const next = workout.exercises[workoutState.exerciseIndex + 1];
+      const next = workoutExecution.exercises[workoutState.exerciseIndex + 1];
 
       if (next) {
         box.innerHTML = `
@@ -3823,7 +3848,7 @@
     );
 
     function completeSet() {
-      const exercise = workout.exercises[workoutState.exerciseIndex];
+      const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
       if (!exercise) {
         finishWorkout();
@@ -3860,12 +3885,12 @@
        * 3. Inicia o descanso.
        * 4. Ao terminar o descanso, já estaremos apontando para o novo exercício.
        */
-      if (workoutState.exerciseIndex < workout.exercises.length - 1) {
+      if (workoutState.exerciseIndex < workoutExecution.exercises.length - 1) {
         workoutState.exerciseIndex++;
         workoutState.currentSet = 1;
         workoutState.executionSeconds = 0;
 
-        const nextExercise = workout.exercises[workoutState.exerciseIndex];
+        const nextExercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
         startRest(
           exercise.rest,
@@ -3931,7 +3956,7 @@
       const nextElement = document.getElementById("restNextText");
 
       if (workoutState.restType === "next_exercise") {
-        const exercise = workout.exercises[workoutState.exerciseIndex];
+        const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
         if (exercise) {
           nextElement.innerHTML =
@@ -3967,7 +3992,7 @@
        * Isso corrige o problema que fazia o treino
        * não passar corretamente para o próximo exercício.
        */
-      if (workoutState.exerciseIndex >= workout.exercises.length) {
+      if (workoutState.exerciseIndex >= workoutExecution.exercises.length) {
         finishWorkout();
   
         return;
@@ -4010,10 +4035,9 @@
     function openPauseMenu() {
       stopExecutionTimer();
       /*
-       * O descanso continua contando normalmente.
-       * No caso de pausa durante descanso, paramos o
-       * intervalo para realmente pausar o treino.
-       */
+      * A pausa interrompe tanto o cronômetro de execução
+      * quanto o cronômetro de descanso.
+      */
       if (workoutState.status === "resting") {
         clearInterval(restInterval);
 
@@ -4073,14 +4097,17 @@
         pauseModalOverlay.classList.remove(
           "visible"
         );
+
         pauseModalOverlay.setAttribute(
           "aria-hidden",
           "true"
         );
 
         stopExecutionTimer();
+
         clearInterval(restInterval);
         restInterval = null;
+
         await liberarWakeLock();
         clearSession();
 
@@ -4095,6 +4122,10 @@
           restType: null
         };
 
+        //Limpa a sessão de execução para que não seja possível continuar o treino depois de finalizado.
+        workoutExecution = null;
+        executionWorkoutId = null;
+
         showScreen(builderScreen);
         renderWorkout();
         checkForActiveSession();
@@ -4108,11 +4139,12 @@
       const completedReps = getTotalReps();
       const entry = {
         id: crypto.randomUUID(),
-        workoutName: workout.name || "Meu treino",
+        workoutId: executionWorkoutId,
+        workoutName: workoutExecution.name || "Meu treino",
         completedAt: new Date().toISOString(),
         durationSeconds: Number(workoutState.totalSeconds || 0),
         totalReps: completedReps,
-        exercises: workout.exercises.map(exercise => ({
+        exercises: workoutExecution.exercises.map(exercise => ({
           name: exercise.name,
           sets: Number(exercise.sets),
           reps: Number(exercise.reps),
@@ -4122,9 +4154,9 @@
 
       history.unshift(entry);
 
-      if (currentWorkoutId) {
+      if (executionWorkoutId) {
         const savedIndex = savedWorkouts.findIndex(
-          item => item.id === currentWorkoutId
+          item => item.id === executionWorkoutId
         );
 
         if (savedIndex !== -1) {
@@ -4268,12 +4300,15 @@
       saveWorkoutToHistory();
       stopExecutionTimer();
       await liberarWakeLock();
-      
-      clearInterval(restInterval);
 
+      clearInterval(restInterval);
       restInterval = null;
 
       clearSession();
+
+      //Limpa a sessão de execução para que não seja possível continuar o treino depois de finalizado.
+      workoutExecution = null;
+      executionWorkoutId = null;
 
       workoutState = {
         exerciseIndex: 0,
@@ -4308,14 +4343,23 @@
 
       try {
         const session = JSON.parse(saved);
-        const exercise = workout.exercises[session.exerciseIndex];
-
-        if (!session || !exercise) {
+        if (!session ||
+          !session.workout ||
+          !Array.isArray(session.workout.exercises)
+        ) {
           clearSession();
-          recoveryBox.classList.add(
-            "hidden"
-          );
+          recoveryBox.classList.add("hidden");
+          return;
+        }
 
+        workoutExecution = normalizeWorkout(session.workout);
+        executionWorkoutId = session.workoutId || null;
+
+        const exercise = workoutExecution?.exercises?.[session.exerciseIndex];
+
+        if (!exercise) {
+          clearSession();
+          recoveryBox.classList.add("hidden");
           return;
         }
 
@@ -4428,7 +4472,8 @@
         name: saved.name,
         exercises: cloneWorkout(saved.exercises),
         createdAt: saved.createdAt,
-        updatedAt: saved.updatedAt
+        updatedAt: saved.updatedAt,
+        lastUsedAt: saved.lastUsedAt || null
       };
     }
 
@@ -4475,7 +4520,8 @@
               id: item.id || crypto.randomUUID(),
               ...normalizedWorkout,
               createdAt: item.createdAt || new Date().toISOString(),
-              updatedAt: item.updatedAt || item.createdAt || new Date().toISOString()
+              updatedAt: item.updatedAt || item.createdAt || new Date().toISOString(),
+              lastUsedAt: item.lastUsedAt || null
             };
           });
 
