@@ -201,7 +201,25 @@
       background: var(--primary-dark);
     }
 
+    .btn-primary-line {
+      border: var(--primary) 1px solid !important;
+    }
+
+    .btn-primary-line:hover {
+      background: var(--primary) !important;
+      color: #111 !important;
+    }
+
     .btn-danger {
+      background: var(--danger) !important;
+      color: white !important;
+    }
+    
+    .btn-danger-line {
+      border: var(--danger) 1px solid !important;
+    }
+
+    .btn-danger-line:hover {
       background: var(--danger) !important;
       color: white !important;
     }
@@ -210,8 +228,26 @@
       background: var(--info) !important;
       color: white !important;
     }
+
+    .btn-info-line {
+      border: var(--info) 1px solid !important;
+    }
+
+    .btn-info-line:hover {
+      background: var(--info) !important;
+      color: white !important;
+    }
     
     .btn-warning {
+      background: var(--warning) !important;
+      color: white !important;
+    }
+
+    .btn-warning-line {
+      border: var(--warning) 1px solid !important;
+    }
+
+    .btn-warning-line:hover {
       background: var(--warning) !important;
       color: white !important;
     }
@@ -235,10 +271,20 @@
       margin-top: 0px !important;
     }
 
+    .margin-top-8 {
+      margin-top: 8px !important;
+    }
+
     .alert-warning {
-        background-color: rgba(245, 158, 11, 0.1);
-        border-left: 4px solid var(--warning);
-        color: var(--text);
+      background-color: rgba(245, 158, 11, 0.1);
+      border-left: 4px solid var(--warning);
+      color: var(--text);
+    }
+
+    .text-muted {
+      margin: -8px 0 14px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
     /* ========================================
@@ -360,10 +406,11 @@
     }
 
     .bottom-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+      margin-top: 8px;
     }
 
     .full-btn {
@@ -902,13 +949,6 @@
       font-size: 12px;
     }
 
-    .saved-workout-actions {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      flex-shrink: 0;
-    }
-
     .saved-workouts-toolbar {
       display: flex;
       align-items: center;
@@ -1117,10 +1157,6 @@
         justify-content: flex-end;
       }
 
-      .bottom-actions {
-        grid-template-columns: 1fr;
-      }
-
       .full-btn {
         grid-column: auto;
       }
@@ -1138,11 +1174,11 @@
         justify-content: flex-end;
       }
 
-      .saved-workout-actions {
+      .bottom-actions {
         flex-direction: row;
       }
 
-      .saved-workout-actions .btn {
+      .bottom-actions .btn {
         width: 100%;
       }
     }
@@ -1242,7 +1278,7 @@
           <div class="header-row">
             <h2>Exercícios</h2>
             <div class="header-row-actions">
-              <button class="btn btn-small btn-info" id="addExerciseBtn" type="button">
+              <button class="btn btn-small btn-info-line" id="addExerciseBtn" type="button">
                 + Exercício
               </button>
             </div>
@@ -1256,10 +1292,10 @@
               ▶ Iniciar
             </button>
             <button class="btn" id="clearWorkoutBtn">
-              Limpar treino
+              Limpar
             </button>
             <button class="btn" id="workoutNameBtn">
-              Salvar treino
+              Salvar
             </button>
           </div>
         </section>
@@ -1350,9 +1386,6 @@
       <div class="header-row">
         <div>
           <h2>Biblioteca de exercícios</h2>
-          <p style="margin: -8px 0 14px; color: var(--muted); font-size: 13px;">
-            Exercícios disponíveis organizados por grupo muscular.
-          </p>
         </div>
         <div class="header-row-actions">
           <button type="button" class="btn btn-small btn-ghost" id="customExerciseBibliotecaBtn">
@@ -1360,7 +1393,7 @@
           </button>
         </div>
       </div>
-      <div class="library-toolbar">
+      <div class="library-toolbar margin-top-8">
         <input id="librarySearch" type="search" placeholder="🔎 Buscar exercício..." aria-label="Buscar exercício na biblioteca">
         <select id="libraryCategory" aria-label="Filtrar biblioteca por grupo muscular"></select>
       </div>
@@ -2592,8 +2625,8 @@
 
     function updateWorkoutNameButton() {
       workoutNameBtn.textContent = currentWorkoutId
-        ? "Atualizar treino"
-        : "Salvar treino";
+        ? "Atualizar"
+        : "Salvar";
     }
 
     function getLastWorkoutExecution(saved) {
@@ -2708,17 +2741,17 @@
               ${escapeHtml(lastUsedText)}
             </div>
           </div>
-          <div class="saved-workout-actions">
+          <div class="bottom-actions">
             <button class="btn btn-small btn-primary" data-action="train" data-id="${saved.id}">
               Iniciar
             </button>
-            <button class="btn btn-small btn-info" data-action="view" data-id="${saved.id}">
+            <button class="btn btn-small btn-info-line" data-action="view" data-id="${saved.id}">
               Editar
             </button>
-            <button class="btn btn-small btn-warning" data-action="duplicate" data-id="${saved.id}">
+            <button class="btn btn-small btn-warning-line" data-action="duplicate" data-id="${saved.id}">
               Duplicar
             </button>
-            <button class="btn btn-small btn-danger" title="Excluir treino" data-action="delete" data-id="${saved.id}">
+            <button class="btn btn-small btn-ghost btn-danger-line" title="Excluir treino" data-action="delete" data-id="${saved.id}">
               Excluir
             </button>
           </div>
