@@ -1652,7 +1652,7 @@
 
     const WORKOUT_STORAGE = "calisthenics_workout";
     const WORKOUTS_STORAGE = "calisthenics_workouts";
-    const SESSION_STORAGE = "calisthenics_session";
+    const SESSION_WORKOUT_EXECUTION_STORAGE = "calisthenics_session";
     const HISTORY_STORAGE = "calisthenics_history";
     const THEME_STORAGE = "calisthenics_theme";
     const BACKUP_STORAGE = "calisthenics_backup";
@@ -2822,9 +2822,9 @@
 
     function saveSession() {
       localStorage.setItem(
-        SESSION_STORAGE,
+        SESSION_WORKOUT_EXECUTION_STORAGE,
         JSON.stringify({
-          // workoutName: workout.name,
+          workoutName: workout.name,
           workoutId: executionWorkoutId,
           workout: cloneWorkout(workoutExecution),
           ...workoutState
@@ -2833,7 +2833,7 @@
     }
 
     function clearSession() {
-      localStorage.removeItem(SESSION_STORAGE);
+      localStorage.removeItem(SESSION_WORKOUT_EXECUTION_STORAGE);
     }
 
     /* =========================================================
@@ -2844,7 +2844,7 @@
 
       loadExerciseLibrary();
       loadSavedWorkouts();
-      loadWorkout();
+      // loadWorkout();
 
       // Migra exercícios personalizados antigos para a biblioteca.
       workout.exercises.forEach(exercise => {
@@ -4334,7 +4334,7 @@
        RECUPERAÇÃO
     ========================================================= */
     function checkForActiveSession() {
-      const saved = localStorage.getItem(SESSION_STORAGE);
+      const saved = localStorage.getItem(SESSION_WORKOUT_EXECUTION_STORAGE);
 
       if (!saved) {
         recoveryBox.classList.add("hidden");
