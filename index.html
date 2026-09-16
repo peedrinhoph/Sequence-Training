@@ -790,6 +790,32 @@
       overflow-y: auto;
     }
 
+    .workout-editor-modal {
+      max-width: 760px;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
+
+    .workout-editor-modal .card {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .workout-editor-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .workout-editor-modal-header h2 {
+      margin: 0;
+    }
+
     /* ========================================
        HISTÓRICO
     ======================================== */
@@ -1180,6 +1206,11 @@
     <section class="card">
       <div class="header-row">
         <h2>Meus treinos</h2>
+        <div class="header-row-actions">
+          <button class="btn btn-small btn-ghost" id="newSavedWorkoutBtn" type="button">
+            + Novo treino
+          </button>
+        </div>
       </div>
       <div class="saved-workouts-toolbar">
         <span class="saved-workouts-count" id="savedWorkoutsCount"></span>
@@ -1195,39 +1226,45 @@
         Nenhum treino salvo ainda.
       </div>
     </section>
-    <!-- Lista do treino -->
-    <section class="card">
-      <div class="header-row">
-        <h2>
-          Seu treino <br/>
-          <span id="loadedWorkoutName" class="custom-badge hidden"></span>
-        </h2>
-        <div class="header-row-actions">
-          <button class="btn btn-small btn-info" id="addExerciseBtn" type="button">
-            + Exercício
-          </button>
-          <button class="btn btn-small" id="newSavedWorkoutBtn">
-            + Novo treino
+    <!-- Editor do treino (abre somente como modal) -->
+    <div class="modal-overlay" id="workoutEditorModalOverlay" aria-hidden="true">
+      <div class="modal workout-editor-modal" role="dialog" aria-modal="true" aria-labelledby="workoutEditorModalTitle">
+        <div class="workout-editor-modal-header">
+          <h2 id="workoutEditorModalTitle">
+            Seu treino
+            <span id="loadedWorkoutName" class="custom-badge hidden"></span>
+          </h2>
+          <button class="icon-btn" id="closeWorkoutEditorModalBtn" type="button" aria-label="Fechar editor">
+            x
           </button>
         </div>
+        <section class="card">
+          <div class="header-row">
+            <h2>Exercícios</h2>
+            <div class="header-row-actions">
+              <button class="btn btn-small btn-info" id="addExerciseBtn" type="button">
+                + Exercício
+              </button>
+            </div>
+          </div>
+          <div id="workoutList" class="workout-list"></div>
+          <div id="emptyWorkout" class="empty">
+            Nenhum exercício adicionado ainda.
+          </div>
+          <div class="bottom-actions">
+            <button class="btn btn-primary full-btn" id="startWorkoutBtn">
+              ▶ Iniciar
+            </button>
+            <button class="btn" id="clearWorkoutBtn">
+              Limpar treino
+            </button>
+            <button class="btn" id="workoutNameBtn">
+              Salvar treino
+            </button>
+          </div>
+        </section>
       </div>
-      </div>
-      <div id="workoutList" class="workout-list"></div>
-      <div id="emptyWorkout" class="empty">
-        Nenhum exercício adicionado ainda.
-      </div>
-      <div class="bottom-actions">
-        <button class="btn btn-primary full-btn" id="startWorkoutBtn">
-          ▶ Iniciar
-        </button>
-        <button class="btn" id="clearWorkoutBtn">
-          Limpar treino
-        </button>
-        <button class="btn" id="workoutNameBtn">
-          Salvar treino
-        </button>
-      </div>
-    </section>
+    </div>
     <!-- Modal de adicionar/editar exercício -->
     <div class="modal-overlay" id="addExerciseModalOverlay" aria-hidden="true">
       <div class="modal exercise-modal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
@@ -1319,7 +1356,7 @@
         </div>
         <div class="header-row-actions">
           <button type="button" class="btn btn-small btn-ghost" id="customExerciseBibliotecaBtn">
-            + Novo
+            + Novo exercício
           </button>
         </div>
       </div>
@@ -1329,6 +1366,14 @@
       </div>
       <div id="exerciseLibraryList" class="library-list"></div>
       <div id="emptyExerciseLibrary" class="empty hidden">Nenhum exercício encontrado.</div>
+    </section>
+    <!-- Histórico -->
+    <section class="card">
+      <h2>Histórico de treinos</h2>
+      <div id="historyList" class="history-list"></div>
+      <div id="emptyHistory" class="empty">
+        Nenhum treino concluído ainda.
+      </div>
     </section>
     <!-- Dados -->
     <section class="card">
@@ -1344,15 +1389,6 @@
           Restaurar backup
         </button>
         <input type="file" id="importFile" accept=".json,application/json" class="hidden">
-      </div>
-    </section>
-
-    <!-- Histórico -->
-    <section class="card">
-      <h2>Histórico de treinos</h2>
-      <div id="historyList" class="history-list"></div>
-      <div id="emptyHistory" class="empty">
-        Nenhum treino concluído ainda.
       </div>
     </section>
   </main>
@@ -1737,6 +1773,8 @@
     const clearWorkoutBtn = document.getElementById("clearWorkoutBtn");
     const workoutNameBtn = document.getElementById("workoutNameBtn");
     const newSavedWorkoutBtn = document.getElementById("newSavedWorkoutBtn");
+    const workoutEditorModalOverlay = document.getElementById("workoutEditorModalOverlay");
+    const closeWorkoutEditorModalBtn = document.getElementById("closeWorkoutEditorModalBtn");
     const savedWorkoutsList = document.getElementById("savedWorkoutsList");
     const emptySavedWorkouts = document.getElementById("emptySavedWorkouts");
     const savedWorkoutsCount = document.getElementById("savedWorkoutsCount");
@@ -1893,6 +1931,41 @@
     }
 
     /* =========================================================
+       MODAL DO EDITOR DE TREINO
+    ========================================================= */
+
+    function openWorkoutEditorModal() {
+      workoutEditorModalOverlay.classList.add("visible");
+      workoutEditorModalOverlay.setAttribute("aria-hidden", "false");
+
+      setTimeout(() => {
+        addExerciseBtn.focus();
+      }, 50);
+    }
+
+    async function closeWorkoutEditorModal() {
+      const canLeave = await confirmLeavingCurrentEditor();
+      if (!canLeave) return openWorkoutEditorModal();
+
+      workoutEditorModalOverlay.classList.remove("visible");
+      workoutEditorModalOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    closeWorkoutEditorModalBtn.addEventListener(
+      "click",
+      closeWorkoutEditorModal
+    );
+
+    workoutEditorModalOverlay.addEventListener(
+      "click",
+      event => {
+        if (event.target === workoutEditorModalOverlay) {
+          closeWorkoutEditorModal();
+        }
+      }
+    );
+
+    /* =========================================================
        MODAL DE NOME
     ========================================================= */
 
@@ -1981,6 +2054,8 @@
         updateWorkoutName();
         renderSavedWorkouts();
         updateWorkoutNameButton();
+        workoutEditorModalOverlay.classList.remove("visible");
+        workoutEditorModalOverlay.setAttribute("aria-hidden", "true");
       }
     );
 
@@ -2102,6 +2177,11 @@
 
         if (addExerciseModalOverlay.classList.contains("visible")) {
           closeAddExerciseModal();
+          return;
+        }
+
+        if (workoutEditorModalOverlay.classList.contains("visible")) {
+          closeWorkoutEditorModal();
           return;
         }
       }
@@ -2367,8 +2447,7 @@
         return true;
       }
 
-      return JSON.stringify(getWorkoutComparable(workout)) !==
-        JSON.stringify(getWorkoutComparable(saved));
+      return JSON.stringify(getWorkoutComparable(workout)) !== JSON.stringify(getWorkoutComparable(saved));
     }
 
     async function confirmLeavingCurrentEditor() {
@@ -2655,7 +2734,7 @@
 
       if (saved.id !== currentWorkoutId) {
         const canLeave = await confirmLeavingCurrentEditor();
-        if (!canLeave) return;
+        if (!canLeave) return openWorkoutEditorModal();
       }
 
       workout = cloneWorkout(saved);
@@ -2666,9 +2745,7 @@
       populateExerciseSelect();
       renderWorkout();
       resetExerciseForm();
-      //precisa pegar a posicao atual do scroll e colocar no top
-      //precisa scrolar até o inicio da lista Seu treino
-      window.scrollTo({ top: window.scrollY + 500, behavior: "smooth" });
+      openWorkoutEditorModal();
     }
 
     async function duplicateSavedWorkout(id) {
@@ -2792,7 +2869,7 @@
 
     newSavedWorkoutBtn.addEventListener("click", async () => {
       const canLeave = await confirmLeavingCurrentEditor();
-      if (!canLeave) return;
+      if (!canLeave) return openWorkoutEditorModal();
 
       const confirmed = await showConfirm(
         "O treino atual continuará salvo. Um novo treino vazio será aberto.",
@@ -2817,7 +2894,7 @@
       populateExerciseSelect();
       renderWorkout();
       resetExerciseForm();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      openWorkoutEditorModal();
     });
 
     function saveSession() {
