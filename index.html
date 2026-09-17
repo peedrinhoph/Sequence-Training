@@ -607,7 +607,7 @@
 
     .main-action {
       width: 100%;
-      min-height: 64px;
+      min-height: 48px;
       margin-bottom: 10px;
       border: 0;
       border-radius: 14px;
@@ -617,9 +617,10 @@
       font-weight: 600;
     }
 
-    .secondary-action {
+    .other-action {
       width: 100%;
       min-height: 48px;
+      margin-bottom: 10px;
       border: 1px solid var(--border);
       border-radius: 12px;
       background: transparent;
@@ -668,6 +669,39 @@
     }
 
     .rest-next strong {
+      color: var(--text);
+    }
+
+    .rest-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .rest-controls .btn {
+      min-width: 82px;
+    }
+
+    .next-exercise .next-title {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .next-exercise .next-details {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .next-exercise .next-details strong {
       color: var(--text);
     }
 
@@ -1394,7 +1428,7 @@
         </div>
       </div>
       <div class="library-toolbar margin-top-8">
-        <input id="librarySearch" type="search" placeholder="🔎 Buscar exercício..." aria-label="Buscar exercício na biblioteca">
+        <input id="librarySearch" type="search" placeholder="Localizar exercício..." aria-label="Buscar exercício na biblioteca">
         <select id="libraryCategory" aria-label="Filtrar biblioteca por grupo muscular"></select>
       </div>
       <div id="exerciseLibraryList" class="library-list"></div>
@@ -1495,8 +1529,11 @@
     <button class="main-action" id="completeSetBtn">
       ✓ Série concluída
     </button>
-    <button class="secondary-action" id="skipSetBtn">
+    <button class="other-action" id="skipSetBtn">
       Pular série
+    </button>
+    <button class="other-action" id="skipExerciseBtn">
+      Pular exercício
     </button>
   </main>
   <!-- =====================================================
@@ -1526,6 +1563,14 @@
       </div>
       <div class="rest-next" id="restNextText">
         Próxima série
+      </div>
+      <div class="rest-controls" aria-label="Ajustar descanso">
+        <button class="btn btn-ghost" id="decreaseRestBtn" type="button">
+          −15s
+        </button>
+        <button class="btn btn-ghost" id="increaseRestBtn" type="button">
+          +15s
+        </button>
       </div>
       <button class="btn btn-primary" id="skipRestBtn">
         Pular descanso
@@ -2905,7 +2950,7 @@
       if (!canLeave) return openWorkoutEditorModal();
 
       const confirmed = await showConfirm(
-        "O treino atual continuará salvo. Um novo treino vazio será aberto.",
+        "Um novo treino vazio será aberto.",
         {
           title: "Novo treino",
           confirmText: "Criar novo"
@@ -3841,11 +3886,14 @@
       }
 
       if (workoutState.currentSet < exercise.sets) {
+        const nextSet = workoutState.currentSet + 1;
+        const nextWeight = normalizeWeights(exercise)[nextSet - 1] ?? 0;
+
         box.innerHTML = `
-          Próximo:
-          <strong>
-            Série ${workoutState.currentSet + 1}
-          </strong>
+          <span class="next-title">Próximo: <strong>Série ${nextSet}</strong> de ${exercise.sets} <strong>x ${exercise.reps} repetições</strong></span>
+          <span class="next-details">
+            <i>${nextWeight > 0 ? `+${nextWeight} kg` : "Peso corporal"}</i>
+          </span>
         `;
 
         return;
@@ -3854,14 +3902,21 @@
       const next = workoutExecution.exercises[workoutState.exerciseIndex + 1];
 
       if (next) {
+        const nextWeight = normalizeWeights(next)[0] ?? 0;
+
         box.innerHTML = `
-          Próximo exercício:
-          <strong>
-            ${escapeHtml(next.name)}
-          </strong>
+          <span class="next-title">Próximo exercício</span>
+          <strong>${escapeHtml(next.name)}</strong>
+          <span class="next-details">
+            Série 1 de ${next.sets} x ${next.reps} repetições ·
+            <strong>${nextWeight > 0 ? `+${nextWeight} kg` : "Peso corporal"}</strong>
+          </span>
         `;
       } else {
-        box.innerHTML = `Última série do treino`;
+        box.innerHTML = `
+          <span class="next-title">Próxima etapa</span>
+          <strong>Última série do treino</strong>
+        `;
       }
     }
 
@@ -3957,7 +4012,7 @@
         }
       }
     );
-
+    
     function completeSet() {
       const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
@@ -3996,6 +4051,49 @@
        * 3. Inicia o descanso.
        * 4. Ao terminar o descanso, já estaremos apontando para o novo exercício.
        */
+      completeExercise();
+    }
+
+    document.getElementById(
+      "skipExerciseBtn"
+    ).addEventListener(
+      "click",
+      async () => {
+        const lastExercise = workoutState.exerciseIndex < workoutExecution.exercises.length - 1;
+        const confirmed =
+          await showConfirm(
+            lastExercise
+              ? "Abandona todas as séries restantes e vai para o próximo exercício."
+              : "Abandona todas as séries restantes e finaliza o treino.",
+            {
+              title:
+                lastExercise
+                  ? "Pular exercício"
+                  : "Finalizar treino",
+              confirmText:
+                lastExercise
+                  ? "Pular"
+                  : "Finalizar"
+            }
+          );
+
+        if (confirmed) {
+          completeExercise();
+        }
+      }
+    );
+
+    function completeExercise() {
+      const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
+
+       if (!exercise) {
+        finishWorkout();
+
+        return;
+      }
+
+      stopExecutionTimer();
+
       if (workoutState.exerciseIndex < workoutExecution.exercises.length - 1) {
         workoutState.exerciseIndex++;
         workoutState.currentSet = 1;
@@ -4012,7 +4110,7 @@
         return;
       }
       /*
-       * Última série do último exercício.
+       * Último exercício.
        */
       finishWorkout();
     }
@@ -4020,6 +4118,28 @@
     /* =========================================================
        DESCANSO
     ========================================================= */
+
+    const decreaseRestBtn = document.getElementById("decreaseRestBtn");
+    const increaseRestBtn = document.getElementById("increaseRestBtn");
+
+    function adjustRestTime(delta) {
+      if (workoutState.status !== "resting") return;
+
+      workoutState.restTimer = Math.max(
+        0,
+        Number(workoutState.restTimer || 0) + delta
+      );
+
+      saveSession();
+      renderRestScreen();
+
+      if (workoutState.restTimer <= 0) {
+        finishRest();
+      }
+    }
+
+    decreaseRestBtn.addEventListener("click", () => adjustRestTime(-15));
+    increaseRestBtn.addEventListener("click", () => adjustRestTime(15));
 
     function startRest(
       seconds,
@@ -4059,6 +4179,7 @@
       document.getElementById(
         "restTimer"
       ).textContent = Math.max(0, workoutState.restTimer);
+
       /*
        * Não usamos innerHTML para o texto
        * principal, evitando problemas com nomes
@@ -4070,18 +4191,36 @@
         const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
         if (exercise) {
-          nextElement.innerHTML =
-            `Próximo exercício:
-             <strong>
-               ${escapeHtml(exercise.name)}
-             </strong>`;
+          const weight = normalizeWeights(exercise)[0] ?? 0;
+          nextElement.innerHTML = `
+            <span class="next-title">Próximo exercício</span>
+            <strong>${escapeHtml(exercise.name)}</strong><br/>
+            <span class="next-details">
+              Série 1 de ${exercise.sets} x <strong>${exercise.reps} repetições</strong><br/>
+              <i>${weight > 0 ? `+${weight} kg` : "Peso corporal"}</i>
+            </span>
+          `;
         } else {
           nextElement.textContent =
             "Próximo exercício";
         }
       } else {
-        nextElement.innerHTML =
-          `Próxima série`;
+        const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
+        const nextSet = workoutState.currentSet;
+        const weight = exercise
+          ? normalizeWeights(exercise)[nextSet - 1] ?? 0
+          : 0;
+
+        nextElement.innerHTML = `
+          <span class="next-title">Próxima série</span>
+          <strong>${nextSet} de ${exercise?.sets || nextSet}</strong>
+          ${exercise ? `
+            <span class="next-details">
+             x${exercise.reps} repetições <br/>
+              <i>${weight > 0 ? `+${weight} kg` : "Peso corporal"}</i>
+            </span>
+          ` : ""}
+        `;
       }
     }
 
@@ -4527,7 +4666,7 @@
       async () => {
         const confirmed =
           await showConfirm(
-            "O progresso do treino em andamento será descartado. O treino configurado continuará salvo.",
+            "O progresso do treino em andamento será descartado.",
             {
               title: "Começar novo treino",
               confirmText: "Começar novo",

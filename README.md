@@ -724,12 +724,14 @@ A evolução do Sequence Training será feita priorizando primeiro **estabilidad
 * [x] Cronômetro de execução
 * [x] Cronômetro de descanso
 * [x] Pausar e continuar
-* [x] Pular série/descanso
+* [x] Pular série
+* [x] Pular descanso
+* [x] Pular exercício
 * [x] Indicação do próximo exercício
 * [x] Sinais sonoros
 * [x] Suporte à vibração
-* [ ] Controles de `+15s` e `-15s` no descanso
-* [ ] Melhorar indicação da próxima série/exercício
+* [x] Controles de `+15s` e `-15s` no descanso
+* [x] Melhorar indicação da próxima série/exercício
 
 ## 🟡 Fase 4 — Evoluir o histórico
 
