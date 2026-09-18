@@ -716,6 +716,8 @@ A evolução do Sequence Training será feita priorizando primeiro **estabilidad
 * [x] Criar biblioteca de exercícios
 * [x] Categorizar exercícios por grupo muscular
 * [x] Melhorar cadastro de exercícios personalizados
+* [x] Melhorar o acesso a opções de ação com dropdown
+* [x] Melhorar a lista de exercícios da biblioteca
 
 ## 🟡 Fase 3 — Evoluir a execução do treino
 

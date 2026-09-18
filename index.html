@@ -966,8 +966,10 @@
       border-radius: 12px;
     }
 
-    .saved-workout-info {
-      min-width: 0;
+    .saved-workout-last-use {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
     }
 
     .saved-workout-name {
@@ -975,12 +977,15 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      margin-bottom: 5px;
+      font-size: 16px;
     }
 
     .saved-workout-details {
       margin-top: 4px;
       color: var(--muted);
       font-size: 12px;
+      line-height: 1.5;
     }
 
     .saved-workouts-toolbar {
@@ -1002,28 +1007,71 @@
       height: 38px;
     }
 
-    .saved-workout-info {
-      flex: 1;
+    .dropdown-menu {
+      position: relative;
+      flex-shrink: 0;
     }
 
-    .saved-workout-name {
-      margin-bottom: 5px;
-      font-size: 16px;
+    .dropdown-menu-toggle {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--text);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .saved-workout-details {
-      line-height: 1.5;
+    .dropdown-menu-toggle:hover {
+      background: var(--card2);
     }
 
-    .saved-workout-last-use {
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 12px;
+    .dropdown-menu-options {
+      position: absolute;
+      right: 0;
+      bottom: calc(100% + 6px);
+      min-width: 140px;
+      padding: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      display: none;
+      z-index: 100;
+    }
+
+    .dropdown-menu-options.active {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .dropdown-menu-options button {
+      width: 100%;
+      padding: 9px 12px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .dropdown-menu-options button:hover {
+      background: var(--card2);
     }
 
     /* ========================================
     BIBLIOTECA DE EXERCÍCIOS
     ======================================== */
+
     .library-toolbar {
       display: grid;
       grid-template-columns: 1fr 160px;
@@ -1038,7 +1086,7 @@
     }
 
     .library-group-title {
-      margin: 6px 0 3px;
+      margin: 8px 0 4px;
       color: var(--primary);
       font-size: 11px;
       font-weight: 700;
@@ -1046,15 +1094,36 @@
       letter-spacing: .04em;
     }
 
+    .library-group-title:first-child {
+      margin-top: 2px;
+    }
+
     .library-exercise-item {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       padding: 7px 9px;
       background: var(--card2);
       border: 1px solid var(--border);
       border-radius: 7px;
-      min-height: 38px;
+      min-height: 42px;
+      transition: border-color .15s ease, background .15s ease;
+    }
+
+    .library-exercise-item:hover {
+      border-color: var(--primary);
+    }
+
+    .library-exercise-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .library-exercise-dot.custom {
+      background: var(--info);
     }
 
     .library-exercise-info {
@@ -1066,26 +1135,21 @@
       font-weight: 600;
       font-size: 13px;
       line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .library-exercise-meta {
-      margin-top: 1px;
+      margin-top: 2px;
       color: var(--muted);
       font-size: 10px;
       line-height: 1.2;
     }
 
     .library-exercise-actions {
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      position: relative;
       flex-shrink: 0;
-    }
-
-    .library-exercise-actions .btn {
-      padding: 5px 8px;
-      font-size: 11px;
-      line-height: 1;
     }
 
     /* Busca/filtro dentro do modal de exercício */
@@ -1123,9 +1187,7 @@
         padding: 5px 7px;
         font-size: 10px;
       }
-    }
 
-    @media (max-width: 560px) {
       .saved-workouts-toolbar {
         align-items: stretch;
         flex-direction: column;
@@ -1134,12 +1196,10 @@
       .saved-workouts-sort {
         width: 100%;
       }
-    }
+
     /* ========================================
        MOBILE
     ======================================== */
-
-    @media (max-width: 560px) {
 
       .app {
         padding:
@@ -1212,8 +1272,12 @@
         flex-direction: row;
       }
 
-      .bottom-actions .btn {
-        width: 100%;
+      .bottom-actions > .btn {
+        flex: 1;
+      }
+
+      .dropdown-menu {
+        flex-shrink: 0;
       }
     }
   </style>
@@ -1278,7 +1342,7 @@
         <h2>Meus treinos</h2>
         <div class="header-row-actions">
           <button class="btn btn-small btn-ghost" id="newSavedWorkoutBtn" type="button">
-            + Novo treino
+            + Treino
           </button>
         </div>
       </div>
@@ -1420,19 +1484,32 @@
       <div class="header-row">
         <div>
           <h2>Biblioteca de exercícios</h2>
+          <div id="libraryCount" class="library-exercise-meta"></div>
         </div>
         <div class="header-row-actions">
-          <button type="button" class="btn btn-small btn-ghost" id="customExerciseBibliotecaBtn">
-            + Novo exercício
+          <button
+            type="button"
+            class="btn btn-small btn-ghost"
+            id="customExerciseBibliotecaBtn">
+            + Exercício
           </button>
         </div>
       </div>
       <div class="library-toolbar margin-top-8">
-        <input id="librarySearch" type="search" placeholder="Localizar exercício..." aria-label="Buscar exercício na biblioteca">
-        <select id="libraryCategory" aria-label="Filtrar biblioteca por grupo muscular"></select>
+        <input
+          id="librarySearch"
+          type="search"
+          placeholder="Localizar exercício..."
+          aria-label="Buscar exercício na biblioteca">
+        <select
+          id="libraryCategory"
+          aria-label="Filtrar biblioteca por grupo muscular">
+        </select>
       </div>
       <div id="exerciseLibraryList" class="library-list"></div>
-      <div id="emptyExerciseLibrary" class="empty hidden">Nenhum exercício encontrado.</div>
+      <div id="emptyExerciseLibrary" class="empty hidden">
+        Nenhum exercício encontrado.
+      </div>
     </section>
     <!-- Histórico -->
     <section class="card">
@@ -2265,7 +2342,42 @@
       }
     );
 
+    /*
+     * Dropdown actions do treino
+    */
+   document.addEventListener("click", (event) => {
+      const toggle = event.target.closest(".dropdown-menu-toggle");
+      // Clicou nos três pontinhos
+      if (toggle) {
+        const menu = toggle.nextElementSibling;
+        const isOpen = menu.classList.contains("active");
 
+        // Fecha todos os outros menus
+        document.querySelectorAll(".dropdown-menu-options.active")
+          .forEach((item) => item.classList.remove("active"));
+
+        document.querySelectorAll(".dropdown-menu-toggle")
+          .forEach((button) => button.setAttribute("aria-expanded", "false"));
+
+        // Alterna o menu atual
+        if (!isOpen) {
+          menu.classList.add("active");
+          toggle.setAttribute("aria-expanded", "true");
+        }
+
+        event.stopPropagation();
+        return;
+      }
+
+      // Clicou fora de algum menu
+      if (!event.target.closest(".dropdown-menu")) {
+        document.querySelectorAll(".dropdown-menu-options.active")
+          .forEach((item) => item.classList.remove("active"));
+
+        document.querySelectorAll(".dropdown-menu-toggle")
+          .forEach((button) => button.setAttribute("aria-expanded", "false"));
+      }
+    });
     /* =========================================================
        STORAGE
     ========================================================= */
@@ -2402,20 +2514,52 @@
         items.forEach(exercise => {
           const item = document.createElement("div");
           item.className = "library-exercise-item";
+
+          const meta = exercise.custom
+            ? "Personalizado"
+            : group;
+
           item.innerHTML = `
+            <div class="library-exercise-dot ${exercise.custom ? "custom" : ""}"></div>
             <div class="library-exercise-info">
               <div class="library-exercise-name">
                 ${escapeHtml(exercise.name)}
               </div>
+              <div class="library-exercise-meta">
+                ${escapeHtml(meta)}
+              </div>
             </div>
-            <div class="library-exercise-actions">
-              <!--<button class="btn btn-small btn-primary" data-library-action="add" data-id="${escapeHtml(exercise.id)}">+ Adicionar</button>-->
-              ${exercise.custom
-                ? `<button class="icon-btn btn-danger" data-library-action="delete" data-id="${escapeHtml(exercise.id)}">×</button>`
-                : ""
-              }
-            </div>
+
+            ${exercise.custom ? `
+              <div class="dropdown-menu">
+                <button
+                  type="button"
+                  class="dropdown-menu-toggle"
+                  aria-label="Mais opções"
+                  aria-expanded="false">
+                  ⋮
+                </button>
+
+                <div class="dropdown-menu-options">
+                  <!--<button
+                    type="button"
+                    data-library-action="edit"
+                    data-id="${escapeHtml(exercise.id)}">
+                    Editar
+                  </button>-->
+
+                  <button
+                    type="button"
+                    class="menu-delete"
+                    data-library-action="delete"
+                    data-id="${escapeHtml(exercise.id)}">
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            ` : ""}
           `;
+
           exerciseLibraryList.appendChild(item);
         });
       });
@@ -2777,8 +2921,11 @@
           : "Ainda não executado";
 
         item.innerHTML = `
-          <div class="saved-workout-info">
-            <div class="saved-workout-name">${escapeHtml(saved.name)}</div>
+          <div>
+            <div class="saved-workout-name">
+              ${escapeHtml(saved.name)}
+            </div>
+
             <div class="saved-workout-details">
               ${exercisesCount} exercício${exercisesCount !== 1 ? "s" : ""}
             </div>
@@ -2786,19 +2933,47 @@
               ${escapeHtml(lastUsedText)}
             </div>
           </div>
+
           <div class="bottom-actions">
-            <button class="btn btn-small btn-primary" data-action="train" data-id="${saved.id}">
-              Iniciar
+            <button
+              class="btn btn-small btn-primary"
+              data-action="train"
+              data-id="${saved.id}">
+              ▶ Iniciar
             </button>
-            <button class="btn btn-small btn-info-line" data-action="view" data-id="${saved.id}">
-              Editar
-            </button>
-            <button class="btn btn-small btn-warning-line" data-action="duplicate" data-id="${saved.id}">
-              Duplicar
-            </button>
-            <button class="btn btn-small btn-ghost btn-danger-line" title="Excluir treino" data-action="delete" data-id="${saved.id}">
-              Excluir
-            </button>
+
+            <div class="dropdown-menu">
+              <button
+                class="dropdown-menu-toggle"
+                type="button"
+                aria-label="Mais opções"
+                aria-expanded="false">
+                ⋮
+              </button>
+
+              <div class="dropdown-menu-options">
+                <button
+                  type="button"
+                  data-action="view"
+                  data-id="${saved.id}">
+                  Editar
+                </button>
+
+                <button
+                  type="button"
+                  data-action="duplicate"
+                  data-id="${saved.id}">
+                  Duplicar
+                </button>
+
+                <button
+                  type="button"
+                  data-action="delete"
+                  data-id="${saved.id}">
+                  Excluir
+                </button>
+              </div>
+            </div>
           </div>
         `;
 
