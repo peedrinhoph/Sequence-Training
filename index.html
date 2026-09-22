@@ -865,6 +865,10 @@
       flex-shrink: 0;
     }
 
+    .width-full {
+      width: 100%;
+    }
+
     .exercise-modal {
       max-width: 520px;
       max-height: calc(100vh - 40px);
@@ -1342,7 +1346,7 @@
         <h2>Meus treinos</h2>
         <div class="header-row-actions">
           <button class="btn btn-small btn-ghost" id="newSavedWorkoutBtn" type="button">
-            + Treino
+            +1 Treino
           </button>
         </div>
       </div>
@@ -1374,10 +1378,13 @@
         </div>
         <section class="card">
           <div class="header-row">
-            <h2>Exercícios</h2>
-            <div class="header-row-actions">
+            <!-- <h2>Exercícios</h2> -->
+            <div class="header-row-actions width-full">
               <button class="btn btn-small btn-info-line" id="addExerciseBtn" type="button">
-                + Exercício
+                +1 Exercício
+              </button>
+              <button class="btn btn-small btn-primary" id="workoutNameBtn">
+                Salvar
               </button>
             </div>
           </div>
@@ -1386,14 +1393,11 @@
             Nenhum exercício adicionado ainda.
           </div>
           <div class="bottom-actions">
-            <button class="btn btn-primary full-btn" id="startWorkoutBtn">
+            <button class="btn btn-primary full-btn hidden" id="startWorkoutBtn">
               ▶ Iniciar
             </button>
             <button class="btn" id="clearWorkoutBtn">
-              Limpar
-            </button>
-            <button class="btn" id="workoutNameBtn">
-              Salvar
+              Limpar treino
             </button>
           </div>
         </section>
@@ -1483,7 +1487,7 @@
     <section class="card">
       <div class="header-row">
         <div>
-          <h2>Biblioteca de exercícios</h2>
+          <h2>Exercícios disponíveis</h2>
           <div id="libraryCount" class="library-exercise-meta"></div>
         </div>
         <div class="header-row-actions">
@@ -1491,7 +1495,7 @@
             type="button"
             class="btn btn-small btn-ghost"
             id="customExerciseBibliotecaBtn">
-            + Exercício
+            + Adicionar
           </button>
         </div>
       </div>
@@ -1697,16 +1701,13 @@
   ====================================================== -->
   <div class="modal-overlay" id="nameModalOverlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="nameModalTitle">
-      <h3 id="nameModalTitle">
+      <!-- <h3 id="nameModalTitle">
         Nome do treino
-      </h3>
-      <p>
-        Escolha um nome para identificar este treino.
-      </p>
+      </h3> -->
       <form id="nameForm" class="modal-form">
         <div class="field">
           <label for="workoutNameInput">
-            Nome
+            Nome do treino
           </label>
           <input id="workoutNameInput" type="text" maxlength="80" placeholder="Ex.: Treino A" required>
         </div>
@@ -2814,7 +2815,7 @@
 
     function updateWorkoutNameButton() {
       workoutNameBtn.textContent = currentWorkoutId
-        ? "Atualizar"
+        ? "Atualizar treino"
         : "Salvar";
     }
 
@@ -3832,7 +3833,7 @@
 
         const confirmed =
           await showConfirm(
-            "Todos os exercícios deste treino serão removidos. Essa ação não pode ser desfeita.",
+            "Limpar os exercícios e começar do zero.",
             {
               title:
                 "Limpar treino",
@@ -4596,6 +4597,7 @@
       );
 
       renderHistory();
+      renderSavedWorkouts();
     }
 
     function loadHistory() {
