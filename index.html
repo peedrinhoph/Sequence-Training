@@ -1201,6 +1201,24 @@
         width: 100%;
       }
 
+
+    .dashboard-modal { max-width: 760px; max-height: calc(100vh - 32px); overflow-y: auto; }
+    .saved-workout-item, .history-item { cursor: pointer; transition: border-color .15s ease; }
+    .saved-workout-item:hover, .history-item:hover { border-color: var(--primary); }
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:10px; margin:12px 0 18px; }
+    .stat-tile { padding:12px; background:var(--card2); border:1px solid var(--border); border-radius:10px; }
+    .stat-tile span { display:block; color:var(--muted); font-size:12px; }
+    .stat-tile strong { display:block; margin-top:5px; font-size:20px; }
+    .chart-row { display:grid; grid-template-columns:80px 1fr 42px; gap:8px; align-items:center; margin:8px 0; font-size:12px; }
+    .chart-track { height:10px; border-radius:20px; background:var(--card2); overflow:hidden; }
+    .chart-fill { height:100%; background:var(--primary); border-radius:20px; }
+    .history-exercise { padding:12px 0; border-bottom:1px solid var(--border); }
+    .history-exercise:last-child { border-bottom:0; }
+    .history-set-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:7px; }
+    .history-set-chip { padding:5px 8px; border-radius:7px; background:var(--card2); font-size:12px; }
+    .status-skipped { color:var(--warning); font-weight:700; }
+    .modal-section-title { margin:18px 0 8px; font-size:15px; }
+
     /* ========================================
        MOBILE
     ======================================== */
@@ -1343,13 +1361,13 @@
     <!-- Meus treinos -->
     <section class="card">
       <div class="header-row">
-        <h2>Meus treinos</h2>
         <div class="header-row-actions">
-          <button class="btn btn-small btn-ghost" id="newSavedWorkoutBtn" type="button">
-            +1 Treino
-          </button>
+          <button class="btn btn-small btn-ghost" id="newSavedWorkoutBtn" type="button">Novo treino</button>
+          <button class="btn btn-small btn-ghost" id="openLibraryBtn" type="button">Exercícios disponíveis</button>
+          <button class="btn btn-small btn-ghost" id="openHistoryBtn" type="button">Histórico</button>
         </div>
       </div>
+      <br/>
       <div class="saved-workouts-toolbar">
         <span class="saved-workouts-count" id="savedWorkoutsCount"></span>
         <select id="savedWorkoutsSort" class="saved-workouts-sort" aria-label="Ordenar meus treinos">
@@ -1363,6 +1381,13 @@
       <div id="emptySavedWorkouts" class="empty">
         Nenhum treino salvo ainda.
       </div>
+    </section>
+    <!-- Estatísticas sempre visíveis abaixo dos treinos -->
+    <section class="card" id="trainingStatsCard">
+      <div class="header-row">
+        <h2>Evolução e estatísticas</h2>
+      </div>
+      <div id="statsContent"></div>
     </section>
     <!-- Editor do treino (abre somente como modal) -->
     <div class="modal-overlay" id="workoutEditorModalOverlay" aria-hidden="true">
@@ -1483,11 +1508,16 @@
       </form>
       </div>
     </div>
-    <!-- Biblioteca de exercícios -->
-    <section class="card">
+    <!-- Biblioteca de exercícios (modal) -->
+    <div class="modal-overlay" id="libraryModalOverlay" aria-hidden="true">
+      <div class="modal dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="libraryModalTitle">
+        <div class="workout-editor-modal-header">
+          <h2 id="libraryModalTitle">Exercícios disponíveis</h2>
+          <button class="icon-btn" id="closeLibraryModalBtn" type="button" aria-label="Fechar">×</button>
+        </div>
+        <section class="card">
       <div class="header-row">
         <div>
-          <h2>Exercícios disponíveis</h2>
           <div id="libraryCount" class="library-exercise-meta"></div>
         </div>
         <div class="header-row-actions">
@@ -1511,18 +1541,30 @@
         </select>
       </div>
       <div id="exerciseLibraryList" class="library-list"></div>
-      <div id="emptyExerciseLibrary" class="empty hidden">
-        Nenhum exercício encontrado.
+      <div id="emptyExerciseLibrary" class="empty hidden">Nenhum exercício encontrado.</div>
+        </section>
       </div>
-    </section>
-    <!-- Histórico -->
-    <section class="card">
-      <h2>Histórico de treinos</h2>
-      <div id="historyList" class="history-list"></div>
-      <div id="emptyHistory" class="empty">
-        Nenhum treino concluído ainda.
+    </div>
+    <!-- Histórico (modal) -->
+    <div class="modal-overlay" id="historyModalOverlay" aria-hidden="true">
+      <div class="modal dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
+        <div class="workout-editor-modal-header">
+          <h2 id="historyModalTitle">Histórico de treinos</h2>
+          <button class="icon-btn" id="closeHistoryModalBtn" type="button" aria-label="Fechar">×</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+        <div id="emptyHistory" class="empty">Nenhum treino concluído ainda.</div>
       </div>
-    </section>
+    </div>
+    <div class="modal-overlay" id="historyDetailOverlay" aria-hidden="true">
+      <div class="modal dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="historyDetailTitle">
+        <div class="workout-editor-modal-header">
+          <h2 id="historyDetailTitle">Detalhes do treino</h2>
+          <button class="icon-btn" id="closeHistoryDetailBtn" type="button" aria-label="Fechar">×</button>
+        </div>
+        <div id="historyDetailContent"></div>
+      </div>
+    </div>
     <!-- Dados -->
     <section class="card">
       <h2>Dados</h2>
@@ -1616,6 +1658,7 @@
     <button class="other-action" id="skipExerciseBtn">
       Pular exercício
     </button>
+    <button class="other-action" id="editSetResultBtn">Editar resultado da série</button>
   </main>
   <!-- =====================================================
        TELA DE DESCANSO
@@ -1748,6 +1791,20 @@
           <button type="submit" class="btn btn-primary">
             Adicionar
           </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-overlay" id="setResultModalOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="setResultModalTitle">
+      <h3 id="setResultModalTitle">Resultado da série</h3>
+      <p>Os valores planejados já estão preenchidos. Altere apenas se necessário.</p>
+      <form id="setResultForm" class="modal-form">
+        <div class="field"><label for="actualRepsInput">Repetições realizadas</label><input id="actualRepsInput" type="number" min="0" max="999" required></div>
+        <div class="field"><label for="actualWeightInput">Carga utilizada (kg)</label><input id="actualWeightInput" type="number" min="0" max="999" step="0.25" required></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="cancelSetResultBtn">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar resultado</button>
         </div>
       </form>
     </div>
@@ -1886,6 +1943,7 @@
     //Inicializa a execução do treino com o estado inicial
     let workoutExecution = null;
     let executionWorkoutId = null;
+    let executionLog = [];
 
     let workoutState = {
       exerciseIndex: 0,
@@ -1950,6 +2008,8 @@
     const newWorkoutBtn = document.getElementById("newWorkoutBtn");
     const themeBtn = document.getElementById("themeBtn");
     const historyList = document.getElementById("historyList");
+    const libraryModalOverlay = document.getElementById("libraryModalOverlay");
+    const historyModalOverlay = document.getElementById("historyModalOverlay");
     const emptyHistory = document.getElementById("emptyHistory");
 
     /* =========================================================
@@ -2258,11 +2318,15 @@
     const customExerciseForm = document.getElementById("customExerciseForm");
     const customName = document.getElementById("customName");
     const customMuscleGroup = document.getElementById("customMuscleGroup");
+    let editingLibraryExerciseId = null;
     const closeCustomModalBtn = document.getElementById("closeCustomModalBtn");
 
     function openCustomModal() {
+      editingLibraryExerciseId = null;
       customExerciseForm.reset();
       customMuscleGroup.value = "Outros";
+      document.getElementById("customModalTitle").textContent = "Exercício personalizado";
+      customExerciseForm.querySelector('button[type="submit"]').textContent = "Adicionar";
       customModalOverlay.classList.add(
         "visible"
       );
@@ -2323,6 +2387,11 @@
 
         if (nameModalOverlay.classList.contains("visible")) {
           closeNameModal();
+          return;
+        }
+
+        if (setResultModalOverlay.classList.contains("visible")) {
+          closeSetResultModal();
           return;
         }
 
@@ -2542,12 +2611,10 @@
                 </button>
 
                 <div class="dropdown-menu-options">
-                  <!--<button
+                  <button
                     type="button"
                     data-library-action="edit"
-                    data-id="${escapeHtml(exercise.id)}">
-                    Editar
-                  </button>-->
+                    data-id="${escapeHtml(exercise.id)}">Editar</button>
 
                   <button
                     type="button"
@@ -2911,6 +2978,10 @@
       getSortedSavedWorkouts().forEach(saved => {
         const item = document.createElement("div");
         item.className = "saved-workout-item";
+        item.dataset.workoutCardId = saved.id;
+        item.setAttribute("role", "button");
+        item.setAttribute("tabindex", "0");
+        item.setAttribute("aria-label", `Editar treino ${saved.name}`);
 
         const exercisesCount = Array.isArray(saved.exercises)
           ? saved.exercises.length
@@ -3071,6 +3142,18 @@
           exerciseSelect.value = item.name;
           exerciseSelect.focus();
         }, 60);
+        return;
+      }
+
+      if (action === "edit" && item.custom) {
+        editingLibraryExerciseId = item.id;
+        customName.value = item.name;
+        customMuscleGroup.value = item.muscleGroup || "Outros";
+        document.getElementById("customModalTitle").textContent = "Editar exercício personalizado";
+        customExerciseForm.querySelector('button[type="submit"]').textContent = "Salvar alterações";
+        customModalOverlay.classList.add("visible");
+        customModalOverlay.setAttribute("aria-hidden", "false");
+        customName.focus();
         return;
       }
 
@@ -3439,6 +3522,41 @@
         }
 
         const muscleGroup = customMuscleGroup.value || "Outros";
+        if (editingLibraryExerciseId) {
+          const target = exerciseLibrary.find(item => item.id === editingLibraryExerciseId);
+          if (!target) return;
+          const duplicate = exerciseLibrary.find(item => item.id !== target.id && item.name.toLocaleLowerCase("pt-BR") === name.toLocaleLowerCase("pt-BR"));
+          if (duplicate) {
+            await showMessage("Já existe outro exercício com esse nome na biblioteca.", "Nome duplicado");
+            return;
+          }
+          const oldName = target.name;
+          target.name = name;
+          target.muscleGroup = muscleGroup;
+          savedWorkouts.forEach(saved => saved.exercises.forEach(exercise => {
+            if (exercise.libraryId === target.id || exercise.name === oldName) {
+              exercise.name = name;
+              exercise.libraryId = target.id;
+              exercise.muscleGroup = muscleGroup;
+            }
+          }));
+          workout.exercises.forEach(exercise => {
+            if (exercise.libraryId === target.id || exercise.name === oldName) {
+              exercise.name = name;
+              exercise.libraryId = target.id;
+              exercise.muscleGroup = muscleGroup;
+            }
+          });
+          saveSavedWorkouts();
+          saveWorkout();
+          saveExerciseLibrary();
+          populateExerciseSelect();
+          renderExerciseLibrary();
+          renderSavedWorkouts();
+          renderWorkout();
+          closeCustomModal();
+          return;
+        }
         let libraryItem = getExerciseLibraryItemByName(name);
 
         if (libraryItem && !libraryItem.custom) {
@@ -3868,6 +3986,18 @@
 
       workoutExecution = cloneWorkout(sourceWorkout);
       executionWorkoutId = sourceWorkoutId;
+      executionLog = workoutExecution.exercises.map(exercise => ({
+        exerciseId: exercise.libraryId || exercise.id,
+        name: exercise.name,
+        plannedSets: Number(exercise.sets || 0),
+        plannedReps: Number(exercise.reps || 0),
+        plannedWeights: normalizeWeights(exercise),
+        status: "pending",
+        durationSeconds: 0,
+        sets: [],
+        startedAt: null,
+        endedAt: null
+      }));
 
       workoutState = {
         exerciseIndex: 0,
@@ -4115,6 +4245,12 @@
 
             workoutState.executionSeconds++;
             workoutState.totalSeconds++;
+            const logEntry = executionLog[workoutState.exerciseIndex];
+            if (logEntry) {
+              logEntry.status = "in_progress";
+              logEntry.startedAt = logEntry.startedAt || new Date().toISOString();
+              logEntry.durationSeconds = Number(logEntry.durationSeconds || 0) + 1;
+            }
 
             updateExecutionTimer();
             updateTotalWorkoutTimer();
@@ -4159,6 +4295,50 @@
        CONCLUSÃO DE SÉRIE
     ========================================================= */
 
+    const setResultModalOverlay = document.getElementById("setResultModalOverlay");
+    const actualRepsInput = document.getElementById("actualRepsInput");
+    const actualWeightInput = document.getElementById("actualWeightInput");
+    let editedSetResult = null;
+
+    document.getElementById("editSetResultBtn").addEventListener("click", () => {
+      const exercise = workoutExecution?.exercises?.[workoutState.exerciseIndex];
+      if (!exercise) return;
+      const logEntry = executionLog[workoutState.exerciseIndex];
+      const savedSet = logEntry?.sets?.find(set => set.setNumber === workoutState.currentSet);
+      editedSetResult = savedSet ? { ...savedSet } : null;
+      actualRepsInput.value = savedSet?.reps ?? exercise.reps;
+      actualWeightInput.value = savedSet?.weight ?? (normalizeWeights(exercise)[workoutState.currentSet - 1] ?? 0);
+      setResultModalOverlay.classList.add("visible");
+      setResultModalOverlay.setAttribute("aria-hidden", "false");
+      actualRepsInput.focus();
+    });
+    function closeSetResultModal() {
+      setResultModalOverlay.classList.remove("visible");
+      setResultModalOverlay.setAttribute("aria-hidden", "true");
+    }
+    document.getElementById("cancelSetResultBtn").addEventListener("click", closeSetResultModal);
+    setResultModalOverlay.addEventListener("click", event => {
+      if (event.target === setResultModalOverlay) closeSetResultModal();
+    });
+    document.getElementById("setResultForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const exercise = workoutExecution?.exercises?.[workoutState.exerciseIndex];
+      const logEntry = executionLog[workoutState.exerciseIndex];
+      if (!exercise || !logEntry) return closeSetResultModal();
+      const existing = logEntry.sets.find(set => set.setNumber === workoutState.currentSet);
+      const result = {
+        setNumber: workoutState.currentSet,
+        reps: Math.max(0, Number(actualRepsInput.value || 0)),
+        weight: Math.max(0, Number(actualWeightInput.value || 0)),
+        durationSeconds: Number(existing?.durationSeconds ?? workoutState.executionSeconds ?? 0),
+        status: existing?.status || "edited"
+      };
+      if (existing) Object.assign(existing, result);
+      else logEntry.sets.push(result);
+      saveSession();
+      closeSetResultModal();
+    });
+
     document.getElementById(
       "completeSetBtn"
     ).addEventListener(
@@ -4184,12 +4364,12 @@
           );
 
         if (confirmed) {
-          completeSet();
+          completeSet({ skipped: true });
         }
       }
     );
     
-    function completeSet() {
+    function completeSet(options = {}) {
       const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
       if (!exercise) {
@@ -4199,6 +4379,21 @@
       }
 
       stopExecutionTimer();
+      const logEntry = executionLog[workoutState.exerciseIndex];
+      if (logEntry) {
+        const setNumber = Number(workoutState.currentSet || 1);
+        const existing = logEntry.sets.find(set => set.setNumber === setNumber);
+        const setResult = {
+          setNumber,
+          reps: Number(logEntry.sets.find(set => set.setNumber === setNumber)?.reps ?? exercise.reps ?? 0),
+          weight: Number(logEntry.sets.find(set => set.setNumber === setNumber)?.weight ?? (normalizeWeights(exercise)[setNumber - 1] ?? 0)),
+          durationSeconds: Number(workoutState.executionSeconds || 0),
+          status: options.skipped ? "skipped" : "completed"
+        };
+        if (existing) Object.assign(existing, setResult);
+        else logEntry.sets.push(setResult);
+        if (!options.skipped) logEntry.status = "in_progress";
+      }
       /*
        * Caso ainda existam séries no exercício atual:
        *
@@ -4254,12 +4449,12 @@
           );
 
         if (confirmed) {
-          completeExercise();
+          completeExercise(true);
         }
       }
     );
 
-    function completeExercise() {
+    function completeExercise(skipped = false) {
       const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
        if (!exercise) {
@@ -4269,6 +4464,16 @@
       }
 
       stopExecutionTimer();
+      const logEntry = executionLog[workoutState.exerciseIndex];
+      if (logEntry) {
+        if (skipped) {
+          logEntry.status = "skipped";
+          logEntry.skippedAtSet = workoutState.currentSet;
+        } else if (logEntry.status !== "skipped") {
+          logEntry.status = "completed";
+        }
+        logEntry.endedAt = new Date().toISOString();
+      }
 
       if (workoutState.exerciseIndex < workoutExecution.exercises.length - 1) {
         workoutState.exerciseIndex++;
@@ -4562,7 +4767,8 @@
     ========================================================= */
     function saveWorkoutToHistory() {
       const history = loadHistory();
-      const completedReps = getTotalReps();
+      const completedReps = executionLog.reduce((total, exercise) =>
+        total + (exercise.sets || []).filter(set => set.status === "completed").reduce((sum, set) => sum + Number(set.reps || 0), 0), 0);
       const entry = {
         id: crypto.randomUUID(),
         workoutId: executionWorkoutId,
@@ -4570,13 +4776,49 @@
         completedAt: new Date().toISOString(),
         durationSeconds: Number(workoutState.totalSeconds || 0),
         totalReps: completedReps,
-        exercises: workoutExecution.exercises.map(exercise => ({
-          name: exercise.name,
-          sets: Number(exercise.sets),
-          reps: Number(exercise.reps),
-          weights: normalizeWeights(exercise)
-        }))
+        exercises: workoutExecution.exercises.map((exercise, index) => {
+          const result = executionLog[index] || {};
+          return {
+            exerciseId: exercise.libraryId || exercise.id,
+            name: exercise.name,
+            sets: Number(exercise.sets),
+            reps: Number(exercise.reps),
+            weights: normalizeWeights(exercise),
+            status: result.status === "pending" ? "skipped" : (result.status || "completed"),
+            durationSeconds: Number(result.durationSeconds || 0),
+            startedAt: result.startedAt || null,
+            endedAt: result.endedAt || null,
+            completedSets: Array.isArray(result.sets) ? result.sets : [],
+            skippedAtSet: result.skippedAtSet || null
+          };
+        }),
+        schemaVersion: 2
       };
+
+      const newRecords = [];
+      const previousEntries = history;
+      entry.exercises.forEach(exercise => {
+        const sets = (exercise.completedSets || []).filter(set => set.status === "completed");
+        if (!sets.length) return;
+        const oldSets = previousEntries.flatMap(oldEntry =>
+          (oldEntry.exercises || [])
+            .filter(oldExercise => oldExercise.name === exercise.name)
+            .flatMap(oldExercise => oldExercise.completedSets || [])
+            .filter(set => set.status === "completed")
+        );
+        const previousMaxReps = Math.max(0, ...oldSets.map(set => Number(set.reps || 0)));
+        const previousMaxWeight = Math.max(0, ...oldSets.map(set => Number(set.weight || 0)));
+        const newMaxReps = Math.max(0, ...sets.map(set => Number(set.reps || 0)));
+        const newMaxWeight = Math.max(0, ...sets.map(set => Number(set.weight || 0)));
+        if (newMaxReps > previousMaxReps && previousMaxReps > 0) {
+          newRecords.push(`${exercise.name}: ${newMaxReps} repetições`);
+        } else if (newMaxReps > 0 && previousMaxReps === 0 && previousEntries.some(oldEntry => (oldEntry.exercises || []).some(oldExercise => oldExercise.name === exercise.name))) {
+          newRecords.push(`${exercise.name}: ${newMaxReps} repetições registradas`);
+        }
+        if (newMaxWeight > previousMaxWeight && newMaxWeight > 0 && previousMaxWeight > 0) {
+          newRecords.push(`${exercise.name}: +${newMaxWeight} kg`);
+        }
+      });
 
       history.unshift(entry);
 
@@ -4598,6 +4840,14 @@
 
       renderHistory();
       renderSavedWorkouts();
+      renderTrainingStats();
+
+      if (newRecords.length) {
+        setTimeout(() => showMessage(
+          `Novo recorde pessoal!\\n\\n${newRecords.map(record => `• ${record}`).join("\\n")}`,
+          "🏆 Novo recorde"
+        ), 250);
+      }
     }
 
     function loadHistory() {
@@ -4649,6 +4899,10 @@
         const item = document.createElement("div");
         
         item.className = "history-item";
+        item.dataset.historyId = entry.id;
+        item.setAttribute("role", "button");
+        item.setAttribute("tabindex", "0");
+        item.setAttribute("aria-label", `Ver detalhes do treino ${entry.workoutName || "Meu treino"}`);
         
         const date = new Date(entry.completedAt);
         const dateText =
@@ -4684,6 +4938,139 @@
         historyList.appendChild(item);
       });
     }
+
+    function renderHistoryDetail(entry) {
+      const content = document.getElementById("historyDetailContent");
+      const title = document.getElementById("historyDetailTitle");
+      title.textContent = entry.workoutName || "Detalhes do treino";
+      const exercises = Array.isArray(entry.exercises) ? entry.exercises : [];
+      const completedSets = exercises.reduce((n, ex) => n + (ex.completedSets || []).filter(set => set.status === "completed").length, 0);
+      const skippedExercises = exercises.filter(ex => ex.status === "skipped").length;
+      content.innerHTML = `
+        <div class="stats-grid">
+          <div class="stat-tile"><span>Duração total</span><strong>${escapeHtml(formatDuration(entry.durationSeconds))}</strong></div>
+          <div class="stat-tile"><span>Repetições registradas</span><strong>${Number(entry.totalReps || 0)}</strong></div>
+          <div class="stat-tile"><span>Séries concluídas</span><strong>${completedSets}</strong></div>
+          <div class="stat-tile"><span>Exercícios pulados</span><strong>${skippedExercises}</strong></div>
+        </div>
+        ${exercises.map(ex => {
+          const sets = Array.isArray(ex.completedSets) ? ex.completedSets : [];
+          const statusText = ex.status === "skipped" ? `Pulado${ex.skippedAtSet ? ` a partir da série ${ex.skippedAtSet}` : ""}` : ex.status === "completed" ? "Concluído" : "Parcial";
+          const plannedFallback = !sets.length && ex.status !== "skipped";
+          return `<div class="history-exercise">
+            <strong>${escapeHtml(ex.name || "Exercício")}</strong>
+            <div class="saved-workout-details">${escapeHtml(statusText)} · Tempo: ${escapeHtml(formatDuration(ex.durationSeconds || 0))}</div>
+            <div class="history-set-row">${sets.length ? sets.map(set => `<span class="history-set-chip">S${set.setNumber}: ${set.status === "skipped" ? "pulada" : `${set.reps} reps · ${Number(set.weight || 0) > 0 ? `+${set.weight} kg` : "peso corporal"} · ${formatDuration(set.durationSeconds || 0)}`}</span>`).join("") : plannedFallback ? `<span class="history-set-chip">Planejado: ${ex.sets} × ${ex.reps}</span>` : `<span class="history-set-chip">Nenhuma série executada</span>`}</div>
+          </div>`;
+        }).join("")}
+      `;
+      document.getElementById("historyDetailOverlay").classList.add("visible");
+      document.getElementById("historyDetailOverlay").setAttribute("aria-hidden", "false");
+    }
+
+    function renderTrainingStats() {
+      const history = loadHistory().filter(entry => entry.completedAt);
+      const totalSeconds = history.reduce((sum, entry) => sum + Number(entry.durationSeconds || 0), 0);
+      const weekStart = new Date();
+      weekStart.setHours(0,0,0,0);
+      weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7));
+      const weekly = history.filter(entry => new Date(entry.completedAt) >= weekStart).length;
+      const volume = history.reduce((sum, entry) => sum + (entry.exercises || []).reduce((subtotal, ex) =>
+        subtotal + (ex.completedSets || []).filter(set => set.status === "completed").reduce((v, set) => v + Number(set.weight || 0) * Number(set.reps || 0), 0), 0), 0);
+      const exerciseProgress = {};
+      const prs = {};
+      history.slice().reverse().forEach(entry => (entry.exercises || []).forEach(ex => {
+        const name = ex.name || "Exercício";
+        const sets = Array.isArray(ex.completedSets) ? ex.completedSets : [];
+        sets.filter(set => set.status === "completed").forEach(set => {
+          const load = Number(set.weight || 0);
+          const reps = Number(set.reps || 0);
+          const score = load > 0 ? load : reps;
+          if (!prs[name] || score > prs[name].score) prs[name] = { score, load, reps, date: entry.completedAt };
+          if (load > 0) {
+            if (!exerciseProgress[name]) exerciseProgress[name] = [];
+            exerciseProgress[name].push({ date: entry.completedAt, value: load });
+          } else {
+            if (!exerciseProgress[name]) exerciseProgress[name] = [];
+            exerciseProgress[name].push({ date: entry.completedAt, value: reps });
+          }
+        });
+      }));
+      const frequency = Array.from({length: 7}, (_, i) => {
+        const day = new Date(weekStart);
+        day.setDate(weekStart.getDate() + i);
+        return { label: day.toLocaleDateString("pt-BR", {weekday:"short"}), count: history.filter(entry => {
+          const d = new Date(entry.completedAt); return d.toDateString() === day.toDateString();
+        }).length };
+      });
+      const maxFrequency = Math.max(1, ...frequency.map(x => x.count));
+      const progressionHTML = Object.entries(exerciseProgress).slice(0, 8).map(([name, values]) => {
+        const recent = values.slice(-8);
+        const max = Math.max(1, ...recent.map(v => v.value));
+        return `<h4 class="modal-section-title">${escapeHtml(name)} · ${recent.some(v => v.value > 0) && prs[name]?.load > 0 ? "carga (kg)" : "repetições"}</h4>` + recent.map((v, i) => `<div class="chart-row"><span>${escapeHtml(new Date(v.date).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"}))}</span><div class="chart-track"><div class="chart-fill" style="width:${Math.max(3, v.value/max*100)}%"></div></div><strong>${v.value}</strong></div>`).join("");
+      }).join("") || "<p class='saved-workout-details'>Ainda não há dados suficientes para gráficos. Os treinos novos passarão a registrar os resultados por série.</p>";
+      const prHTML = Object.entries(prs).map(([name, pr]) => `<div class="history-exercise"><strong>${escapeHtml(name)}</strong><div class="saved-workout-details">Recorde registrado: ${pr.load > 0 ? `+${pr.load} kg × ${pr.reps} reps` : `${pr.reps} repetições`}</div></div>`).join("") || "<p class='saved-workout-details'>Os recordes serão calculados conforme novos treinos forem registrados.</p>";
+      document.getElementById("statsContent").innerHTML = `
+        <div class="stats-grid">
+          <div class="stat-tile"><span>Treinos nesta semana</span><strong>${weekly}</strong></div>
+          <div class="stat-tile"><span>Tempo total treinado</span><strong>${escapeHtml(formatDuration(totalSeconds))}</strong></div>
+          <div class="stat-tile"><span>Volume com carga externa</span><strong>${Math.round(volume).toLocaleString("pt-BR")} kg</strong></div>
+          <div class="stat-tile"><span>Treinos registrados</span><strong>${history.length}</strong></div>
+        </div>
+        <h3 class="modal-section-title">Frequência semanal</h3>
+        ${frequency.map(day => `<div class="chart-row"><span>${escapeHtml(day.label)}</span><div class="chart-track"><div class="chart-fill" style="width:${day.count/maxFrequency*100}%"></div></div><strong>${day.count}</strong></div>`).join("")}
+        <h3 class="modal-section-title">Evolução de cargas e repetições</h3>${progressionHTML}
+        <h3 class="modal-section-title">Recordes pessoais (PR)</h3>${prHTML}
+      `;
+    }
+
+    function closeOverlay(id) {
+      const overlay = document.getElementById(id);
+      if (overlay) { overlay.classList.remove("visible"); overlay.setAttribute("aria-hidden", "true"); }
+    }
+
+    renderTrainingStats();
+
+    document.getElementById("openLibraryBtn").addEventListener("click", () => {
+      libraryModalOverlay.classList.add("visible"); libraryModalOverlay.setAttribute("aria-hidden", "false");
+    });
+    document.getElementById("openHistoryBtn").addEventListener("click", () => {
+      historyModalOverlay.classList.add("visible"); historyModalOverlay.setAttribute("aria-hidden", "false");
+    });
+    document.getElementById("closeLibraryModalBtn").addEventListener("click", () => closeOverlay("libraryModalOverlay"));
+    document.getElementById("closeHistoryModalBtn").addEventListener("click", () => closeOverlay("historyModalOverlay"));
+    document.getElementById("closeHistoryDetailBtn").addEventListener("click", () => closeOverlay("historyDetailOverlay"));
+    ["libraryModalOverlay", "historyModalOverlay", "historyDetailOverlay"].forEach(id => {
+      document.getElementById(id).addEventListener("click", event => {
+        if (event.target.id === id) closeOverlay(id);
+      });
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        ["historyDetailOverlay", "historyModalOverlay", "libraryModalOverlay"].forEach(id => closeOverlay(id));
+      }
+    });
+    historyList.addEventListener("click", event => {
+      const card = event.target.closest("[data-history-id]");
+      if (!card) return;
+      const entry = loadHistory().find(item => item.id === card.dataset.historyId);
+      if (entry) renderHistoryDetail(entry);
+    });
+    historyList.addEventListener("keydown", event => {
+      if ((event.key === "Enter" || event.key === " ") && event.target.matches("[data-history-id]")) {
+        event.preventDefault(); event.target.click();
+      }
+    });
+    savedWorkoutsList.addEventListener("click", event => {
+      if (event.target.closest("button, .dropdown-menu")) return;
+      const card = event.target.closest("[data-workout-card-id]");
+      if (card) loadSavedWorkout(card.dataset.workoutCardId);
+    });
+    savedWorkoutsList.addEventListener("keydown", event => {
+      if ((event.key === "Enter" || event.key === " ") && event.target.matches("[data-workout-card-id]")) {
+        event.preventDefault(); event.target.click();
+      }
+    });
 
     function clearHistory() {
       localStorage.removeItem(HISTORY_STORAGE);
@@ -4736,6 +5123,7 @@
       //Limpa a sessão de execução para que não seja possível continuar o treino depois de finalizado.
       workoutExecution = null;
       executionWorkoutId = null;
+      executionLog = [];
 
       workoutState = {
         exerciseIndex: 0,
@@ -4781,6 +5169,12 @@
 
         workoutExecution = normalizeWorkout(session.workout);
         executionWorkoutId = session.workoutId || null;
+        executionLog = Array.isArray(session.executionLog) ? session.executionLog : workoutExecution.exercises.map(exercise => ({
+          exerciseId: exercise.libraryId || exercise.id, name: exercise.name,
+          plannedSets: Number(exercise.sets || 0), plannedReps: Number(exercise.reps || 0),
+          plannedWeights: normalizeWeights(exercise), status: "pending", durationSeconds: 0,
+          sets: [], startedAt: null, endedAt: null
+        }));
 
         const exercise = workoutExecution?.exercises?.[session.exerciseIndex];
 
