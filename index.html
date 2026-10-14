@@ -1036,6 +1036,10 @@
       background: var(--card2);
     }
 
+    .dropdown-menu-bottom {
+      bottom: calc(100% - 13rem) !important;
+    }
+
     .dropdown-menu-options {
       position: absolute;
       right: 0;
@@ -1340,7 +1344,21 @@
           <h1>Sequence Training</h1>
           <p>Physical & Athletic Training</p>
         </div>
-        <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">☀️</button>
+        <div class="dropdown-menu">
+          <button
+            type="button"
+            class="dropdown-menu-toggle"
+            aria-label="Mais opções"
+            aria-expanded="false">
+            ⋮
+          </button>
+          <div class="dropdown-menu-options dropdown-menu-bottom">
+            <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">☀️</button>
+            <button id="newSavedWorkoutBtn" type="button">Novo treino</button>
+            <button id="openLibraryBtn" type="button" aria-label="Base de exercicios">Exercícios</button>
+            <button id="openHistoryBtn" type="button" aria-label="Lista historico">Histórico</button>
+          </div>
+        </div>
       </div>
     </header>
     <!-- Recuperação de treino -->
@@ -1362,12 +1380,9 @@
     <section class="card">
       <div class="header-row">
         <div class="header-row-actions">
-          <button class="btn btn-small btn-ghost" id="newSavedWorkoutBtn" type="button">Novo treino</button>
-          <button class="btn btn-small btn-ghost" id="openLibraryBtn" type="button">Exercícios disponíveis</button>
-          <button class="btn btn-small btn-ghost" id="openHistoryBtn" type="button">Histórico</button>
+          <h2>Meus treinos</h2>
         </div>
       </div>
-      <br/>
       <div class="saved-workouts-toolbar">
         <span class="saved-workouts-count" id="savedWorkoutsCount"></span>
         <select id="savedWorkoutsSort" class="saved-workouts-sort" aria-label="Ordenar meus treinos">
