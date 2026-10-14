@@ -741,14 +741,14 @@ A evolução do Sequence Training será feita priorizando primeiro **estabilidad
 * [x] Registro da duração
 * [x] Registro de repetições
 * [x] Resumo dos exercícios
-* [ ] Histórico detalhado por exercício
-* [ ] Histórico de cargas e repetições
-* [ ] Gráficos de evolução
-* [ ] Frequência semanal de treinos
-* [ ] Volume total de treino
-* [ ] Tempo total treinado
-* [ ] Recordes pessoais (PR)
-* [ ] Notificação de novo recorde
+* [x] Histórico detalhado por exercício
+* [x] Histórico de cargas e repetições
+* [x] Gráficos de evolução
+* [x] Frequência semanal de treinos
+* [x] Volume total de treino
+* [x] Tempo total treinado
+* [x] Recordes pessoais (PR)
+* [x] Notificação de novo recorde
 
 ## 🟠 Fase 5 — Progressão
 
