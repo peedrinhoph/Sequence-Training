@@ -1361,14 +1361,13 @@
     <!-- Meus treinos -->
     <section class="card">
       <div class="header-row">
-        <h2>Meus treinos</h2>
         <div class="header-row-actions">
+          <button class="btn btn-small btn-ghost" id="newSavedWorkoutBtn" type="button">Novo treino</button>
           <button class="btn btn-small btn-ghost" id="openLibraryBtn" type="button">Exercícios disponíveis</button>
           <button class="btn btn-small btn-ghost" id="openHistoryBtn" type="button">Histórico</button>
-          <button class="btn btn-small btn-ghost" id="openStatsBtn" type="button">Estatísticas</button>
-          <button class="btn btn-small btn-ghost" id="newSavedWorkoutBtn" type="button">+1 Treino</button>
         </div>
       </div>
+      <br/>
       <div class="saved-workouts-toolbar">
         <span class="saved-workouts-count" id="savedWorkoutsCount"></span>
         <select id="savedWorkoutsSort" class="saved-workouts-sort" aria-label="Ordenar meus treinos">
@@ -1382,6 +1381,13 @@
       <div id="emptySavedWorkouts" class="empty">
         Nenhum treino salvo ainda.
       </div>
+    </section>
+    <!-- Estatísticas sempre visíveis abaixo dos treinos -->
+    <section class="card" id="trainingStatsCard">
+      <div class="header-row">
+        <h2>Evolução e estatísticas</h2>
+      </div>
+      <div id="statsContent"></div>
     </section>
     <!-- Editor do treino (abre somente como modal) -->
     <div class="modal-overlay" id="workoutEditorModalOverlay" aria-hidden="true">
@@ -1512,7 +1518,6 @@
         <section class="card">
       <div class="header-row">
         <div>
-          <h2>Exercícios disponíveis</h2>
           <div id="libraryCount" class="library-exercise-meta"></div>
         </div>
         <div class="header-row-actions">
@@ -1558,15 +1563,6 @@
           <button class="icon-btn" id="closeHistoryDetailBtn" type="button" aria-label="Fechar">×</button>
         </div>
         <div id="historyDetailContent"></div>
-      </div>
-    </div>
-    <div class="modal-overlay" id="statsModalOverlay" aria-hidden="true">
-      <div class="modal dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="statsModalTitle">
-        <div class="workout-editor-modal-header">
-          <h2 id="statsModalTitle">Evolução e estatísticas</h2>
-          <button class="icon-btn" id="closeStatsModalBtn" type="button" aria-label="Fechar">×</button>
-        </div>
-        <div id="statsContent"></div>
       </div>
     </div>
     <!-- Dados -->
@@ -2618,7 +2614,7 @@
                   <button
                     type="button"
                     data-library-action="edit"
-                    data-id="${escapeHtml(exercise.id)}">Editar nome</button>
+                    data-id="${escapeHtml(exercise.id)}">Editar</button>
 
                   <button
                     type="button"
@@ -4844,6 +4840,7 @@
 
       renderHistory();
       renderSavedWorkouts();
+      renderTrainingStats();
 
       if (newRecords.length) {
         setTimeout(() => showMessage(
@@ -5025,8 +5022,6 @@
         <h3 class="modal-section-title">Evolução de cargas e repetições</h3>${progressionHTML}
         <h3 class="modal-section-title">Recordes pessoais (PR)</h3>${prHTML}
       `;
-      document.getElementById("statsModalOverlay").classList.add("visible");
-      document.getElementById("statsModalOverlay").setAttribute("aria-hidden", "false");
     }
 
     function closeOverlay(id) {
@@ -5034,25 +5029,25 @@
       if (overlay) { overlay.classList.remove("visible"); overlay.setAttribute("aria-hidden", "true"); }
     }
 
+    renderTrainingStats();
+
     document.getElementById("openLibraryBtn").addEventListener("click", () => {
       libraryModalOverlay.classList.add("visible"); libraryModalOverlay.setAttribute("aria-hidden", "false");
     });
     document.getElementById("openHistoryBtn").addEventListener("click", () => {
       historyModalOverlay.classList.add("visible"); historyModalOverlay.setAttribute("aria-hidden", "false");
     });
-    document.getElementById("openStatsBtn").addEventListener("click", renderTrainingStats);
     document.getElementById("closeLibraryModalBtn").addEventListener("click", () => closeOverlay("libraryModalOverlay"));
     document.getElementById("closeHistoryModalBtn").addEventListener("click", () => closeOverlay("historyModalOverlay"));
     document.getElementById("closeHistoryDetailBtn").addEventListener("click", () => closeOverlay("historyDetailOverlay"));
-    document.getElementById("closeStatsModalBtn").addEventListener("click", () => closeOverlay("statsModalOverlay"));
-    ["libraryModalOverlay", "historyModalOverlay", "historyDetailOverlay", "statsModalOverlay"].forEach(id => {
+    ["libraryModalOverlay", "historyModalOverlay", "historyDetailOverlay"].forEach(id => {
       document.getElementById(id).addEventListener("click", event => {
         if (event.target.id === id) closeOverlay(id);
       });
     });
     document.addEventListener("keydown", event => {
       if (event.key === "Escape") {
-        ["historyDetailOverlay", "statsModalOverlay", "historyModalOverlay", "libraryModalOverlay"].forEach(id => closeOverlay(id));
+        ["historyDetailOverlay", "historyModalOverlay", "libraryModalOverlay"].forEach(id => closeOverlay(id));
       }
     });
     historyList.addEventListener("click", event => {
