@@ -1242,6 +1242,18 @@
     .history-set-chip { padding:5px 8px; border-radius:7px; background:var(--card2); font-size:12px; }
     .status-skipped { color:var(--warning); font-weight:700; }
     .modal-section-title { margin:18px 0 8px; font-size:15px; }
+    .finish-summary { width:100%; margin:0 0 22px; text-align:left; }
+    .finish-summary .stats-grid { text-align:left; }
+    .calendar-header { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:8px 0 12px; }
+    .calendar-header strong { text-transform:capitalize; }
+    .calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:5px; }
+    .calendar-day-label, .calendar-day { min-height:38px; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:12px; }
+    .calendar-day-label { color:var(--muted); font-weight:700; }
+    .calendar-day { position:relative; background:var(--card2); border:1px solid transparent; }
+    .calendar-day.empty-day { background:transparent; }
+    .calendar-day.has-workout { border-color:var(--primary); font-weight:800; }
+    .calendar-day.has-workout::after { content:""; position:absolute; bottom:4px; width:5px; height:5px; border-radius:50%; background:var(--primary); }
+    .calendar-day.today { box-shadow:inset 0 0 0 1px var(--info); }
 
     /* ========================================
        MOBILE
@@ -1600,11 +1612,13 @@
           <button class="icon-btn" id="closeHistoryDetailBtn" type="button" aria-label="Fechar">×</button>
         </div>
         <div id="historyDetailContent"></div>
+        <div class="form-actions"><button class="btn btn-primary width-full" id="repeatHistoryWorkoutBtn" type="button">↻ Repetir este treino</button></div>
       </div>
     </div>
     <!-- Dados -->
     <section class="card">
       <h2>Dados</h2>
+      <div id="backupStatus" class="saved-workout-details" style="margin-bottom:10px" aria-live="polite"></div>
       <div class="tools">
         <button class="btn btn-small" id="exportBtn">
           Exportar treinos
@@ -1752,6 +1766,7 @@
       <p>
         Excelente trabalho. Treino finalizado.
       </p>
+      <div id="finishSummary" class="finish-summary"></div>
       <button class="btn btn-primary" id="finishBackBtn">
         Voltar para o início
       </button>
@@ -2800,10 +2815,12 @@
           workout: cloneWorkout(workout),
           currentWorkoutId,
           savedWorkouts: savedWorkouts.map(cloneWorkoutForExport),
-          exerciseLibrary: cloneWorkout(exerciseLibrary)
+          exerciseLibrary: cloneWorkout(exerciseLibrary),
+          history: loadHistory()
         };
 
         localStorage.setItem(BACKUP_STORAGE, JSON.stringify(backup));
+        renderBackupStatus();
         return true;
       } catch (error) {
         console.error("Erro ao criar backup:", error);
@@ -2824,7 +2841,8 @@
         if (
           !parsed ||
           !Array.isArray(parsed.savedWorkouts) ||
-          !parsed.workout
+          !parsed.workout ||
+          (parsed.history !== undefined && !Array.isArray(parsed.history))
         ) {
           return null;
         }
@@ -2834,6 +2852,15 @@
         console.error("Erro ao carregar backup:", error);
         return null;
       }
+    }
+
+    function renderBackupStatus() {
+      const target = document.getElementById("backupStatus");
+      if (!target) return;
+      const backup = loadDataBackup();
+      if (!backup) { target.textContent = "Nenhum backup automático disponível ainda."; return; }
+      const date = new Date(backup.createdAt);
+      target.textContent = `Último backup automático: ${Number.isNaN(date.getTime()) ? "data desconhecida" : date.toLocaleString("pt-BR", {dateStyle:"short", timeStyle:"short"})} · ${backup.reason || "Proteção automática"}${Array.isArray(backup.history) ? " · inclui histórico" : " · sem histórico"}`;
     }
 
     function loadSavedWorkouts() {
@@ -4820,6 +4847,7 @@
             name: exercise.name,
             sets: Number(exercise.sets),
             reps: Number(exercise.reps),
+            rest: Number(exercise.rest || 30),
             weights: normalizeWeights(exercise),
             status: result.status === "pending" ? "skipped" : (result.status || "completed"),
             durationSeconds: Number(result.durationSeconds || 0),
@@ -4885,6 +4913,7 @@
           "🏆 Novo recorde"
         ), 250);
       }
+      return entry;
     }
 
     function loadHistory() {
@@ -4976,7 +5005,9 @@
       });
     }
 
+    let selectedHistoryEntryId = null;
     function renderHistoryDetail(entry) {
+      selectedHistoryEntryId = entry.id;
       const content = document.getElementById("historyDetailContent");
       const title = document.getElementById("historyDetailTitle");
       title.textContent = entry.workoutName || "Detalhes do treino";
@@ -5005,6 +5036,7 @@
       document.getElementById("historyDetailOverlay").setAttribute("aria-hidden", "false");
     }
 
+    let statsCalendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     function renderTrainingStats() {
       const history = loadHistory().filter(entry => entry.completedAt);
       const latestWorkout = history.slice().sort((a, b) =>
@@ -5013,7 +5045,7 @@
       const latestWorkoutHTML = latestWorkout
         ? `<div class="latest-workout-highlight">
             <div class="latest-label">Último treino realizado</div>
-            <div class="latest-name">${escapeHtml(latestWorkout.name || "Treino")}</div>
+            <div class="latest-name">${escapeHtml(latestWorkout.workoutName || latestWorkout.name || "Treino")}</div>
             <div class="latest-meta">${escapeHtml(new Date(latestWorkout.completedAt).toLocaleString("pt-BR", { dateStyle: "medium", timeStyle: "short" }))} · ${escapeHtml(formatDuration(latestWorkout.durationSeconds || 0))}</div>
           </div>`
         : `<div class="latest-workout-highlight"><div class="latest-label">Último treino realizado</div><div class="latest-meta">Nenhum treino concluído registrado.</div></div>`;
@@ -5051,6 +5083,14 @@
         }).length };
       });
       const maxFrequency = Math.max(1, ...frequency.map(x => x.count));
+      const calendarMonth = statsCalendarMonth || new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const calendarYear = calendarMonth.getFullYear();
+      const calendarMonthIndex = calendarMonth.getMonth();
+      const monthStart = new Date(calendarYear, calendarMonthIndex, 1);
+      const monthDays = new Date(calendarYear, calendarMonthIndex + 1, 0).getDate();
+      const mondayOffset = (monthStart.getDay() + 6) % 7;
+      const trainingDates = new Set(history.filter(entry => { const d = new Date(entry.completedAt); return d.getFullYear() === calendarYear && d.getMonth() === calendarMonthIndex; }).map(entry => new Date(entry.completedAt).getDate()));
+      const calendarHTML = `<div class="calendar-header"><button class="btn btn-small btn-ghost" type="button" data-calendar-shift="-1" aria-label="Mês anterior">‹</button><strong>${escapeHtml(calendarMonth.toLocaleDateString("pt-BR", {month:"long", year:"numeric"}))}</strong><button class="btn btn-small btn-ghost" type="button" data-calendar-shift="1" aria-label="Próximo mês">›</button></div><div class="calendar-grid">${["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(day => `<div class="calendar-day-label">${day}</div>`).join("")}${Array.from({length:mondayOffset}, () => `<div class="calendar-day empty-day"></div>`).join("")}${Array.from({length:monthDays}, (_, i) => { const day = i + 1; const isToday = new Date().getFullYear() === calendarYear && new Date().getMonth() === calendarMonthIndex && new Date().getDate() === day; return `<div class="calendar-day ${trainingDates.has(day) ? "has-workout" : ""} ${isToday ? "today" : ""}" title="${trainingDates.has(day) ? "Treino registrado" : "Sem treino registrado"}">${day}</div>`; }).join("")}</div><p class="saved-workout-details">${trainingDates.size} dia${trainingDates.size === 1 ? "" : "s"} com treino neste mês</p>`;
       const progressionHTML = Object.entries(exerciseProgress).slice(0, 8).map(([name, values]) => {
         const recent = values.slice(-8);
         const max = Math.max(1, ...recent.map(v => v.value));
@@ -5065,6 +5105,8 @@
           <div class="stat-tile"><span>Volume com carga externa</span><strong>${Math.round(volume).toLocaleString("pt-BR")} kg</strong></div>
           <div class="stat-tile"><span>Treinos registrados</span><strong>${history.length}</strong></div>
         </div>
+        <h3 class="modal-section-title">Calendário de treinos</h3>
+        ${calendarHTML}
         <h3 class="modal-section-title">Frequência semanal</h3>
         ${frequency.map(day => `<div class="chart-row"><span>${escapeHtml(day.label)}</span><div class="chart-track"><div class="chart-fill" style="width:${day.count/maxFrequency*100}%"></div></div><strong>${day.count}</strong></div>`).join("")}
         <h3 class="modal-section-title">Evolução de cargas e repetições</h3>${progressionHTML}
@@ -5111,6 +5153,7 @@
       );
       if (!confirmed) return;
 
+      createDataBackup("Antes de limpar o histórico");
       localStorage.removeItem(HISTORY_STORAGE);
       renderHistory();
       renderTrainingStats();
@@ -5120,6 +5163,7 @@
     });
 
     renderTrainingStats();
+    renderBackupStatus();
 
     document.getElementById("openLibraryBtn").addEventListener("click", () => {
       libraryModalOverlay.classList.add("visible"); libraryModalOverlay.setAttribute("aria-hidden", "false");
@@ -5140,6 +5184,26 @@
         ["historyDetailOverlay", "historyModalOverlay", "libraryModalOverlay"].forEach(id => closeOverlay(id));
       }
     });
+    document.getElementById("statsContent").addEventListener("click", event => {
+      const button = event.target.closest("[data-calendar-shift]");
+      if (!button) return;
+      statsCalendarMonth.setMonth(statsCalendarMonth.getMonth() + Number(button.dataset.calendarShift));
+      renderTrainingStats();
+    });
+    document.getElementById("repeatHistoryWorkoutBtn").addEventListener("click", async () => {
+      const entry = loadHistory().find(item => item.id === selectedHistoryEntryId);
+      if (!entry || !Array.isArray(entry.exercises) || !entry.exercises.length) {
+        await showMessage("Não há exercícios disponíveis para repetir nesta sessão.", "Repetir treino");
+        return;
+      }
+      const repeatWorkout = { name: `${entry.workoutName || "Treino"} (repetição)`, exercises: entry.exercises.filter(ex => ex.status !== "skipped" || Number(ex.sets) > 0).map((ex, index) => ({ id: ex.exerciseId || `history-${index}`, libraryId: ex.exerciseId || null, name: ex.name || "Exercício", sets: Math.max(1, Number(ex.sets || 3)), reps: Math.max(1, Number(ex.reps || 10)), rest: Math.max(0, Number(ex.rest || 30)), weights: Array.isArray(ex.weights) ? ex.weights.slice() : [] })) };
+      if (!repeatWorkout.exercises.length) { await showMessage("Esta sessão não possui exercícios que possam ser repetidos.", "Repetir treino"); return; }
+      const confirmed = await showConfirm(`Iniciar uma nova sessão baseada em “${entry.workoutName || "Treino"}”? O histórico original será mantido.`, { title: "Repetir treino", confirmText: "Iniciar treino" });
+      if (!confirmed) return;
+      closeOverlay("historyDetailOverlay"); closeOverlay("historyModalOverlay");
+      await startWorkoutExecution(repeatWorkout, null);
+    });
+
     historyList.addEventListener("click", event => {
       const card = event.target.closest("[data-history-id]");
       if (!card) return;
@@ -5200,8 +5264,17 @@
     /* =========================================================
        FINALIZAÇÃO
     ========================================================= */
+    function renderFinishSummary(entry) {
+      const exercises = Array.isArray(entry?.exercises) ? entry.exercises : [];
+      const completedSets = exercises.reduce((n, ex) => n + (ex.completedSets || []).filter(set => set.status === "completed").length, 0);
+      const skipped = exercises.filter(ex => ex.status === "skipped").length;
+      const volume = exercises.reduce((sum, ex) => sum + (ex.completedSets || []).filter(set => set.status === "completed").reduce((v, set) => v + Number(set.weight || 0) * Number(set.reps || 0), 0), 0);
+      document.getElementById("finishSummary").innerHTML = `<div class="stats-grid"><div class="stat-tile"><span>Duração</span><strong>${escapeHtml(formatDuration(entry.durationSeconds || 0))}</strong></div><div class="stat-tile"><span>Séries concluídas</span><strong>${completedSets}</strong></div><div class="stat-tile"><span>Repetições</span><strong>${Number(entry.totalReps || 0)}</strong></div><div class="stat-tile"><span>Exercícios pulados</span><strong>${skipped}</strong></div></div>${volume > 0 ? `<div class="stat-tile"><span>Volume com carga externa</span><strong>${Math.round(volume).toLocaleString("pt-BR")} kg</strong></div>` : ""}`;
+    }
+
     async function finishWorkout() {
-      saveWorkoutToHistory();
+      const completedEntry = saveWorkoutToHistory();
+      renderFinishSummary(completedEntry);
       stopExecutionTimer();
       await liberarWakeLock();
 
@@ -5552,6 +5625,7 @@
       }
 
       savedWorkouts = normalizedWorkouts;
+      if (Array.isArray(backup.history)) localStorage.setItem(HISTORY_STORAGE, JSON.stringify(backup.history));
       currentWorkoutId = backup.currentWorkoutId || null;
       workout = normalizedCurrent;
 
@@ -5579,6 +5653,8 @@
       renderExerciseLibrary();
       renderWorkout();
       renderSavedWorkouts();
+      renderHistory();
+      renderTrainingStats();
       resetExerciseForm();
       updateWorkoutNameButton();
       checkForActiveSession();
