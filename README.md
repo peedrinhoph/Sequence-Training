@@ -564,42 +564,99 @@ A versão atual de exportação utiliza o formato:
 
 ```json
 {
-  "version": 3,
-  "exportedAt": "2026-09-07T20:07:47.480Z",
+  "version": 4,
+  "exportedAt": "2026-10-15T12:15:29.282Z",
   "workouts": [
     {
-      "id": "a485fad9-0ddb-4d34-b924-251b3ec5acba",
-      "name": "Push",
+      "id": "fb426c52-f840-4abe-a581-80fa78872961",
+      "name": "Quarta",
       "exercises": [
         {
-          "id": "8f25664f-36a7-4940-ac55-557b3a7a78f3",
-          "name": "Flexão",
-          "sets": 3,
-          "reps": 12,
-          "rest": 30,
-          "weights": [
-            0,
-            0,
-            0
-          ],
-          "custom": false
-        },
-        {
-          "id": "35f06977-aea0-40f5-84f6-7db4060d4480",
-          "name": "Paralelas",
-          "sets": 3,
+          "id": "5d6a34d2-5ab9-47c1-a183-995c29fd110c",
+          "name": "Abdominal",
+          "sets": 2,
           "reps": 10,
-          "rest": 45,
+          "rest": 15,
           "weights": [
             0,
-            5,
-            5
+            10
           ],
-          "custom": false
+          "custom": false,
+          "libraryId": "abdominal",
+          "muscleGroup": "Abdômen"
         }
       ],
-      "createdAt": "2026-09-07T20:00:00.000Z",
-      "updatedAt": "2026-09-07T20:05:00.000Z"
+      "createdAt": "2026-09-15T20:32:47.853Z",
+      "updatedAt": "2026-09-15T21:41:40.053Z",
+      "lastUsedAt": "2026-10-15T12:13:16.898Z"
+    }
+  ],
+  "exerciseLibrary": [
+    {
+      "id": "flexao",
+      "name": "Flexão",
+      "muscleGroup": "Peito",
+      "custom": false
+    },
+    {
+      "id": "flexao-diamante",
+      "name": "Flexão diamante",
+      "muscleGroup": "Tríceps",
+      "custom": false
+    },
+    {
+      "id": "barra-fixa",
+      "name": "Barra fixa",
+      "muscleGroup": "Costas",
+      "custom": false
+    },
+    {
+      "id": "barra-supinada",
+      "name": "Barra supinada",
+      "muscleGroup": "Costas / Bíceps",
+      "custom": false
+    },
+    {
+      "id": "paralelas",
+      "name": "Paralelas",
+      "muscleGroup": "Peito / Tríceps",
+      "custom": false
+    },
+    {
+      "id": "agachamento",
+      "name": "Agachamento",
+      "muscleGroup": "Pernas",
+      "custom": false
+    },
+    {
+      "id": "avanco",
+      "name": "Avanço",
+      "muscleGroup": "Pernas / Glúteos",
+      "custom": false
+    },
+    {
+      "id": "abdominal",
+      "name": "Abdominal",
+      "muscleGroup": "Abdômen",
+      "custom": false
+    },
+    {
+      "id": "abdominal-infra",
+      "name": "Abdominal infra",
+      "muscleGroup": "Abdômen",
+      "custom": false
+    },
+    {
+      "id": "elevacao-pernas",
+      "name": "Elevação de pernas",
+      "muscleGroup": "Abdômen",
+      "custom": false
+    },
+    {
+      "id": "prancha",
+      "name": "Prancha",
+      "muscleGroup": "Abdômen",
+      "custom": false
     }
   ]
 }
