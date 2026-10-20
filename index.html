@@ -1184,6 +1184,39 @@
       margin-bottom: 8px;
     }
 
+    .dashboard-modal { max-width: 760px; max-height: calc(100vh - 32px); overflow-y: auto; }
+    .saved-workout-item, .history-item { cursor: pointer; transition: border-color .15s ease; }
+    .saved-workout-item:hover, .history-item:hover { border-color: var(--primary); }
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:10px; margin:12px 0 18px; }
+    .stat-tile { padding:12px; background:var(--card2); border:1px solid var(--border); border-radius:10px; }
+    .latest-workout-highlight { margin: 4px 0 14px; padding: 14px; border: 1px solid var(--primary); border-left: 4px solid var(--primary); border-radius: 12px; background: var(--card2); }
+    .latest-workout-highlight .latest-label { color: var(--primary); font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+    .latest-workout-highlight .latest-name { font-size: 17px; font-weight: 800; margin-bottom: 5px; }
+    .latest-workout-highlight .latest-meta { color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .stat-tile span { display:block; color:var(--muted); font-size:12px; }
+    .stat-tile strong { display:block; margin-top:5px; font-size:20px; }
+    .chart-row { display:grid; grid-template-columns:80px 1fr 42px; gap:8px; align-items:center; margin:8px 0; font-size:12px; }
+    .chart-track { height:10px; border-radius:20px; background:var(--card2); overflow:hidden; }
+    .chart-fill { height:100%; background:var(--primary); border-radius:20px; }
+    .history-exercise { padding:12px 0; border-bottom:1px solid var(--border); }
+    .history-exercise:last-child { border-bottom:0; }
+    .history-set-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:7px; }
+    .history-set-chip { padding:5px 8px; border-radius:7px; background:var(--card2); font-size:12px; }
+    .status-skipped { color:var(--warning); font-weight:700; }
+    .modal-section-title { margin:18px 0 8px; font-size:15px; }
+    .finish-summary { width:100%; margin:0 0 22px; text-align:left; }
+    .finish-summary .stats-grid { text-align:left; }
+    .calendar-header { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:8px 0 12px; }
+    .calendar-header strong { text-transform:capitalize; }
+    .calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:5px; }
+    .calendar-day-label, .calendar-day { min-height:38px; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:12px; }
+    .calendar-day-label { color:var(--muted); font-weight:700; }
+    .calendar-day { position:relative; background:var(--card2); border:1px solid transparent; }
+    .calendar-day.empty-day { background:transparent; }
+    .calendar-day.has-workout { border-color:var(--primary); font-weight:800; }
+    .calendar-day.has-workout::after { content:""; position:absolute; bottom:4px; width:5px; height:5px; border-radius:50%; background:var(--primary); }
+    .calendar-day.today { box-shadow:inset 0 0 0 1px var(--info); }
+
     @media (max-width: 560px) {
       .library-toolbar,
       .exercise-picker-toolbar {
@@ -1220,40 +1253,6 @@
       .saved-workouts-sort {
         width: 100%;
       }
-
-
-    .dashboard-modal { max-width: 760px; max-height: calc(100vh - 32px); overflow-y: auto; }
-    .saved-workout-item, .history-item { cursor: pointer; transition: border-color .15s ease; }
-    .saved-workout-item:hover, .history-item:hover { border-color: var(--primary); }
-    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:10px; margin:12px 0 18px; }
-    .stat-tile { padding:12px; background:var(--card2); border:1px solid var(--border); border-radius:10px; }
-    .latest-workout-highlight { margin: 4px 0 14px; padding: 14px; border: 1px solid var(--primary); border-left: 4px solid var(--primary); border-radius: 12px; background: var(--card2); }
-    .latest-workout-highlight .latest-label { color: var(--primary); font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
-    .latest-workout-highlight .latest-name { font-size: 17px; font-weight: 800; margin-bottom: 5px; }
-    .latest-workout-highlight .latest-meta { color: var(--muted); font-size: 12px; line-height: 1.5; }
-    .stat-tile span { display:block; color:var(--muted); font-size:12px; }
-    .stat-tile strong { display:block; margin-top:5px; font-size:20px; }
-    .chart-row { display:grid; grid-template-columns:80px 1fr 42px; gap:8px; align-items:center; margin:8px 0; font-size:12px; }
-    .chart-track { height:10px; border-radius:20px; background:var(--card2); overflow:hidden; }
-    .chart-fill { height:100%; background:var(--primary); border-radius:20px; }
-    .history-exercise { padding:12px 0; border-bottom:1px solid var(--border); }
-    .history-exercise:last-child { border-bottom:0; }
-    .history-set-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:7px; }
-    .history-set-chip { padding:5px 8px; border-radius:7px; background:var(--card2); font-size:12px; }
-    .status-skipped { color:var(--warning); font-weight:700; }
-    .modal-section-title { margin:18px 0 8px; font-size:15px; }
-    .finish-summary { width:100%; margin:0 0 22px; text-align:left; }
-    .finish-summary .stats-grid { text-align:left; }
-    .calendar-header { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:8px 0 12px; }
-    .calendar-header strong { text-transform:capitalize; }
-    .calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:5px; }
-    .calendar-day-label, .calendar-day { min-height:38px; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:12px; }
-    .calendar-day-label { color:var(--muted); font-weight:700; }
-    .calendar-day { position:relative; background:var(--card2); border:1px solid transparent; }
-    .calendar-day.empty-day { background:transparent; }
-    .calendar-day.has-workout { border-color:var(--primary); font-weight:800; }
-    .calendar-day.has-workout::after { content:""; position:absolute; bottom:4px; width:5px; height:5px; border-radius:50%; background:var(--primary); }
-    .calendar-day.today { box-shadow:inset 0 0 0 1px var(--info); }
 
     /* ========================================
        MOBILE
