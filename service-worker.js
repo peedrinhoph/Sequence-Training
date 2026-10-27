@@ -5,7 +5,7 @@
    invalidar os arquivos armazenados pelo Service Worker.
    ========================================================= */
 
-const CACHE_VERSION = "3.3.3";
+const CACHE_VERSION = "3.3.4";
 const CACHE_PREFIX = "sequence-training-";
 const CACHE_NAME = `${CACHE_PREFIX}${CACHE_VERSION}`;
 
@@ -44,6 +44,13 @@ self.addEventListener("activate", event => {
   );
 
   self.clients.claim();
+});
+
+self.addEventListener("notificationclick", event => {
+ event.notification.close();
+ event.waitUntil(clients.matchAll({ type: "window", includeUncontrolled: true }).then(list =>
+   list.length ? list[0].focus() : clients.openWindow("./")
+ ));
 });
 
 self.addEventListener("fetch", event => {
