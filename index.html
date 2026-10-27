@@ -577,71 +577,6 @@
       flex-direction: column;
     }
 
-    #workoutScreen {
-      width: 100%;
-      padding: max(16px, env(safe-area-inset-top)) 18px calc(20px + env(safe-area-inset-bottom));
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-areas:
-        "top top"
-        "progress progress"
-        "exercise exercise"
-        "sets sets"
-        "target target"
-        "timer timer"
-        "next next"
-        "main main"
-        "skipset skipex"
-        "edit edit";
-      align-content: start;
-      align-items: stretch;
-      gap: 0 10px;
-      max-width: 560px;
-    }
-
-    #workoutScreen.hidden {
-      display: none !important;
-    }
-
-    #workoutScreen #completeSetBtn {
-      grid-area: main;
-      min-height: 58px;
-      margin: 0 0 10px;
-      border-radius: 15px;
-      font-size: 17px;
-      font-weight: 800;
-      box-shadow: 0 5px 0 var(--primary-dark);
-    }
-
-    #workoutScreen #completeSetBtn:active {
-      transform: translateY(2px);
-      box-shadow: 0 3px 0 var(--primary-dark);
-    }
-
-    #workoutScreen #skipSetBtn,
-    #workoutScreen #skipExerciseBtn {
-      min-height: 43px;
-      margin: 0 0 9px;
-      border-radius: 12px;
-      font-size: 12px;
-    }
-
-    #workoutScreen #skipSetBtn {
-      grid-area: skipset;
-    }
-
-    #workoutScreen #skipExerciseBtn {
-      grid-area: skipex;
-    }
-
-    #workoutScreen #editSetResultBtn {
-      grid-area: edit;
-      min-height: 38px;
-      margin: 0;
-      border: 0;
-      font-size: 12px;
-    }
-
     .workout-topbar {
       display: flex;
       align-items: center;
@@ -1835,6 +1770,319 @@
         height: 38px;
       }
     }
+
+    /* ========================================
+       TELA DE EXECUÇÃO E DESCANSO (layout enxuto)
+    ======================================== */
+
+    #workoutScreen,
+    #restScreen {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      flex-direction: column;
+      padding: max(14px, env(safe-area-inset-top)) 18px 0;
+    }
+
+    #workoutScreen.hidden,
+    #restScreen.hidden {
+      display: none !important;
+    }
+
+    #workoutScreen .workout-topbar,
+    #restScreen .workout-topbar {
+      margin: 0 0 16px;
+    }
+
+    #workoutScreen .progress-container {
+      margin: 0 0 18px;
+    }
+
+    .exercise-hero {
+      margin: 0 0 14px;
+      text-align: center;
+    }
+
+    .exercise-hero h2 {
+      margin: 0 0 12px;
+      font-size: clamp(26px, 7vw, 36px);
+      line-height: 1.08;
+      letter-spacing: -.03em;
+      overflow-wrap: anywhere;
+    }
+
+    .set-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 14px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    .set-row-text span {
+      color: var(--muted);
+    }
+
+    .set-dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .set-dots:empty {
+      display: none;
+    }
+
+    .set-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: transparent;
+      border: 2px solid var(--border);
+    }
+
+    .set-dot.done {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .set-dot.skipped {
+      background: var(--warning);
+      border-color: var(--warning);
+    }
+
+    .set-dot.current {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+    }
+
+    #workoutScreen .reps-display {
+      margin: 0 0 12px;
+      padding: clamp(16px, 4.5vw, 26px) 14px 16px;
+    }
+
+    #workoutScreen .reps-display .number {
+      font-size: clamp(60px, 18vw, 92px);
+    }
+
+    #workoutScreen .reps-display .caption {
+      margin-top: 8px;
+    }
+
+    #workoutScreen .weight-display {
+      margin-top: 10px;
+    }
+
+    #workoutScreen .execution-timer {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 12px auto 0;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    #workoutScreen .execution-timer strong {
+      font-size: 15px;
+    }
+
+    #workoutScreen .next-exercise {
+      min-height: 0;
+      margin: 0 0 12px;
+      padding: 11px 14px;
+    }
+
+    /* Rodapé fixo: o botão principal fica sempre visível, na zona do polegar. */
+    .execution-footer {
+      position: sticky;
+      bottom: 0;
+      z-index: 5;
+      margin-top: auto;
+      padding: 14px 0 calc(14px + env(safe-area-inset-bottom));
+      background: linear-gradient(to bottom, transparent, var(--bg) 22%);
+    }
+
+    .execution-footer .main-action {
+      display: block;
+      width: 100%;
+      min-height: 60px;
+      margin: 0;
+      border: 0;
+      border-radius: 16px;
+      background: var(--primary);
+      color: #111;
+      font-size: 18px;
+      font-weight: 800;
+      box-shadow: 0 5px 0 var(--primary-dark);
+    }
+
+    .execution-footer .main-action:active {
+      transform: translateY(2px);
+      box-shadow: 0 3px 0 var(--primary-dark);
+    }
+
+    #restScreen .rest-screen-content {
+      padding: 4px 0 8px;
+    }
+
+    #restScreen .rest-timer {
+      width: min(56vw, 220px);
+      height: min(56vw, 220px);
+      margin-bottom: 16px;
+      font-size: clamp(48px, 13vw, 68px);
+    }
+
+    #restScreen .rest-next {
+      margin: 0;
+    }
+
+    /* Registro do resultado durante o descanso */
+    .set-result-card {
+      width: 100%;
+      margin: 4px 0 16px;
+      padding: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      text-align: left;
+    }
+
+    .set-result-title {
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .stepper-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+    }
+
+    .stepper-row label {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .stepper {
+      display: grid;
+      grid-template-columns: 48px 84px 48px;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .stepper button {
+      height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card2);
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stepper button:active {
+      background: var(--border);
+    }
+
+    .stepper input {
+      height: 48px;
+      padding: 0 4px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      /* esconde as setas nativas: os botões − e + já fazem esse papel */
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .stepper input::-webkit-outer-spin-button,
+    .stepper input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .set-result-hint {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* Desfazer */
+    .undo-toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(100px + env(safe-area-inset-bottom));
+      z-index: 900;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: min(calc(100% - 32px), 520px);
+      padding: 10px 10px 10px 16px;
+      background: var(--text);
+      color: var(--bg);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+      transform: translateX(-50%);
+      font-size: 14px;
+    }
+
+    .undo-toast span {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .undo-toast button {
+      min-height: 40px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--primary-dark);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    :root[data-theme="light"] .undo-toast button {
+      color: var(--primary);
+    }
+
+    /* Ações secundárias no menu de pausa */
+    .pause-buttons .pause-secondary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    @media (max-width: 380px) {
+      .stepper {
+        grid-template-columns: 44px 70px 44px;
+      }
+    }
+
+    @media (max-height: 680px) {
+      #restScreen .rest-timer {
+        width: 150px;
+        height: 150px;
+        border-width: 6px;
+        font-size: 46px;
+      }
+
+      #restScreen .rest-label {
+        margin-bottom: 8px;
+      }
+    }
   </style>
 
   <script>
@@ -2141,78 +2389,49 @@
   <main class="app hidden" id="workoutScreen">
     <div class="workout-topbar">
       <div class="workout-title">
-        <strong id="workoutNameDisplay">
-          Meu treino
-        </strong>
-        <span>
-          Em execução
-        </span>
+        <strong id="workoutNameDisplay">Meu treino</strong>
       </div>
-      <div class="workout-total-time" id="workoutTotalTime">00:00</div>
-      <button class="pause-btn" id="pauseBtn" aria-label="Pausar treino">
+      <div class="workout-total-time" id="workoutTotalTime" aria-label="Tempo total do treino">00:00</div>
+      <button class="pause-btn" id="pauseBtn" aria-label="Pausar treino e mais opções" title="Pausar / mais opções">
         ⏸
       </button>
     </div>
     <!-- Progresso -->
     <div class="progress-container">
       <div class="progress-label">
-        <span id="progressExerciseLabel">
-          Exercício 1 de 1
-        </span>
-        <strong id="progressPercentage">
-          0% concluído
-        </strong>
+        <span id="progressExerciseLabel">Exercício 1 de 1</span>
+        <strong id="progressPercentage">0% concluído</strong>
       </div>
       <div class="progress">
         <div class="progress-bar" id="progressBar"></div>
       </div>
     </div>
     <!-- Exercício atual -->
-    <div class="current-exercise">
-      <div class="label">
-        EXERCÍCIO ATUAL
+    <section class="exercise-hero" aria-live="polite">
+      <h2 id="currentExerciseName">Flexão</h2>
+      <div class="set-row">
+        <div class="set-dots" id="setDots" role="img"></div>
+        <div class="set-row-text">
+          <strong id="currentSetDisplay">Série 1</strong>
+          <span id="totalSetsDisplay">de 3</span>
+        </div>
       </div>
-      <h2 id="currentExerciseName">
-        Flexão
-      </h2>
-    </div>
-    <div class="set-counter">
-      <strong id="currentSetDisplay">
-        Série 1
-      </strong>
-      <span id="totalSetsDisplay">
-        de 3
-      </span>
-    </div>
+    </section>
     <div class="reps-display">
-      <div class="number" id="currentRepsDisplay">
-        10
-      </div>
-      <div class="caption">
-        REPETIÇÕES
-      </div>
-      <div class="weight-display" id="currentWeightDisplay">
-        Peso corporal
-      </div>
+      <div class="number" id="currentRepsDisplay">10</div>
+      <div class="caption">REPETIÇÕES</div>
+      <div class="weight-display" id="currentWeightDisplay">Peso corporal</div>
       <div class="last-performance hidden" id="lastPerformanceDisplay"></div>
-    </div>
-    <div class="execution-timer">
-      Tempo de execução
-      <strong id="executionTimer">
-        00:00
-      </strong>
+      <div class="execution-timer">
+        <span id="executionTimerLabel">Tempo de execução</span>
+        <strong id="executionTimer">00:00</strong>
+      </div>
     </div>
     <div class="next-exercise" id="nextExerciseBox"></div>
-    <button class="main-action" id="completeSetBtn">
-      ✓ Série concluída
-    </button>
-    <button class="other-action" id="skipSetBtn">
-      Pular série
-    </button>
-    <button class="other-action" id="skipExerciseBtn">
-      Pular exercício
-    </button>
-    <button class="other-action" id="editSetResultBtn">Editar resultado da série</button>
+    <!-- Botão principal fixo no rodapé (zona do polegar) -->
+    <div class="execution-footer">
+      <button class="main-action" id="completeSetBtn">✓ Série concluída</button>
+    </div>
   </main>
   <!-- =====================================================
        TELA DE DESCANSO
@@ -2220,12 +2439,8 @@
   <main class="app hidden" id="restScreen">
     <div class="workout-topbar">
       <div class="workout-title">
-        <strong id="restWorkoutName">
-          Meu treino
-        </strong>
-        <span>
-          Intervalo
-        </span>
+        <strong id="restWorkoutName">Meu treino</strong>
+        <span>Intervalo</span>
       </div>
       <div class="workout-total-time" id="restTotalTime">00:00</div>
       <button class="pause-btn" id="restPauseBtn" aria-label="Pausar treino">
@@ -2233,29 +2448,45 @@
       </button>
     </div>
     <div class="rest-screen-content">
-      <div class="rest-label">
-        DESCANSO
-      </div>
-      <div class="rest-timer" id="restTimer">
-        30
-      </div>
-      <div class="rest-next" id="restNextText">
-        Próxima série
-      </div>
+      <div class="rest-label">DESCANSO</div>
+      <div class="rest-timer" id="restTimer">30</div>
       <div class="rest-controls" aria-label="Ajustar descanso">
-        <button class="btn btn-ghost" id="decreaseRestBtn" type="button">
-          −15s
-        </button>
-        <button class="btn btn-ghost" id="increaseRestBtn" type="button">
-          +15s
-        </button>
+        <button class="btn btn-ghost" id="decreaseRestBtn" type="button">−15s</button>
+        <button class="btn btn-ghost" id="increaseRestBtn" type="button">+15s</button>
       </div>
-      <button class="btn btn-primary" id="skipRestBtn">
-        Pular descanso
-      </button>
+      <!-- Resultado da série que acabou de ser concluída -->
+      <section class="set-result-card hidden" id="restSetResult" aria-labelledby="restSetResultTitle">
+        <div class="set-result-title" id="restSetResultTitle">Série concluída</div>
+        <div class="stepper-row" id="restRepsRow">
+          <label for="restRepsInput">Repetições</label>
+          <div class="stepper">
+            <button type="button" data-step="reps:-1" aria-label="Diminuir repetições">−</button>
+            <input id="restRepsInput" type="number" inputmode="numeric" min="0" max="999">
+            <button type="button" data-step="reps:1" aria-label="Aumentar repetições">+</button>
+          </div>
+        </div>
+        <div class="stepper-row" id="restWeightRow">
+          <label for="restWeightInput">Carga (kg)</label>
+          <div class="stepper">
+            <button type="button" data-step="weight:-2.5" aria-label="Diminuir carga">−</button>
+            <input id="restWeightInput" type="number" inputmode="decimal" min="0" max="999" step="0.25">
+            <button type="button" data-step="weight:2.5" aria-label="Aumentar carga">+</button>
+          </div>
+        </div>
+        <div class="set-result-hint" id="restSetResultHint">Ajuste só se fez diferente do planejado.</div>
+      </section>
+      <div class="rest-next" id="restNextText">Próxima série</div>
+    </div>
+    <div class="execution-footer">
+      <button class="main-action" id="skipRestBtn">Pular descanso</button>
     </div>
   </main>
-  <!-- =====================================================
+  <!-- Aviso com opção de desfazer a última ação do treino -->
+  <div class="undo-toast hidden" id="undoToast" role="status" aria-live="polite">
+    <span id="undoToastText"></span>
+    <button type="button" id="undoBtn">Desfazer</button>
+  </div>
+    <!-- =====================================================
        TELA FINAL
   ====================================================== -->
   <main class="app hidden" id="finishScreen">
@@ -2353,16 +2584,16 @@
   </div>
   <div class="modal-overlay" id="setResultModalOverlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="setResultModalTitle">
-      <h3 id="setResultModalTitle">Resultado da série</h3>
-      <p>Os valores planejados já estão preenchidos. Altere apenas se necessário.</p>
+      <h3 id="setResultModalTitle">Última série do treino</h3>
+      <p>Confirme o que você fez. Os valores planejados já estão preenchidos.</p>
       <form id="setResultForm" class="modal-form">
         <div class="field"><label for="actualRepsInput">Repetições realizadas</label><input id="actualRepsInput"
             type="number" min="0" max="999" required></div>
         <div class="field"><label for="actualWeightInput">Carga utilizada (kg)</label><input id="actualWeightInput"
             type="number" min="0" max="999" step="0.25" required></div>
         <div class="modal-actions">
-          <button type="button" class="btn btn-ghost" id="cancelSetResultBtn">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Salvar resultado</button>
+          <button type="button" class="btn btn-ghost" id="cancelSetResultBtn">Voltar ao treino</button>
+          <button type="submit" class="btn btn-primary">Salvar e finalizar</button>
         </div>
       </form>
     </div>
@@ -2396,6 +2627,10 @@
         <button class="btn btn-primary" id="resumeBtn">
           Continuar treino
         </button>
+        <div class="pause-secondary" id="pauseSkipActions">
+          <button class="btn btn-ghost" id="skipSetBtn" type="button">Pular série</button>
+          <button class="btn btn-ghost" id="skipExerciseBtn" type="button">Pular exercício</button>
+        </div>
         <button class="btn btn-danger" id="endWorkoutBtn">
           Encerrar treino
         </button>
@@ -2542,7 +2777,10 @@
         restType: null,
         // Momento (ms) até onde o tempo já foi contabilizado.
         // null = cronômetro parado.
-        lastTickAt: null
+        lastTickAt: null,
+        // Última série concluída ({ exerciseIndex, setNumber }),
+        // ajustável durante o descanso.
+        lastCompletedSet: null
       };
     }
 
@@ -5226,6 +5464,48 @@
        RENDER EXECUÇÃO
     ========================================================= */
 
+    // Uma bolinha por série: concluída, pulada, atual ou pendente.
+    function renderSetDots(exercise) {
+      const container = document.getElementById("setDots");
+      if (!container) return;
+
+      const total = Number(exercise.sets || 0);
+
+      // Com muitas séries as bolinhas deixam de ajudar; fica só o texto.
+      if (total < 2 || total > 12) {
+        container.innerHTML = "";
+        container.removeAttribute("aria-label");
+        return;
+      }
+
+      const sets = executionLog[workoutState.exerciseIndex]?.sets || [];
+      let done = 0;
+      let skipped = 0;
+
+      container.innerHTML = Array.from({ length: total }, (_, index) => {
+        const setNumber = index + 1;
+        const record = sets.find(set => set.setNumber === setNumber);
+        let state = "";
+
+        if (record?.status === "completed") {
+          state = "done";
+          done++;
+        } else if (record?.status === "skipped") {
+          state = "skipped";
+          skipped++;
+        } else if (setNumber === workoutState.currentSet) {
+          state = "current";
+        }
+
+        return `<span class="set-dot ${state}"></span>`;
+      }).join("");
+
+      container.setAttribute(
+        "aria-label",
+        `${done} de ${total} séries concluídas${skipped ? `, ${skipped} pulada${skipped === 1 ? "" : "s"}` : ""}`
+      );
+    }
+
     function renderWorkoutExecution() {
       const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
 
@@ -5241,12 +5521,13 @@
       updateExecutionWorkoutName();
       document.getElementById("currentExerciseName").textContent = exercise.name;
       document.getElementById("currentSetDisplay").textContent = `Série ${workoutState.currentSet}`;
-      document.getElementById("totalSetsDisplay").textContent = `/ ${exercise.sets}`;
+      document.getElementById("totalSetsDisplay").textContent = `de ${exercise.sets}`;
+      renderSetDots(exercise);
       const timed = exercise.executionType === "timed";
       document.getElementById("currentRepsDisplay").textContent = timed ? formatDuration(exercise.durationSeconds || 30) : exercise.reps;
       document.querySelector("#workoutScreen .reps-display .caption").textContent = timed ? "TEMPO ALVO" : "REPETIÇÕES";
       document.getElementById("completeSetBtn").textContent = timed ? "✓ Tempo concluído" : "✓ Série concluída";
-      document.getElementById("executionTimer").parentElement.firstChild.textContent = timed ? "Tempo restante" : "Tempo de execução";
+      document.getElementById("executionTimerLabel").textContent = timed ? "Tempo restante" : "Tempo de execução";
       const currentWeight = normalizeWeights(exercise)[workoutState.currentSet - 1] ?? 0;
       const currentWeightDisplay = document.getElementById("currentWeightDisplay");
       currentWeightDisplay.textContent = currentWeight > 0 ? `+${currentWeight} kg` : "Peso corporal";
@@ -5402,44 +5683,208 @@
     const setResultModalOverlay = document.getElementById("setResultModalOverlay");
     const actualRepsInput = document.getElementById("actualRepsInput");
     const actualWeightInput = document.getElementById("actualWeightInput");
+    let setResultResolver = null;
 
-    document.getElementById("editSetResultBtn").addEventListener("click", () => {
+    function isFinalSetOfWorkout() {
       const exercise = workoutExecution?.exercises?.[workoutState.exerciseIndex];
-      if (!exercise) return;
-      const logEntry = executionLog[workoutState.exerciseIndex];
-      const savedSet = logEntry?.sets?.find(set => set.setNumber === workoutState.currentSet);
-      actualRepsInput.value = savedSet?.reps ?? exercise.reps;
-      actualWeightInput.value = savedSet?.weight ?? (normalizeWeights(exercise)[workoutState.currentSet - 1] ?? 0);
+
+      return Boolean(exercise) &&
+        workoutState.exerciseIndex === workoutExecution.exercises.length - 1 &&
+        workoutState.currentSet >= Number(exercise.sets || 1);
+    }
+
+    // Na última série do treino não há descanso para registrar o resultado,
+    // então ele é confirmado em um modal antes de finalizar.
+    // Resolve com { reps, weight } ou null ("Voltar ao treino").
+    function promptFinalSetResult(exercise) {
+      const setNumber = workoutState.currentSet;
+      const existing = executionLog[workoutState.exerciseIndex]?.sets?.find(set => set.setNumber === setNumber);
+
+      actualRepsInput.value = existing?.reps ?? exercise.reps;
+      actualWeightInput.value = existing?.weight ?? (normalizeWeights(exercise)[setNumber - 1] ?? 0);
+
       setResultModalOverlay.classList.add("visible");
       setResultModalOverlay.setAttribute("aria-hidden", "false");
-      actualRepsInput.focus();
-    });
-    function closeSetResultModal() {
+      setTimeout(() => actualRepsInput.focus(), 50);
+
+      return new Promise(resolve => {
+        setResultResolver = resolve;
+      });
+    }
+
+    function closeSetResultModal(result = null) {
       setResultModalOverlay.classList.remove("visible");
       setResultModalOverlay.setAttribute("aria-hidden", "true");
+
+      const resolve = setResultResolver;
+      setResultResolver = null;
+      if (resolve) resolve(result);
     }
-    document.getElementById("cancelSetResultBtn").addEventListener("click", closeSetResultModal);
+
+    document.getElementById("cancelSetResultBtn").addEventListener("click", () => closeSetResultModal(null));
     setResultModalOverlay.addEventListener("click", event => {
-      if (event.target === setResultModalOverlay) closeSetResultModal();
+      if (event.target === setResultModalOverlay) closeSetResultModal(null);
     });
     document.getElementById("setResultForm").addEventListener("submit", event => {
       event.preventDefault();
-      const exercise = workoutExecution?.exercises?.[workoutState.exerciseIndex];
-      const logEntry = executionLog[workoutState.exerciseIndex];
-      if (!exercise || !logEntry) return closeSetResultModal();
-      const existing = logEntry.sets.find(set => set.setNumber === workoutState.currentSet);
-      const result = {
-        setNumber: workoutState.currentSet,
-        reps: Math.max(0, Number(actualRepsInput.value || 0)),
-        weight: Math.max(0, Number(actualWeightInput.value || 0)),
-        durationSeconds: Number(existing?.durationSeconds ?? workoutState.executionSeconds ?? 0),
-        status: existing?.status || "edited"
-      };
-      if (existing) Object.assign(existing, result);
-      else logEntry.sets.push(result);
-      saveSession();
-      closeSetResultModal();
+      closeSetResultModal({
+        reps: Math.max(0, Math.round(Number(actualRepsInput.value || 0))),
+        weight: Math.max(0, Number(actualWeightInput.value || 0))
+      });
     });
+
+    /* =========================================================
+       REGISTRO DO RESULTADO DURANTE O DESCANSO
+       A série recém-concluída é registrada com os valores planejados;
+       durante o descanso o usuário ajusta com +/− se fez diferente.
+    ========================================================= */
+
+    const restSetResult = document.getElementById("restSetResult");
+    const restSetResultTitle = document.getElementById("restSetResultTitle");
+    const restRepsRow = document.getElementById("restRepsRow");
+    const restWeightRow = document.getElementById("restWeightRow");
+    const restSetResultHint = document.getElementById("restSetResultHint");
+    const restRepsInput = document.getElementById("restRepsInput");
+    const restWeightInput = document.getElementById("restWeightInput");
+
+    function getLastCompletedSetRecord() {
+      const ref = workoutState.lastCompletedSet;
+      if (!ref || !workoutExecution) return null;
+
+      const exercise = workoutExecution.exercises[ref.exerciseIndex];
+      const set = executionLog[ref.exerciseIndex]?.sets?.find(item =>
+        item.setNumber === ref.setNumber && item.status === "completed"
+      );
+
+      return exercise && set ? { exercise, set, ref } : null;
+    }
+
+    function renderRestSetResult() {
+      const record = getLastCompletedSetRecord();
+
+      if (!record) {
+        restSetResult.classList.add("hidden");
+        return;
+      }
+
+      const timed = getExecutionType(record.exercise) === "timed";
+
+      restSetResultTitle.textContent = timed
+        ? `${record.exercise.name} · série ${record.ref.setNumber} concluída (${formatDuration(record.set.durationSeconds || 0)})`
+        : `${record.exercise.name} · série ${record.ref.setNumber} concluída`;
+
+      restRepsRow.classList.toggle("hidden", timed);
+      restWeightRow.classList.toggle("hidden", timed);
+      restSetResultHint.classList.toggle("hidden", timed);
+
+      restRepsInput.value = Number(record.set.reps || 0);
+      restWeightInput.value = Number(record.set.weight || 0);
+
+      restSetResult.classList.remove("hidden");
+    }
+
+    function updateLastSetResult(field, rawValue) {
+      const record = getLastCompletedSetRecord();
+      if (!record) return;
+
+      let value = Number(rawValue);
+      if (!Number.isFinite(value)) value = 0;
+
+      value = field === "reps"
+        ? Math.round(value)
+        : Math.round(value * 100) / 100;
+      value = Math.min(999, Math.max(0, value));
+
+      record.set[field] = value;
+      (field === "reps" ? restRepsInput : restWeightInput).value = value;
+      saveSession();
+    }
+
+    restSetResult.addEventListener("click", event => {
+      const button = event.target.closest("[data-step]");
+      if (!button) return;
+
+      const [field, delta] = button.dataset.step.split(":");
+      const input = field === "reps" ? restRepsInput : restWeightInput;
+
+      updateLastSetResult(field, Number(input.value || 0) + Number(delta));
+      vibrate(10);
+    });
+
+    restRepsInput.addEventListener("change", () => updateLastSetResult("reps", restRepsInput.value));
+    restWeightInput.addEventListener("change", () => updateLastSetResult("weight", restWeightInput.value));
+
+    /* =========================================================
+       DESFAZER
+       Guarda uma cópia do estado antes de concluir/pular. O aviso fica
+       visível por alguns segundos; tocar em "Desfazer" volta para a série.
+    ========================================================= */
+
+    const UNDO_TIMEOUT_MS = 8000;
+    const undoToast = document.getElementById("undoToast");
+    const undoToastText = document.getElementById("undoToastText");
+    let undoSnapshot = null;
+    let undoTimeout = null;
+
+    function captureUndo() {
+      return {
+        state: JSON.parse(JSON.stringify(workoutState)),
+        log: JSON.parse(JSON.stringify(executionLog))
+      };
+    }
+
+    function offerUndo(snapshot, label) {
+      undoSnapshot = snapshot;
+      undoToastText.textContent = label;
+      undoToast.classList.remove("hidden");
+
+      clearTimeout(undoTimeout);
+      undoTimeout = setTimeout(hideUndoToast, UNDO_TIMEOUT_MS);
+    }
+
+    function hideUndoToast() {
+      clearTimeout(undoTimeout);
+      undoTimeout = null;
+      undoSnapshot = null;
+      undoToast.classList.add("hidden");
+    }
+
+    function undoLastAction() {
+      const snapshot = undoSnapshot;
+      hideUndoToast();
+
+      if (!snapshot || !workoutExecution) return;
+
+      stopExecutionTimer();
+      clearInterval(restInterval);
+      restInterval = null;
+
+      // O tempo total continua refletindo o tempo real que passou.
+      const totalSeconds = workoutState.totalSeconds;
+
+      workoutState = {
+        ...snapshot.state,
+        totalSeconds,
+        status: "working",
+        restTimer: 0,
+        restType: null,
+        restNextText: "",
+        lastTickAt: null
+      };
+      executionLog = snapshot.log;
+
+      saveSession();
+      showWorkoutScreen();
+      renderWorkoutExecution();
+      startExecutionTimer();
+      vibrate(20);
+    }
+
+    document.getElementById("undoBtn").addEventListener("click", undoLastAction);
+
+    /* =========================================================
+       CONCLUIR / PULAR SÉRIE
+    ========================================================= */
 
     // Antes de concluir manualmente, contabiliza o tempo pendente.
     // Se a contabilização já tiver concluído a série (exercício por tempo),
@@ -5459,36 +5904,68 @@
           workoutState.status === "working" &&
           `${workoutState.exerciseIndex}:${workoutState.currentSet}` === before
         ) {
-          completeSet();
+          vibrate(15);
+          completeSet({ undoable: true });
         }
       }
     );
 
+    // "Pular série" e "Pular exercício" ficam no menu de pausa, longe do
+    // botão principal, para evitar toques acidentais. Como existe "Desfazer",
+    // só pedem confirmação quando a ação finaliza o treino.
+    document.getElementById("skipSetBtn").addEventListener("click", async () => {
+      hidePauseMenu();
 
-    document.getElementById(
-      "skipSetBtn"
-    ).addEventListener(
-      "click",
-      async () => {
-        const confirmed =
-          await showConfirm(
-            "A série será considerada concluída e você passará para a próxima etapa.",
-            {
-              title:
-                "Pular série",
-              confirmText:
-                "Pular"
-            }
-          );
+      if (!workoutExecution || workoutState.status !== "working") {
+        resumeTimers();
+        return;
+      }
 
-        if (confirmed && workoutExecution && workoutState.status === "working") {
-          tickExecution();
-          if (workoutExecution && workoutState.status === "working") {
-            completeSet({ skipped: true });
-          }
+      if (isFinalSetOfWorkout()) {
+        const confirmed = await showConfirm(
+          "Esta é a última série do treino. Pular encerra o treino.",
+          { title: "Pular última série", confirmText: "Pular e finalizar" }
+        );
+
+        if (!confirmed) {
+          resumeTimers();
+          return;
         }
       }
-    );
+
+      completeSet({ skipped: true, undoable: true });
+    });
+
+    document.getElementById("skipExerciseBtn").addEventListener("click", async () => {
+      hidePauseMenu();
+
+      if (!workoutExecution || workoutState.status !== "working") {
+        resumeTimers();
+        return;
+      }
+
+      const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
+      const isLastExercise = workoutState.exerciseIndex === workoutExecution.exercises.length - 1;
+
+      if (isLastExercise) {
+        const confirmed = await showConfirm(
+          "Abandona as séries restantes e finaliza o treino.",
+          { title: "Finalizar treino", confirmText: "Finalizar" }
+        );
+
+        if (!confirmed) {
+          resumeTimers();
+          return;
+        }
+
+        completeExercise(true);
+        return;
+      }
+
+      const snapshot = captureUndo();
+      completeExercise(true);
+      offerUndo(snapshot, `${exercise.name} pulado`);
+    });
 
     function completeSet(options = {}) {
       const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
@@ -5499,12 +5976,46 @@
         return;
       }
 
+      const finalSet = isFinalSetOfWorkout();
+
+      // Última série (por repetições): confirma o resultado antes de finalizar.
+      if (
+        finalSet &&
+        !options.skipped &&
+        !options.finalConfirmed &&
+        getExecutionType(exercise) === "reps"
+      ) {
+        stopExecutionTimer();
+
+        promptFinalSetResult(exercise).then(result => {
+          if (!workoutExecution) return;
+
+          if (!result) {
+            startExecutionTimer();
+            return;
+          }
+
+          const logEntry = executionLog[workoutState.exerciseIndex];
+          const setNumber = workoutState.currentSet;
+          const existing = logEntry?.sets?.find(set => set.setNumber === setNumber);
+
+          if (existing) Object.assign(existing, result);
+          else logEntry?.sets?.push({ setNumber, ...result, status: "pending" });
+
+          completeSet({ ...options, finalConfirmed: true });
+        });
+
+        return;
+      }
+
+      // Não há como desfazer depois que o treino é finalizado.
+      const snapshot = options.undoable && !finalSet ? captureUndo() : null;
+      const setNumber = Number(workoutState.currentSet || 1);
       const endedAt = options.endedAt ?? Date.now();
 
       stopExecutionTimer();
       const logEntry = executionLog[workoutState.exerciseIndex];
       if (logEntry) {
-        const setNumber = Number(workoutState.currentSet || 1);
         const existing = logEntry.sets.find(set => set.setNumber === setNumber);
         const setResult = {
           setNumber,
@@ -5517,6 +6028,16 @@
         else logEntry.sets.push(setResult);
         if (!options.skipped) logEntry.status = "in_progress";
       }
+
+      // Referência usada pela tela de descanso para ajustar o resultado.
+      workoutState.lastCompletedSet = options.skipped
+        ? null
+        : { exerciseIndex: workoutState.exerciseIndex, setNumber };
+
+      if (snapshot) {
+        offerUndo(snapshot, options.skipped ? `Série ${setNumber} pulada` : `Série ${setNumber} concluída`);
+      }
+
       /*
        * Caso ainda existam séries no exercício atual:
        *
@@ -5548,38 +6069,6 @@
        */
       completeExercise(false, endedAt);
     }
-
-    document.getElementById(
-      "skipExerciseBtn"
-    ).addEventListener(
-      "click",
-      async () => {
-        const lastExercise = workoutState.exerciseIndex < workoutExecution.exercises.length - 1;
-        const confirmed =
-          await showConfirm(
-            lastExercise
-              ? "Abandona todas as séries restantes e vai para o próximo exercício."
-              : "Abandona todas as séries restantes e finaliza o treino.",
-            {
-              title:
-                lastExercise
-                  ? "Pular exercício"
-                  : "Finalizar treino",
-              confirmText:
-                lastExercise
-                  ? "Pular"
-                  : "Finalizar"
-            }
-          );
-
-        if (confirmed && workoutExecution && workoutState.status === "working") {
-          tickExecution();
-          if (workoutExecution && workoutState.status === "working") {
-            completeExercise(true);
-          }
-        }
-      }
-    );
 
     function completeExercise(skipped = false, endedAt = Date.now()) {
       const exercise = workoutExecution.exercises[workoutState.exerciseIndex];
@@ -5671,6 +6160,7 @@
       saveSession();
       showRestScreen();
       renderRestScreen();
+      renderRestSetResult();
       startRestInterval();
     }
 
@@ -5832,13 +6322,21 @@
       workoutState.lastTickAt = null;
       saveSession();
 
+      // Pular série/exercício só faz sentido durante a execução, não no descanso.
+      document.getElementById("pauseSkipActions")
+        .classList.toggle("hidden", workoutState.status !== "working");
+
       pauseModalOverlay.classList.add("visible");
       pauseModalOverlay.setAttribute("aria-hidden", "false");
     }
 
-    function closePauseMenu() {
+    function hidePauseMenu() {
       pauseModalOverlay.classList.remove("visible");
       pauseModalOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    function resumeTimers() {
+      if (!workoutExecution) return;
 
       if (workoutState.status === "working") {
         startExecutionTimer();
@@ -5847,6 +6345,11 @@
       if (workoutState.status === "resting") {
         resumeRestTimer();
       }
+    }
+
+    function closePauseMenu() {
+      hidePauseMenu();
+      resumeTimers();
     }
 
     function resumeRestTimer() {
@@ -5865,6 +6368,7 @@
     document.getElementById("restPauseBtn").addEventListener("click", openPauseMenu);
     document.getElementById("resumeBtn").addEventListener("click", closePauseMenu);
     document.getElementById("endWorkoutBtn").addEventListener("click", async () => {
+      hideUndoToast();
       pauseModalOverlay.classList.remove(
         "visible"
       );
@@ -6376,6 +6880,7 @@
     }
 
     async function finishWorkout() {
+      hideUndoToast();
       stopExecutionTimer();
       clearInterval(restInterval);
       restInterval = null;
@@ -6467,7 +6972,8 @@
           restType: session.restType || null,
           // O tempo em que o app ficou fechado não é contado: a retomada
           // funciona como uma pausa.
-          lastTickAt: null
+          lastTickAt: null,
+          lastCompletedSet: session.lastCompletedSet || null
         };
 
         recoveryInfo.textContent = `${exercise.name} · Série ${workoutState.currentSet} de ${exercise.sets}`;
@@ -6497,6 +7003,7 @@
         showRestScreen();
 
         renderRestScreen();
+        renderRestSetResult();
         updateTotalWorkoutTimer();
 
         resumeRestTimer();
