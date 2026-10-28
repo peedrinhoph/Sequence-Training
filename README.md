@@ -346,21 +346,29 @@ Também é possível adicionar **qualquer exercício personalizado**.
 
 A interface foi desenvolvida seguindo uma abordagem **mobile-first**, considerando principalmente o uso durante o treino.
 
-<img width="757" height="524" alt="Screenshot 2026-09-07 183855" src="https://github.com/user-attachments/assets/ef73327d-90d3-41a4-a909-8e52e83bc54a" />
+<img width="750" height="1398" alt="image" src="https://github.com/user-attachments/assets/67e340a4-9684-4f7f-9982-181a9ec8436b" />
 
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/10376488-cbd7-4ab1-9204-8e6ea1341524" />
+<img width="370" height="1568" alt="image" src="https://github.com/user-attachments/assets/054b9636-7126-4cd6-b2d9-99acd4fcc52a" />
 
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/42ab0e84-2c6a-48e2-8f3f-494113139e2c" />
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/aa2e31d1-c1b4-45e9-9124-8fb23d464f1e" />
 
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/04ed9550-53ba-4b9f-b896-3a324014e360" />
+<img width="509" height="1568" alt="image" src="https://github.com/user-attachments/assets/f6a123c3-a1e2-477d-8c53-07f575f610cb" />
 
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/d7c290cc-ce5f-418e-84a0-3f8c3c5e62ae" />
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/e8a72701-6ba8-4a4c-9de0-29e5787f636a" />
 
-<img width="330" height="1568" alt="image" src="https://github.com/user-attachments/assets/6e3f4047-46e1-4f45-ab26-203fb834d065" />
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/6f012870-ebc8-4e5a-95fb-bcfd4160c2d8" />
 
-<img width="734" height="689" alt="Screenshot 2026-09-07 183906" src="https://github.com/user-attachments/assets/56b7147c-773b-4672-9952-db94f6dccfc7" />
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/8e1ebb96-be23-461e-a05a-6ae91f73334e" />
 
-<img width="451" height="655" alt="Screenshot 2026-09-07 184048" src="https://github.com/user-attachments/assets/2be1a935-cafa-4fd8-b4fd-01e34711ffe9" />
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/bded2ae3-2cc0-4bf5-b0e7-2b50e8baff40" />
+
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/8cf6689c-5f0b-49d5-a263-899385e8b68a" />
+
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/b11fa374-1945-4b61-95f5-be8e44c0dc5a" />
+
+<img width="750" height="1398" alt="image" src="https://github.com/user-attachments/assets/a4d369fb-6782-49fd-80c2-2182edfe2bdc" />
+
+<img width="384" height="1568" alt="image" src="https://github.com/user-attachments/assets/1f41d04a-6fcf-4d53-9bae-bef7b2013028" />
 
 ---
 
