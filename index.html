@@ -1931,11 +1931,227 @@
       padding: 4px 0 8px;
     }
 
-    #restScreen .rest-timer {
+    /* Anéis de progresso (descanso e exercícios por tempo) */
+    .ring {
+      position: relative;
       width: min(56vw, 220px);
-      height: min(56vw, 220px);
+      aspect-ratio: 1;
+      margin: 0 auto;
+    }
+
+    .ring-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .ring-track,
+    .ring-fill {
+      fill: none;
+      stroke-width: 8;
+    }
+
+    .ring-track {
+      stroke: var(--card2);
+    }
+
+    .ring-fill {
+      stroke: var(--primary);
+      stroke-linecap: round;
+      transition: stroke-dashoffset .3s linear, stroke .2s ease;
+    }
+
+    .ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .ring-center strong {
+      font-size: clamp(44px, 12.5vw, 64px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ring-center span {
+      max-width: 80%;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    #restScreen .rest-ring {
       margin-bottom: 16px;
-      font-size: clamp(48px, 13vw, 68px);
+    }
+
+    .timed-ring {
+      width: min(60vw, 230px);
+    }
+
+    .timed-ring.is-prep .ring-fill {
+      stroke: var(--warning);
+    }
+
+    .timed-ring.is-prep .ring-center span {
+      color: var(--warning);
+      text-transform: uppercase;
+    }
+
+    /* Barra de progresso clicável (abre a lista de exercícios) */
+    #workoutScreen .progress-container {
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+    }
+
+    .progress-container .progress-label,
+    .progress-container .progress {
+      display: flex;
+    }
+
+    .progress-container .progress-bar {
+      display: block;
+    }
+
+    .progress-more {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* Lista de exercícios durante o treino */
+    .exec-list-hint {
+      margin: -6px 0 14px;
+    }
+
+    .exec-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .exec-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 12px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .exec-item.is-current {
+      border-color: var(--primary);
+      box-shadow: inset 3px 0 0 var(--primary);
+    }
+
+    .exec-item.is-done,
+    .exec-item.is-skipped {
+      opacity: .6;
+    }
+
+    .exec-index {
+      flex: 0 0 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--border);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .exec-item.is-done .exec-index {
+      background: var(--primary);
+      color: #111;
+    }
+
+    .exec-item.is-skipped .exec-index {
+      background: var(--warning);
+      color: #111;
+    }
+
+    .exec-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .exec-info strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .exec-info span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .exec-badge {
+      flex-shrink: 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .exec-item.is-current .exec-badge {
+      color: var(--primary);
+    }
+
+    .exec-item.is-partial .exec-badge {
+      color: var(--warning);
+    }
+
+    .exec-item .btn {
+      flex-shrink: 0;
+    }
+
+    /* Peso corporal e recordes */
+    .body-weight-row {
+      margin: 0 0 6px;
+      padding: 12px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .body-weight-row label {
+      margin-bottom: 8px;
+    }
+
+    .body-weight-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 160px;
+    }
+
+    .body-weight-field input {
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .body-weight-row .saved-workout-details {
+      margin: 8px 0 0;
+    }
+
+    .record-lines strong {
+      color: var(--text);
     }
 
     #restScreen .rest-next {
@@ -2072,11 +2288,16 @@
     }
 
     @media (max-height: 680px) {
-      #restScreen .rest-timer {
+      #restScreen .rest-ring {
         width: 150px;
-        height: 150px;
-        border-width: 6px;
-        font-size: 46px;
+      }
+
+      #restScreen .rest-ring .ring-center strong {
+        font-size: 44px;
+      }
+
+      .timed-ring {
+        width: 170px;
       }
 
       #restScreen .rest-label {
@@ -2392,20 +2613,21 @@
         <strong id="workoutNameDisplay">Meu treino</strong>
       </div>
       <div class="workout-total-time" id="workoutTotalTime" aria-label="Tempo total do treino">00:00</div>
+      <button class="pause-btn" id="exerciseListBtn" type="button" aria-label="Ver exercícios do treino" title="Exercícios do treino">☰</button>
       <button class="pause-btn" id="pauseBtn" aria-label="Pausar treino e mais opções" title="Pausar / mais opções">
         ⏸
       </button>
     </div>
     <!-- Progresso -->
-    <div class="progress-container">
-      <div class="progress-label">
-        <span id="progressExerciseLabel">Exercício 1 de 1</span>
+    <button type="button" class="progress-container" id="progressListBtn" aria-label="Ver exercícios do treino">
+      <span class="progress-label">
+        <span><span id="progressExerciseLabel">Exercício 1 de 1</span> <span class="progress-more">· ver todos ›</span></span>
         <strong id="progressPercentage">0% concluído</strong>
-      </div>
-      <div class="progress">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
-    </div>
+      </span>
+      <span class="progress">
+        <span class="progress-bar" id="progressBar"></span>
+      </span>
+    </button>
     <!-- Exercício atual -->
     <section class="exercise-hero" aria-live="polite">
       <h2 id="currentExerciseName">Flexão</h2>
@@ -2420,6 +2642,17 @@
     <div class="reps-display">
       <div class="number" id="currentRepsDisplay">10</div>
       <div class="caption">REPETIÇÕES</div>
+      <!-- Exercícios por tempo: anel com o tempo restante (e a preparação) -->
+      <div class="ring timed-ring hidden" id="timedRing">
+        <svg class="ring-svg" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="ring-track" cx="60" cy="60" r="54"></circle>
+          <circle class="ring-fill" id="timedRingFill" cx="60" cy="60" r="54"></circle>
+        </svg>
+        <div class="ring-center">
+          <strong id="timedRingValue">00:30</strong>
+          <span id="timedRingLabel">restante</span>
+        </div>
+      </div>
       <div class="weight-display" id="currentWeightDisplay">Peso corporal</div>
       <div class="last-performance hidden" id="lastPerformanceDisplay"></div>
       <div class="execution-timer">
@@ -2443,13 +2676,23 @@
         <span>Intervalo</span>
       </div>
       <div class="workout-total-time" id="restTotalTime">00:00</div>
+      <button class="pause-btn" id="restExerciseListBtn" type="button" aria-label="Ver exercícios do treino" title="Exercícios do treino">☰</button>
       <button class="pause-btn" id="restPauseBtn" aria-label="Pausar treino">
         ⏸
       </button>
     </div>
     <div class="rest-screen-content">
       <div class="rest-label">DESCANSO</div>
-      <div class="rest-timer" id="restTimer">30</div>
+      <div class="ring rest-ring">
+        <svg class="ring-svg" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="ring-track" cx="60" cy="60" r="54"></circle>
+          <circle class="ring-fill" id="restRingFill" cx="60" cy="60" r="54"></circle>
+        </svg>
+        <div class="ring-center">
+          <strong id="restTimer">30</strong>
+          <span>segundos</span>
+        </div>
+      </div>
       <div class="rest-controls" aria-label="Ajustar descanso">
         <button class="btn btn-ghost" id="decreaseRestBtn" type="button">−15s</button>
         <button class="btn btn-ghost" id="increaseRestBtn" type="button">+15s</button>
@@ -2599,6 +2842,21 @@
     </div>
   </div>
   <!-- =====================================================
+       LISTA DE EXERCÍCIOS DURANTE O TREINO
+  ====================================================== -->
+  <div class="modal-overlay" id="exerciseListOverlay" aria-hidden="true">
+    <div class="modal dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="exerciseListTitle">
+      <div class="workout-editor-modal-header">
+        <h2 id="exerciseListTitle">Exercícios do treino</h2>
+        <button class="icon-btn" id="closeExerciseListBtn" type="button" aria-label="Fechar">×</button>
+      </div>
+      <p class="saved-workout-details exec-list-hint">
+        O cronômetro continua correndo. Use “Fazer agora” para trocar a ordem, por exemplo se um aparelho estiver ocupado: o exercício atual fica para depois e continua de onde parou.
+      </p>
+      <div id="exerciseListContent" class="exec-list"></div>
+    </div>
+  </div>
+  <!-- =====================================================
        MODAL DE ESCOLHA DE BACKUP
   ====================================================== -->
   <div class="modal-overlay" id="backupModalOverlay" aria-hidden="true">
@@ -2720,8 +2978,22 @@
     const HISTORY_STORAGE = "calisthenics_history";
     const THEME_STORAGE = "calisthenics_theme";
     const BACKUP_STORAGE = "calisthenics_backup";
-    const MAX_BACKUPS = 5;
     const EXERCISE_LIBRARY_STORAGE = "calisthenics_exercise_library";
+    const BODY_WEIGHT_STORAGE = "calisthenics_body_weight";
+    // Marca de que o app gravou dados no localStorage porque o IndexedDB
+    // não estava disponível; na próxima abertura com IndexedDB eles são copiados.
+    const LEGACY_DIRTY_STORAGE = "calisthenics_legacy_dirty";
+
+    // IndexedDB: nome exclusivo, porque no GitHub Pages todos os projetos
+    // de um mesmo usuário compartilham a origem (usuario.github.io).
+    const DB_NAME = "sequence-training";
+    const DB_VERSION = 1;
+
+    // Backups automáticos guardados (o IndexedDB comporta mais).
+    const MAX_BACKUPS_INDEXEDDB = 10;
+    const MAX_BACKUPS_LOCALSTORAGE = 5;
+    // Limite do histórico apenas no modo de contingência (localStorage).
+    const LOCALSTORAGE_HISTORY_LIMIT = 100;
 
     // Frequência de atualização dos cronômetros. O tempo em si é calculado
     // por timestamp, então este valor só define a "resolução" da tela.
@@ -2780,7 +3052,11 @@
         lastTickAt: null,
         // Última série concluída ({ exerciseIndex, setNumber }),
         // ajustável durante o descanso.
-        lastCompletedSet: null
+        lastCompletedSet: null,
+        // Duração total do descanso atual (para o anel de progresso).
+        restDuration: 0,
+        // Segundos de preparação que faltam antes de uma série por tempo.
+        prepRemaining: 0
       };
     }
 
@@ -3234,6 +3510,12 @@
           return;
         }
 
+        const exerciseListOverlay = document.getElementById("exerciseListOverlay");
+        if (isOpen(exerciseListOverlay)) {
+          closeExerciseList();
+          return;
+        }
+
         if (isOpen(nameModalOverlay)) {
           closeNameModal();
           return;
@@ -3344,29 +3626,406 @@
       }).filter(Boolean);
     }
 
-    function loadExerciseLibrary() {
+    /* =========================================================
+       ARMAZENAMENTO
+
+       Treinos, histórico, biblioteca e backups ficam no IndexedDB.
+       O app carrega tudo para a memória ao abrir (savedWorkouts,
+       historyCache, exerciseLibrary, backupIndex). As leituras são
+       feitas da memória, de forma síncrona, e cada alteração é gravada
+       no banco em segundo plano.
+
+       Continuam no localStorage, de propósito:
+       - tema, visualização, alertas e peso corporal (lidos na abertura);
+       - o rascunho do editor;
+       - o treino em andamento, gravado a cada segundo: a escrita síncrona
+         garante que nada se perde se o app for fechado de repente.
+
+       Se o IndexedDB não estiver disponível, o app funciona como antes,
+       só com o localStorage (modo de contingência).
+    ========================================================= */
+
+    const AppStorage = {
+      db: null,
+      mode: "loading", // "indexeddb" | "localstorage"
+      pendingWrites: 0,
+      errorShown: false
+    };
+
+    // Histórico em memória, do mais recente para o mais antigo.
+    let historyCache = [];
+    // Metadados dos backups (o conteúdo completo só é lido ao restaurar).
+    let backupIndex = [];
+
+    function getMaxBackups() {
+      return AppStorage.mode === "indexeddb" ? MAX_BACKUPS_INDEXEDDB : MAX_BACKUPS_LOCALSTORAGE;
+    }
+
+    function openAppDb() {
+      return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+          reject(new Error("IndexedDB indisponível neste navegador."));
+          return;
+        }
+
+        let request;
+        try {
+          request = indexedDB.open(DB_NAME, DB_VERSION);
+        } catch (error) {
+          reject(error);
+          return;
+        }
+
+        request.onupgradeneeded = () => {
+          const db = request.result;
+
+          if (!db.objectStoreNames.contains("workouts")) {
+            db.createObjectStore("workouts", { keyPath: "id" });
+          }
+
+          if (!db.objectStoreNames.contains("library")) {
+            db.createObjectStore("library", { keyPath: "id" });
+          }
+
+          if (!db.objectStoreNames.contains("history")) {
+            const history = db.createObjectStore("history", { keyPath: "id" });
+            history.createIndex("completedAt", "completedAt");
+            history.createIndex("workoutId", "workoutId");
+          }
+
+          if (!db.objectStoreNames.contains("backups")) {
+            const backups = db.createObjectStore("backups", { keyPath: "id" });
+            backups.createIndex("createdAt", "createdAt");
+          }
+
+          if (!db.objectStoreNames.contains("meta")) {
+            db.createObjectStore("meta", { keyPath: "key" });
+          }
+        };
+
+        request.onsuccess = () => {
+          const db = request.result;
+          // Se outra aba abrir uma versão mais nova do banco, libera esta conexão.
+          db.onversionchange = () => db.close();
+          resolve(db);
+        };
+
+        request.onerror = () => reject(request.error);
+        request.onblocked = () => console.warn("IndexedDB aguardando outra aba do app ser fechada.");
+      });
+    }
+
+    // Executa uma transação. `work` recebe a transação e enfileira as
+    // operações; a Promise resolve quando a transação é confirmada.
+    function idbTransaction(storeNames, mode, work) {
+      return new Promise((resolve, reject) => {
+        let result;
+        let tx;
+
+        try {
+          tx = AppStorage.db.transaction(storeNames, mode);
+        } catch (error) {
+          reject(error);
+          return;
+        }
+
+        tx.oncomplete = () => resolve(result);
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(tx.error || new Error("Transação cancelada."));
+
+        try {
+          result = work(tx);
+        } catch (error) {
+          tx.abort();
+          reject(error);
+        }
+      });
+    }
+
+    function idbGetAll(storeName) {
+      return idbTransaction([storeName], "readonly", tx => {
+        const holder = { value: [] };
+        const request = tx.objectStore(storeName).getAll();
+        request.onsuccess = () => { holder.value = request.result || []; };
+        return holder;
+      }).then(holder => holder.value);
+    }
+
+    function idbGet(storeName, key) {
+      return idbTransaction([storeName], "readonly", tx => {
+        const holder = { value: null };
+        const request = tx.objectStore(storeName).get(key);
+        request.onsuccess = () => { holder.value = request.result ?? null; };
+        return holder;
+      }).then(holder => holder.value);
+    }
+
+    // Grava em segundo plano. Transações de escrita no mesmo store são
+    // executadas na ordem em que foram criadas, então a última vence.
+    function queueWrite(description, storeNames, work) {
+      if (AppStorage.mode !== "indexeddb") return Promise.resolve(false);
+
+      AppStorage.pendingWrites++;
+
+      return idbTransaction(storeNames, "readwrite", work)
+        .then(() => true)
+        .catch(error => {
+          console.error(`Erro ao gravar ${description}:`, error);
+          reportStorageError();
+          return false;
+        })
+        .finally(() => {
+          AppStorage.pendingWrites--;
+        });
+    }
+
+    function reportStorageError() {
+      if (AppStorage.errorShown) return;
+      AppStorage.errorShown = true;
+
+      showMessage(
+        "Não foi possível salvar as últimas alterações neste aparelho (o armazenamento pode estar cheio). Exporte seus treinos em Dados → Exportar para não perder nada.",
+        "Erro ao salvar"
+      );
+    }
+
+    // Escrita no localStorage (modo de contingência), tratando falta de espaço.
+    function writeLocalStorage(key, value) {
       try {
-        const saved = localStorage.getItem(EXERCISE_LIBRARY_STORAGE);
-
-        if (saved) {
-          exerciseLibrary = normalizeExerciseLibrary(JSON.parse(saved));
-        }
-
-        if (exerciseLibrary.length === 0) {
-          exerciseLibrary = normalizeExerciseLibrary(DEFAULT_EXERCISE_LIBRARY);
-          saveExerciseLibrary();
-        }
+        localStorage.setItem(key, JSON.stringify(value));
+        localStorage.setItem(LEGACY_DIRTY_STORAGE, "1");
+        return true;
       } catch (error) {
-        console.error("Erro ao carregar biblioteca de exercícios:", error);
+        console.error(`Erro ao gravar ${key}:`, error);
+        reportStorageError();
+        return false;
+      }
+    }
+
+    function readLocalStorageJson(key, fallback) {
+      try {
+        const saved = localStorage.getItem(key);
+        return saved ? JSON.parse(saved) : fallback;
+      } catch (error) {
+        console.error(`Erro ao ler ${key}:`, error);
+        return fallback;
+      }
+    }
+
+    function normalizeSavedWorkoutRecord(item) {
+      const normalized = normalizeWorkout(item);
+      if (!normalized) return null;
+
+      return {
+        id: item.id || crypto.randomUUID(),
+        ...normalized,
+        createdAt: item.createdAt || new Date().toISOString(),
+        updatedAt: item.updatedAt || item.createdAt || new Date().toISOString(),
+        lastUsedAt: item.lastUsedAt || null
+      };
+    }
+
+    function normalizeHistoryList(list) {
+      return (Array.isArray(list) ? list : [])
+        .filter(entry => entry && typeof entry === "object")
+        .map(entry => ({ ...entry, id: entry.id || crypto.randomUUID() }));
+    }
+
+    function sortHistoryNewestFirst(list) {
+      return list.sort((a, b) =>
+        (new Date(b.completedAt).getTime() || 0) - (new Date(a.completedAt).getTime() || 0)
+      );
+    }
+
+    function backupMeta(backup, fallbackId) {
+      return {
+        id: backup.id || fallbackId,
+        createdAt: backup.createdAt,
+        reason: backup.reason || "Proteção automática",
+        workoutsCount: Array.isArray(backup.savedWorkouts) ? backup.savedWorkouts.length : 0,
+        historyCount: Array.isArray(backup.history) ? backup.history.length : 0,
+        hasHistory: Array.isArray(backup.history)
+      };
+    }
+
+    function sortByCreatedAtDesc(list) {
+      return list.sort((a, b) =>
+        (new Date(b.createdAt).getTime() || 0) - (new Date(a.createdAt).getTime() || 0)
+      );
+    }
+
+    // Lê os dados das versões anteriores (localStorage).
+    function readLegacyData() {
+      const workouts = readLocalStorageJson(WORKOUTS_STORAGE, []);
+      const library = readLocalStorageJson(EXERCISE_LIBRARY_STORAGE, []);
+      const backups = readLocalStorageJson(BACKUP_STORAGE, []);
+
+      return {
+        workouts: (Array.isArray(workouts) ? workouts : [])
+          .map(normalizeSavedWorkoutRecord)
+          .filter(Boolean),
+        history: normalizeHistoryList(readLocalStorageJson(HISTORY_STORAGE, [])),
+        library: normalizeExerciseLibrary(library),
+        // Versões antigas guardavam um único backup (objeto) em vez de lista.
+        backups: (Array.isArray(backups) ? backups : [backups])
+          .filter(isValidBackup)
+          .map((backup, index) => ({ ...backup, id: backup.id || `legacy-${index}` }))
+      };
+    }
+
+    /*
+     * Copia os dados do localStorage para o IndexedDB, numa única transação
+     * (ou tudo é gravado, ou nada). Roda:
+     * - na primeira abertura depois da atualização;
+     * - quando o app precisou usar o localStorage em uma sessão anterior
+     *   (IndexedDB indisponível naquele momento).
+     * Os dados antigos continuam no localStorage como cópia de segurança,
+     * exceto os backups, que ocupam mais espaço e já estão no banco.
+     */
+    async function migrateLegacyStorage() {
+      const migration = await idbGet("meta", "migration");
+      const legacyDirty = localStorage.getItem(LEGACY_DIRTY_STORAGE) === "1";
+
+      if (migration && !legacyDirty) return;
+
+      const legacy = readLegacyData();
+      const now = new Date().toISOString();
+
+      await idbTransaction(["workouts", "history", "library", "backups", "meta"], "readwrite", tx => {
+        const workoutsStore = tx.objectStore("workouts");
+        const libraryStore = tx.objectStore("library");
+        const historyStore = tx.objectStore("history");
+        const backupsStore = tx.objectStore("backups");
+
+        // Treinos e biblioteca: o localStorage é a versão mais recente.
+        if (!migration || legacy.workouts.length) {
+          workoutsStore.clear();
+          legacy.workouts.forEach(item => workoutsStore.put(item));
+        }
+
+        if (!migration || legacy.library.length) {
+          libraryStore.clear();
+          legacy.library.forEach(item => libraryStore.put(item));
+        }
+
+        // Histórico e backups: soma ao que já existe (nunca apaga).
+        legacy.history.forEach(entry => historyStore.put(entry));
+        legacy.backups.forEach(backup => backupsStore.put(backup));
+
+        tx.objectStore("meta").put({
+          key: "migration",
+          source: "localStorage",
+          migratedAt: migration?.migratedAt || now,
+          lastSyncAt: now,
+          counts: {
+            workouts: legacy.workouts.length,
+            history: legacy.history.length,
+            library: legacy.library.length,
+            backups: legacy.backups.length
+          }
+        });
+      });
+
+      localStorage.removeItem(LEGACY_DIRTY_STORAGE);
+      localStorage.removeItem(BACKUP_STORAGE);
+    }
+
+    async function loadFromIndexedDb() {
+      const [workouts, history, library, backups] = await Promise.all([
+        idbGetAll("workouts"),
+        idbGetAll("history"),
+        idbGetAll("library"),
+        idbGetAll("backups")
+      ]);
+
+      savedWorkouts = sortByCreatedAtDesc(workouts.map(normalizeSavedWorkoutRecord).filter(Boolean));
+      historyCache = sortHistoryNewestFirst(normalizeHistoryList(history));
+      exerciseLibrary = normalizeExerciseLibrary(library);
+      backupIndex = sortByCreatedAtDesc(backups.filter(isValidBackup).map(backup => backupMeta(backup)));
+    }
+
+    function loadFromLocalStorage() {
+      const legacy = readLegacyData();
+
+      savedWorkouts = legacy.workouts;
+      historyCache = sortHistoryNewestFirst(legacy.history);
+      exerciseLibrary = legacy.library;
+      backupIndex = legacy.backups.map(backup => backupMeta(backup));
+    }
+
+    async function initStorage() {
+      try {
+        AppStorage.db = await openAppDb();
+        AppStorage.mode = "indexeddb";
+        await migrateLegacyStorage();
+        await loadFromIndexedDb();
+      } catch (error) {
+        console.warn("Usando localStorage (IndexedDB indisponível):", error);
+        AppStorage.db = null;
+        AppStorage.mode = "localstorage";
+        loadFromLocalStorage();
+      }
+
+      if (exerciseLibrary.length === 0) {
         exerciseLibrary = normalizeExerciseLibrary(DEFAULT_EXERCISE_LIBRARY);
+        saveExerciseLibrary();
       }
     }
 
     function saveExerciseLibrary() {
-      localStorage.setItem(
-        EXERCISE_LIBRARY_STORAGE,
-        JSON.stringify(exerciseLibrary)
-      );
+      if (AppStorage.mode === "localstorage") {
+        writeLocalStorage(EXERCISE_LIBRARY_STORAGE, exerciseLibrary);
+        return;
+      }
+
+      const snapshot = exerciseLibrary;
+      queueWrite("biblioteca", ["library"], tx => {
+        const store = tx.objectStore("library");
+        store.clear();
+        snapshot.forEach(item => store.put(item));
+      });
+    }
+
+    /* ---------- Histórico ---------- */
+
+    function loadHistory() {
+      // Devolve o histórico em memória (não alterar o array diretamente).
+      return historyCache;
+    }
+
+    function addHistoryEntry(entry) {
+      historyCache.unshift(entry);
+
+      if (AppStorage.mode === "localstorage") {
+        historyCache = historyCache.slice(0, LOCALSTORAGE_HISTORY_LIMIT);
+        writeLocalStorage(HISTORY_STORAGE, historyCache);
+        return;
+      }
+
+      queueWrite("histórico", ["history"], tx => {
+        tx.objectStore("history").put(entry);
+      });
+    }
+
+    function replaceHistory(list) {
+      historyCache = sortHistoryNewestFirst(normalizeHistoryList(list));
+
+      if (AppStorage.mode === "localstorage") {
+        historyCache = historyCache.slice(0, LOCALSTORAGE_HISTORY_LIMIT);
+        writeLocalStorage(HISTORY_STORAGE, historyCache);
+        return;
+      }
+
+      const snapshot = historyCache;
+      queueWrite("histórico", ["history"], tx => {
+        const store = tx.objectStore("history");
+        store.clear();
+        snapshot.forEach(entry => store.put(entry));
+      });
+    }
+
+    function clearHistoryData() {
+      replaceHistory([]);
     }
 
     function getExerciseLibraryItemByName(name) {
@@ -3565,10 +4224,19 @@
     }
 
     function saveSavedWorkouts() {
-      localStorage.setItem(
-        WORKOUTS_STORAGE,
-        JSON.stringify(savedWorkouts)
-      );
+      if (AppStorage.mode === "localstorage") {
+        writeLocalStorage(WORKOUTS_STORAGE, savedWorkouts);
+        return;
+      }
+
+      // O IndexedDB copia os objetos no momento do put, então alterações
+      // posteriores em memória não afetam o que está sendo gravado.
+      const snapshot = savedWorkouts;
+      queueWrite("treinos", ["workouts"], tx => {
+        const store = tx.objectStore("workouts");
+        store.clear();
+        snapshot.forEach(item => store.put(item));
+      });
     }
 
     function getWorkoutComparable(source) {
@@ -3640,48 +4308,46 @@
       );
     }
 
+    // Metadados dos backups, do mais novo para o mais antigo.
     function loadDataBackups() {
-      try {
-        const saved = localStorage.getItem(BACKUP_STORAGE);
-        if (!saved) return [];
-
-        const parsed = JSON.parse(saved);
-        // Versões anteriores guardavam um único backup (objeto) em vez de uma lista.
-        const list = Array.isArray(parsed) ? parsed : [parsed];
-
-        return list.filter(isValidBackup);
-      } catch (error) {
-        console.error("Erro ao carregar backups:", error);
-        return [];
-      }
+      return backupIndex;
     }
 
-    // Grava a lista de backups. Se o armazenamento estiver cheio,
+    // Conteúdo completo de um backup (lido só na hora de restaurar).
+    async function getDataBackup(id) {
+      if (AppStorage.mode === "indexeddb") {
+        const backup = await idbGet("backups", id);
+        return isValidBackup(backup) ? backup : null;
+      }
+
+      return readLegacyData().backups.find(backup => backup.id === id) || null;
+    }
+
+    // Modo de contingência: grava a lista no localStorage. Se faltar espaço,
     // descarta os mais antigos até caber (mantendo pelo menos o mais novo).
-    function saveDataBackups(list) {
-      const backups = list.slice(0, MAX_BACKUPS);
+    function saveLocalStorageBackups(list) {
+      const backups = list.slice(0, MAX_BACKUPS_LOCALSTORAGE);
 
       while (backups.length > 0) {
         try {
           localStorage.setItem(BACKUP_STORAGE, JSON.stringify(backups));
-          return true;
+          return backups;
         } catch (error) {
           if (backups.length === 1) {
             console.error("Sem espaço para gravar o backup:", error);
-            return false;
+            return [];
           }
           backups.pop();
         }
       }
 
-      localStorage.removeItem(BACKUP_STORAGE);
-      return true;
+      return backups;
     }
 
     function createDataBackup(reason = "Proteção automática") {
       try {
         const backup = {
-          version: 2,
+          version: 3,
           id: crypto.randomUUID(),
           createdAt: new Date().toISOString(),
           reason,
@@ -3689,21 +4355,33 @@
           currentWorkoutId,
           savedWorkouts: savedWorkouts.map(cloneWorkoutForExport),
           exerciseLibrary: cloneWorkout(exerciseLibrary),
-          history: loadHistory()
+          // O IndexedDB (put) e o JSON.stringify copiam o histórico agora,
+          // antes de qualquer alteração que venha depois do backup.
+          history: historyCache
         };
 
-        const ok = saveDataBackups([backup, ...loadDataBackups()]);
+        if (AppStorage.mode === "localstorage") {
+          const stored = saveLocalStorageBackups([backup, ...readLegacyData().backups]);
+          backupIndex = stored.map((item, index) => backupMeta(item, `legacy-${index}`));
+          renderBackupStatus();
+          return stored.length > 0;
+        }
+
+        backupIndex = [backupMeta(backup), ...backupIndex];
+        const removed = backupIndex.splice(getMaxBackups());
+
+        queueWrite("backup", ["backups"], tx => {
+          const store = tx.objectStore("backups");
+          store.put(backup);
+          removed.forEach(item => store.delete(item.id));
+        });
+
         renderBackupStatus();
-        return ok;
+        return true;
       } catch (error) {
         console.error("Erro ao criar backup:", error);
         return false;
       }
-    }
-
-    // Mantida por compatibilidade: devolve o backup mais recente.
-    function loadDataBackup() {
-      return loadDataBackups()[0] || null;
     }
 
     function formatBackupDate(value) {
@@ -3719,6 +4397,13 @@
 
       const backups = loadDataBackups();
       const lines = [];
+
+      if (AppStorage.mode === "indexeddb") {
+        const count = historyCache.length;
+        lines.push(`Dados guardados no banco do navegador (IndexedDB) · ${count} treino${count === 1 ? "" : "s"} no histórico, sem limite.`);
+      } else if (AppStorage.mode === "localstorage") {
+        lines.push(`Modo de compatibilidade: este navegador não liberou o IndexedDB, então o histórico guarda só os ${LOCALSTORAGE_HISTORY_LIMIT} treinos mais recentes.`);
+      }
 
       if (!backups.length) {
         lines.push("Nenhum backup automático disponível ainda.");
@@ -3758,33 +4443,6 @@
       }
 
       renderBackupStatus();
-    }
-
-    function loadSavedWorkouts() {
-      try {
-        const saved = localStorage.getItem(WORKOUTS_STORAGE);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed)) {
-            savedWorkouts = parsed
-              .map(item => {
-                const normalized = normalizeWorkout(item);
-                if (!normalized) return null;
-                return {
-                  id: item.id || crypto.randomUUID(),
-                  ...normalized,
-                  createdAt: item.createdAt || new Date().toISOString(),
-                  updatedAt: item.updatedAt || item.createdAt || new Date().toISOString(),
-                  lastUsedAt: item.lastUsedAt || null
-                };
-              })
-              .filter(Boolean);
-          }
-        }
-      } catch (error) {
-        console.error("Erro ao carregar treinos salvos:", error);
-        savedWorkouts = [];
-      }
     }
 
     function loadWorkout() {
@@ -4215,19 +4873,31 @@
       openWorkoutEditorModal();
     });
 
+    // O treino em andamento fica no localStorage: a gravação é síncrona,
+    // então está salva mesmo que o app seja fechado logo em seguida.
+    let sessionSaveErrorShown = false;
+
     function saveSession() {
       if (!workoutExecution) return;
 
-      localStorage.setItem(
-        SESSION_WORKOUT_EXECUTION_STORAGE,
-        JSON.stringify({
-          workoutName: workoutExecution.name || "Meu treino",
-          workoutId: executionWorkoutId,
-          workout: cloneWorkout(workoutExecution),
-          executionLog,
-          ...workoutState
-        })
-      );
+      try {
+        localStorage.setItem(
+          SESSION_WORKOUT_EXECUTION_STORAGE,
+          JSON.stringify({
+            workoutName: workoutExecution.name || "Meu treino",
+            workoutId: executionWorkoutId,
+            workout: workoutExecution,
+            executionLog,
+            ...workoutState
+          })
+        );
+      } catch (error) {
+        // Sem espaço: o treino continua, só não poderá ser retomado se o app fechar.
+        if (!sessionSaveErrorShown) {
+          sessionSaveErrorShown = true;
+          console.error("Não foi possível salvar o treino em andamento:", error);
+        }
+      }
     }
 
     function clearSession() {
@@ -4238,39 +4908,31 @@
        INICIALIZAÇÃO
     ========================================================= */
 
-    function init() {
-
-      loadExerciseLibrary();
-      loadSavedWorkouts();
+    async function init() {
+      loadTheme();
       updateExecutionTypeFields();
-      // loadWorkout();
 
-      // Migra exercícios personalizados antigos para a biblioteca.
-      workout.exercises.forEach(exercise => {
-        if (!getExerciseLibraryItemByName(exercise.name)) {
-          exerciseLibrary.push({
-            id: exercise.libraryId || crypto.randomUUID(),
-            name: exercise.name,
-            muscleGroup: exercise.muscleGroup || "Outros",
-            custom: true
-          });
-        }
-      });
-      saveExerciseLibrary();
+      await initStorage();
 
-      savedWorkouts.forEach(saved => {
-        saved.exercises.forEach(exercise => {
+      // Garante que todo exercício usado nos treinos exista na biblioteca
+      // (exercícios personalizados de versões antigas).
+      let libraryChanged = false;
+
+      [workout, ...savedWorkouts].forEach(source => {
+        source.exercises.forEach(exercise => {
           if (!getExerciseLibraryItemByName(exercise.name)) {
             exerciseLibrary.push({
               id: exercise.libraryId || crypto.randomUUID(),
               name: exercise.name,
               muscleGroup: exercise.muscleGroup || "Outros",
-              custom: Boolean(exercise.custom)
+              custom: source === workout ? true : Boolean(exercise.custom)
             });
+            libraryChanged = true;
           }
         });
       });
-      saveExerciseLibrary();
+
+      if (libraryChanged) saveExerciseLibrary();
 
       // Migra automaticamente o treino único das versões anteriores.
       if (savedWorkouts.length === 0 && workout.exercises.length > 0) {
@@ -4287,7 +4949,6 @@
         saveWorkout();
       }
 
-      loadTheme();
       populateCategorySelect(libraryCategory, true);
       populateCategorySelect(exerciseCategoryFilter, true);
       populateCategorySelect(customMuscleGroup, false);
@@ -4295,6 +4956,8 @@
       renderSavedWorkouts();
       updateWorkoutNameButton();
       renderHistory();
+      renderTrainingStats();
+      renderBackupStatus();
 
       renderWeightInputs(
         weightsInputs,
@@ -5088,6 +5751,7 @@
       executionWorkoutId = sourceWorkoutId;
       executionLog = createExecutionLog(workoutExecution);
       workoutState = createInitialWorkoutState();
+      prepareCurrentSet();
 
       playStartSound();
       saveSession();
@@ -5170,12 +5834,38 @@
       return workoutExecution.exercises.reduce((total, exercise) => total + Number(exercise.sets || 0), 0);
     }
 
+    // Exercícios antes do atual já foram finalizados (concluídos ou pulados).
+    // Do atual em diante, conta as séries registradas no log: um exercício
+    // adiado pela lista de exercícios pode já ter séries feitas.
     function getCompletedSets() {
-      let completed = 0;
-      for (let i = 0; i < workoutState.exerciseIndex; i++) completed += Number(workoutExecution.exercises[i]?.sets || 0);
-      const currentExercise = workoutExecution.exercises[workoutState.exerciseIndex];
-      if (currentExercise) completed += Math.min(Math.max(0, workoutState.currentSet - 1), Number(currentExercise.sets || 0));
-      return completed;
+      return workoutExecution.exercises.reduce((total, exercise, index) => {
+        const planned = Number(exercise.sets || 0);
+
+        if (index < workoutState.exerciseIndex) return total + planned;
+
+        const done = (executionLog[index]?.sets || [])
+          .filter(set => set.status === "completed" || set.status === "skipped")
+          .length;
+
+        return total + Math.min(done, planned);
+      }, 0);
+    }
+
+    // Série em que um exercício deve continuar (1, ou de onde parou se foi adiado).
+    function getResumeSet(index) {
+      const exercise = workoutExecution?.exercises?.[index];
+      const resume = Number(executionLog[index]?.nextSet || 1);
+      return Math.min(Math.max(1, resume), Math.max(1, Number(exercise?.sets || 1)));
+    }
+
+    // Segundos de preparação antes de cada série por tempo.
+    const PREP_SECONDS = 5;
+
+    // Chamada sempre que uma nova série começa.
+    function prepareCurrentSet() {
+      const exercise = workoutExecution?.exercises?.[workoutState.exerciseIndex];
+      workoutState.executionSeconds = 0;
+      workoutState.prepRemaining = getExecutionType(exercise) === "timed" ? PREP_SECONDS : 0;
     }
 
     function updateProgress() {
@@ -5524,10 +6214,18 @@
       document.getElementById("totalSetsDisplay").textContent = `de ${exercise.sets}`;
       renderSetDots(exercise);
       const timed = exercise.executionType === "timed";
-      document.getElementById("currentRepsDisplay").textContent = timed ? formatDuration(exercise.durationSeconds || 30) : exercise.reps;
-      document.querySelector("#workoutScreen .reps-display .caption").textContent = timed ? "TEMPO ALVO" : "REPETIÇÕES";
+      const repsDisplay = document.getElementById("currentRepsDisplay");
+      const caption = document.querySelector("#workoutScreen .reps-display .caption");
+
+      // Por tempo: o anel mostra o tempo restante; por repetições: o número grande.
+      repsDisplay.textContent = timed ? "" : exercise.reps;
+      repsDisplay.classList.toggle("hidden", timed);
+      caption.textContent = "REPETIÇÕES";
+      caption.classList.toggle("hidden", timed);
+      document.getElementById("timedRing").classList.toggle("hidden", !timed);
+      document.querySelector("#workoutScreen .execution-timer").classList.toggle("hidden", timed);
       document.getElementById("completeSetBtn").textContent = timed ? "✓ Tempo concluído" : "✓ Série concluída";
-      document.getElementById("executionTimerLabel").textContent = timed ? "Tempo restante" : "Tempo de execução";
+      document.getElementById("executionTimerLabel").textContent = "Tempo de execução";
       const currentWeight = normalizeWeights(exercise)[workoutState.currentSet - 1] ?? 0;
       const currentWeightDisplay = document.getElementById("currentWeightDisplay");
       currentWeightDisplay.textContent = currentWeight > 0 ? `+${currentWeight} kg` : "Peso corporal";
@@ -5565,13 +6263,14 @@
       const next = workoutExecution.exercises[workoutState.exerciseIndex + 1];
 
       if (next) {
-        const nextWeight = normalizeWeights(next)[0] ?? 0;
+        const nextSet = getResumeSet(workoutState.exerciseIndex + 1);
+        const nextWeight = normalizeWeights(next)[nextSet - 1] ?? 0;
 
         box.innerHTML = `
           <span class="next-title">Próximo exercício</span>
           <strong>${escapeHtml(next.name)}</strong>
           <span class="next-details">
-            Série 1 de ${next.sets} ${next.executionType === "timed" ? `· ${formatDuration(next.durationSeconds || 30)}` : `x ${next.reps} repetições`}${next.executionType === "timed" ? "" : ` · <strong>${nextWeight > 0 ? `+${nextWeight} kg` : "Peso corporal"}</strong>`}
+            Série ${nextSet} de ${next.sets} ${next.executionType === "timed" ? `· ${formatDuration(next.durationSeconds || 30)}` : `x ${next.reps} repetições`}${next.executionType === "timed" ? "" : ` · <strong>${nextWeight > 0 ? `+${nextWeight} kg` : "Peso corporal"}</strong>`}
           </span>
         `;
       } else {
@@ -5610,13 +6309,46 @@
       const timed = activeExercise?.executionType === "timed";
       const target = Number(activeExercise?.durationSeconds || 30);
 
-      const delta = getElapsedWholeSeconds();
+      let delta = getElapsedWholeSeconds();
+
+      // Preparação (exercícios por tempo): conta no tempo total do treino,
+      // mas não no tempo do exercício.
+      if (timed && Number(workoutState.prepRemaining || 0) > 0) {
+        if (delta <= 0) return;
+
+        const before = Number(workoutState.prepRemaining);
+        const prepApplied = Math.min(delta, before);
+
+        workoutState.prepRemaining = before - prepApplied;
+        workoutState.totalSeconds = Number(workoutState.totalSeconds || 0) + prepApplied;
+        workoutState.lastTickAt += prepApplied * 1000;
+        delta -= prepApplied;
+
+        countdownCue(before, workoutState.prepRemaining);
+
+        if (workoutState.prepRemaining === 0) {
+          playGoSound();
+          vibrate(80);
+        }
+
+        updateExecutionTimer();
+        updateTotalWorkoutTimer();
+        saveSession();
+
+        if (workoutState.prepRemaining > 0 || delta <= 0) return;
+      }
+
+      const remainingBefore = target - Number(workoutState.executionSeconds || 0);
 
       // Em exercícios por tempo, só contabiliza até o alvo. O que sobrar
       // continua "pendente" a partir de lastTickAt e passa a contar no descanso.
       const applied = timed
-        ? Math.max(0, Math.min(delta, target - Number(workoutState.executionSeconds || 0)))
+        ? Math.max(0, Math.min(delta, remainingBefore))
         : delta;
+
+      if (timed && applied > 0) {
+        countdownCue(remainingBefore, remainingBefore - applied);
+      }
 
       if (applied > 0) {
         workoutState.executionSeconds = Number(workoutState.executionSeconds || 0) + applied;
@@ -5636,6 +6368,7 @@
       }
 
       if (timed && Number(workoutState.executionSeconds || 0) >= target) {
+        playRestFinishedSound();
         alertUser(
           "Tempo concluído",
           `${activeExercise.name}: série ${workoutState.currentSet} de ${activeExercise.sets} finalizada.`
@@ -5666,14 +6399,47 @@
       }
     }
 
+    const RING_CIRCUMFERENCE = 2 * Math.PI * 54;
+
+    // Preenche o anel com a fração restante (1 = cheio, 0 = vazio).
+    function setRingFraction(element, fraction) {
+      if (!element) return;
+      const clamped = Math.min(1, Math.max(0, Number.isFinite(fraction) ? fraction : 0));
+      element.style.strokeDasharray = `${RING_CIRCUMFERENCE}`;
+      element.style.strokeDashoffset = `${RING_CIRCUMFERENCE * (1 - clamped)}`;
+    }
+
     function updateExecutionTimer() {
       const exercise = workoutExecution?.exercises?.[workoutState.exerciseIndex];
+      const timed = exercise?.executionType === "timed";
       const elapsed = Number(workoutState.executionSeconds || 0);
-      const total = exercise?.executionType === "timed" ? Math.max(0, Number(exercise.durationSeconds || 30) - elapsed) : elapsed;
-      const minutes = Math.floor(total / 60).toString().padStart(2, "0");
-      const seconds = (total % 60).toString().padStart(2, "0");
+      const target = Number(exercise?.durationSeconds || 30);
+      const remaining = Math.max(0, target - elapsed);
+
       const element = document.getElementById("executionTimer");
-      if (element) element.textContent = `${minutes}:${seconds}`;
+      if (element) element.textContent = formatDuration(timed ? remaining : elapsed);
+
+      if (!timed) return;
+
+      const prep = Number(workoutState.prepRemaining || 0);
+      const ring = document.getElementById("timedRing");
+      const value = document.getElementById("timedRingValue");
+      const label = document.getElementById("timedRingLabel");
+      const button = document.getElementById("completeSetBtn");
+
+      ring.classList.toggle("is-prep", prep > 0);
+
+      if (prep > 0) {
+        value.textContent = String(prep);
+        label.textContent = "prepare-se";
+        setRingFraction(document.getElementById("timedRingFill"), prep / PREP_SECONDS);
+        button.textContent = "▶ Começar agora";
+      } else {
+        value.textContent = formatDuration(remaining);
+        label.textContent = `restante · alvo ${formatDuration(target)}`;
+        setRingFraction(document.getElementById("timedRingFill"), remaining / target);
+        button.textContent = "✓ Tempo concluído";
+      }
     }
 
     /* =========================================================
@@ -5896,6 +6662,21 @@
       () => {
         if (!workoutExecution || workoutState.status !== "working") return;
 
+        // Durante a preparação, o botão vira "Começar agora".
+        if (Number(workoutState.prepRemaining || 0) > 0) {
+          tickExecution();
+
+          if (workoutState.status === "working" && workoutState.prepRemaining > 0) {
+            workoutState.prepRemaining = 0;
+            playGoSound();
+            vibrate(40);
+            startExecutionTimer();
+            updateExecutionTimer();
+            saveSession();
+          }
+          return;
+        }
+
         const before = `${workoutState.exerciseIndex}:${workoutState.currentSet}`;
         tickExecution();
 
@@ -6093,7 +6874,7 @@
 
       if (workoutState.exerciseIndex < workoutExecution.exercises.length - 1) {
         workoutState.exerciseIndex++;
-        workoutState.currentSet = 1;
+        workoutState.currentSet = getResumeSet(workoutState.exerciseIndex);
         workoutState.executionSeconds = 0;
 
         const nextExercise = workoutExecution.exercises[workoutState.exerciseIndex];
@@ -6130,6 +6911,10 @@
         0,
         Number(workoutState.restTimer || 0) + delta
       );
+      workoutState.restDuration = Math.max(
+        workoutState.restTimer,
+        Number(workoutState.restDuration || 0) + delta
+      );
 
       saveSession();
       renderRestScreen();
@@ -6153,6 +6938,7 @@
 
       workoutState.status = "resting";
       workoutState.restTimer = Number(seconds);
+      workoutState.restDuration = Number(seconds);
       workoutState.restNextText = nextText;
       workoutState.restType = restType;
       workoutState.lastTickAt = anchor;
@@ -6179,6 +6965,7 @@
       const applied = Math.min(delta, Math.max(0, Number(workoutState.restTimer || 0)));
 
       if (applied > 0) {
+        countdownCue(Number(workoutState.restTimer), Number(workoutState.restTimer) - applied);
         workoutState.restTimer -= applied;
         workoutState.totalSeconds = Number(workoutState.totalSeconds || 0) + applied;
         workoutState.lastTickAt += applied * 1000;
@@ -6217,6 +7004,10 @@
       document.getElementById(
         "restTimer"
       ).textContent = Math.max(0, workoutState.restTimer);
+      setRingFraction(
+        document.getElementById("restRingFill"),
+        Number(workoutState.restTimer || 0) / Math.max(1, Number(workoutState.restDuration || workoutState.restTimer || 1))
+      );
 
       const nextElement = document.getElementById("restNextText");
       const exercise = workoutExecution?.exercises?.[workoutState.exerciseIndex];
@@ -6227,7 +7018,7 @@
             <span class="next-title">Próximo exercício</span>
             <strong>${escapeHtml(exercise.name)}</strong><br/>
             <span class="next-details">
-              Série 1 de ${exercise.sets} ${getSetTargetHtml(exercise, 1)}
+              Série ${workoutState.currentSet} de ${exercise.sets} ${getSetTargetHtml(exercise, workoutState.currentSet)}
             </span>
           `;
         } else {
@@ -6252,10 +7043,11 @@
     function finishRest(anchor = Date.now()) {
       clearInterval(restInterval);
       restInterval = null;
-      playFinishSound();
+      // A contagem 3-2-1 já tocou durante o descanso; aqui só o bipe de largada.
+      playGoSound();
       workoutState.status = "working";
       workoutState.restTimer = 0;
-      workoutState.executionSeconds = 0;
+      prepareCurrentSet();
       /*
        * IMPORTANTE:
        *
@@ -6295,6 +7087,168 @@
       "click",
       skipRest
     );
+
+    /* =========================================================
+       LISTA DE EXERCÍCIOS DURANTE O TREINO
+       Mostra o status de cada exercício e permite fazer outro agora.
+       Os exercícios antes do atual já foram finalizados; trocar a ordem
+       move o escolhido para a posição atual, e o atual fica logo depois,
+       guardando a série em que parou.
+    ========================================================= */
+
+    const exerciseListOverlay = document.getElementById("exerciseListOverlay");
+    const exerciseListContent = document.getElementById("exerciseListContent");
+
+    function getExerciseStatus(index) {
+      const exercise = workoutExecution.exercises[index];
+      const log = executionLog[index] || {};
+      const planned = Number(exercise.sets || 0);
+      const sets = log.sets || [];
+      const done = sets.filter(set => set.status === "completed").length;
+      const skipped = sets.filter(set => set.status === "skipped").length;
+      const isCurrent = index === workoutState.exerciseIndex;
+
+      let state;
+      let label;
+
+      if (log.status === "skipped") {
+        state = "skipped";
+        label = "Pulado";
+      } else if (index < workoutState.exerciseIndex || log.status === "completed") {
+        state = "done";
+        label = "Concluído";
+      } else if (isCurrent) {
+        state = "current";
+        label = workoutState.status === "resting" ? "A seguir" : "Agora";
+      } else if (done + skipped > 0) {
+        state = "partial";
+        label = `Parou na série ${getResumeSet(index)}`;
+      } else {
+        state = "pending";
+        label = "Pendente";
+      }
+
+      return { exercise, planned, done, skipped, state, label, isCurrent };
+    }
+
+    function renderExerciseList() {
+      if (!workoutExecution) return;
+
+      exerciseListContent.innerHTML = workoutExecution.exercises.map((exercise, index) => {
+        const status = getExerciseStatus(index);
+        const timed = getExecutionType(exercise) === "timed";
+        const target = timed
+          ? `${exercise.sets} × ${formatDuration(exercise.durationSeconds || 30)}`
+          : `${exercise.sets} × ${exercise.reps}`;
+        const canJump = index > workoutState.exerciseIndex && status.state !== "done" && status.state !== "skipped";
+
+        return `
+          <div class="exec-item is-${status.state}">
+            <span class="exec-index">${status.state === "done" ? "✓" : index + 1}</span>
+            <div class="exec-info">
+              <strong>${escapeHtml(exercise.name)}</strong>
+              <span>${escapeHtml(target)} · ${status.done}/${status.planned} séries${status.skipped ? ` (${status.skipped} pulada${status.skipped === 1 ? "" : "s"})` : ""}</span>
+            </div>
+            ${canJump
+            ? `<button type="button" class="btn btn-small btn-ghost" data-jump-index="${index}">Fazer agora</button>`
+            : `<span class="exec-badge">${escapeHtml(status.label)}</span>`}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function openExerciseList() {
+      if (!workoutExecution) return;
+
+      renderExerciseList();
+      exerciseListOverlay.classList.add("visible");
+      exerciseListOverlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeExerciseList() {
+      exerciseListOverlay.classList.remove("visible");
+      exerciseListOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    // Move um exercício (e o log dele) de `from` para `to`, mantendo
+    // a referência da última série concluída apontando para o lugar certo.
+    function moveExecutionExercise(from, to) {
+      const [exercise] = workoutExecution.exercises.splice(from, 1);
+      workoutExecution.exercises.splice(to, 0, exercise);
+
+      const [log] = executionLog.splice(from, 1);
+      executionLog.splice(to, 0, log);
+
+      const ref = workoutState.lastCompletedSet;
+      if (ref) {
+        if (ref.exerciseIndex === from) {
+          ref.exerciseIndex = to;
+        } else if (ref.exerciseIndex >= to && ref.exerciseIndex < from) {
+          ref.exerciseIndex += 1;
+        }
+      }
+
+      // A última performance é calculada por posição; recalcula.
+      lastPerformanceCache = { source: null, items: [] };
+    }
+
+    function jumpToExercise(targetIndex) {
+      if (!workoutExecution) return;
+
+      // Contabiliza o tempo até agora antes de trocar.
+      if (workoutState.status === "working") tickExecution();
+      else if (workoutState.status === "resting") tickRest();
+
+      if (!workoutExecution) return;
+
+      const currentIndex = workoutState.exerciseIndex;
+      if (targetIndex <= currentIndex || targetIndex >= workoutExecution.exercises.length) return;
+
+      // O "desfazer" guarda a ordem anterior; depois de trocar não se aplica mais.
+      hideUndoToast();
+
+      const currentLog = executionLog[currentIndex];
+      if (currentLog) currentLog.nextSet = workoutState.currentSet;
+
+      moveExecutionExercise(targetIndex, currentIndex);
+
+      workoutState.currentSet = getResumeSet(currentIndex);
+      const exercise = workoutExecution.exercises[currentIndex];
+
+      if (workoutState.status === "resting") {
+        // O descanso continua; ao terminar, começa o exercício escolhido.
+        workoutState.restType = "next_exercise";
+        workoutState.restNextText = `Próximo exercício: ${exercise.name}`;
+        saveSession();
+        renderRestScreen();
+        renderRestSetResult();
+      } else {
+        stopExecutionTimer();
+        prepareCurrentSet();
+        saveSession();
+        renderWorkoutExecution();
+        startExecutionTimer();
+      }
+
+      vibrate(30);
+    }
+
+    exerciseListContent.addEventListener("click", event => {
+      const button = event.target.closest("[data-jump-index]");
+      if (!button) return;
+
+      closeExerciseList();
+      jumpToExercise(Number(button.dataset.jumpIndex));
+    });
+
+    ["exerciseListBtn", "restExerciseListBtn", "progressListBtn"].forEach(id => {
+      document.getElementById(id).addEventListener("click", openExerciseList);
+    });
+
+    document.getElementById("closeExerciseListBtn").addEventListener("click", closeExerciseList);
+    exerciseListOverlay.addEventListener("click", event => {
+      if (event.target === exerciseListOverlay) closeExerciseList();
+    });
 
     /* =========================================================
        PAUSA
@@ -6369,6 +7323,7 @@
     document.getElementById("resumeBtn").addEventListener("click", closePauseMenu);
     document.getElementById("endWorkoutBtn").addEventListener("click", async () => {
       hideUndoToast();
+      closeExerciseList();
       pauseModalOverlay.classList.remove(
         "visible"
       );
@@ -6401,6 +7356,215 @@
     /* =========================================================
        FINALIZAÇÃO
     ========================================================= */
+    /* =========================================================
+       RECORDES PESSOAIS
+
+       Cada exercício do histórico é identificado pelo id da biblioteca,
+       então renomear um exercício não separa o histórico dele. Registros
+       antigos sem id são associados pelo nome. Execuções por repetição e
+       por tempo do mesmo exercício são recordes separados.
+    ========================================================= */
+
+    // A fórmula de Epley perde precisão com muitas repetições.
+    const EPLEY_MAX_REPS = 12;
+
+    function getBodyWeight() {
+      const value = Number(localStorage.getItem(BODY_WEIGHT_STORAGE));
+      return Number.isFinite(value) && value > 0 ? value : null;
+    }
+
+    function setBodyWeight(value) {
+      const number = Number(String(value ?? "").replace(",", "."));
+
+      if (Number.isFinite(number) && number >= 20 && number <= 400) {
+        localStorage.setItem(BODY_WEIGHT_STORAGE, String(Math.round(number * 10) / 10));
+      } else {
+        localStorage.removeItem(BODY_WEIGHT_STORAGE);
+      }
+    }
+
+    // 1RM estimada (Epley): carga total × (1 + repetições / 30).
+    function estimateOneRepMax(totalLoad, reps) {
+      return reps <= 1 ? totalLoad : totalLoad * (1 + reps / 30);
+    }
+
+    function getExerciseRecordKey(exercise) {
+      const type = getExecutionType(exercise);
+      const id = exercise.exerciseId || exercise.libraryId;
+      let base;
+
+      if (id && exerciseLibrary.some(item => item.id === id)) {
+        base = `lib:${id}`;
+      } else {
+        const byName = getExerciseLibraryItemByName(exercise.name);
+        base = byName ? `lib:${byName.id}` : `name:${normalizeExerciseName(exercise.name)}`;
+      }
+
+      return `${base}|${type}`;
+    }
+
+    function getRecordDisplayName(key, fallbackName) {
+      const [base] = key.split("|");
+
+      if (base.startsWith("lib:")) {
+        const item = exerciseLibrary.find(exercise => exercise.id === base.slice(4));
+        if (item) return item.name;
+      }
+
+      return fallbackName || "Exercício";
+    }
+
+    /*
+     * Calcula os recordes de cada exercício a partir do histórico
+     * (array do mais recente para o mais antigo). Devolve um Map por chave:
+     * maxReps, maxWeight, maxDuration, oneRepMax e a melhor marca de cada sessão.
+     */
+    function computeExerciseRecords(entries, bodyWeight = getBodyWeight()) {
+      const records = new Map();
+
+      // Do mais antigo para o mais recente: a data do recorde é a da
+      // primeira vez em que a marca foi atingida.
+      for (let index = entries.length - 1; index >= 0; index--) {
+        const entry = entries[index];
+        const date = entry.completedAt;
+
+        (entry.exercises || []).forEach(exercise => {
+          const key = getExerciseRecordKey(exercise);
+          const type = getExecutionType(exercise);
+
+          let record = records.get(key);
+          if (!record) {
+            record = {
+              key,
+              type,
+              name: exercise.name,
+              sessions: 0,
+              lastDate: null,
+              maxReps: null,
+              maxWeight: null,
+              maxDuration: null,
+              oneRepMax: null,
+              history: []
+            };
+            records.set(key, record);
+          }
+
+          record.name = getRecordDisplayName(key, exercise.name || record.name);
+
+          const sets = (exercise.completedSets || []).filter(set => set.status === "completed");
+          if (!sets.length) return;
+
+          record.sessions++;
+          record.lastDate = date;
+
+          const session = { date, reps: 0, weight: 0, duration: 0 };
+
+          sets.forEach(set => {
+            const reps = Number(set.reps || 0);
+            const weight = Number(set.weight || 0);
+            const duration = Number(set.durationSeconds || 0);
+
+            if (type === "timed") {
+              session.duration = Math.max(session.duration, duration);
+
+              if (duration > 0 && (!record.maxDuration || duration > record.maxDuration.value)) {
+                record.maxDuration = { value: duration, date };
+              }
+              return;
+            }
+
+            session.reps = Math.max(session.reps, reps);
+            session.weight = Math.max(session.weight, weight);
+
+            if (reps > 0 && (
+              !record.maxReps ||
+              reps > record.maxReps.value ||
+              (reps === record.maxReps.value && weight > record.maxReps.weight)
+            )) {
+              record.maxReps = { value: reps, weight, date };
+            }
+
+            if (weight > 0 && reps > 0 && (
+              !record.maxWeight ||
+              weight > record.maxWeight.value ||
+              (weight === record.maxWeight.value && reps > record.maxWeight.reps)
+            )) {
+              record.maxWeight = { value: weight, reps, date };
+            }
+
+            if (bodyWeight && reps >= 1 && reps <= EPLEY_MAX_REPS) {
+              const total = estimateOneRepMax(bodyWeight + weight, reps);
+
+              if (!record.oneRepMax || total > record.oneRepMax.total) {
+                record.oneRepMax = { total, added: total - bodyWeight, weight, reps, date };
+              }
+            }
+          });
+
+          record.history.push(session);
+        });
+      }
+
+      return records;
+    }
+
+    function roundKg(value) {
+      return Math.round(value * 2) / 2; // arredonda para 0,5 kg
+    }
+
+    // Compara os recordes antes e depois do treino concluído.
+    function detectNewRecords(entry, previousEntries) {
+      const before = computeExerciseRecords(previousEntries);
+      const after = computeExerciseRecords([entry, ...previousEntries]);
+      const messages = [];
+      const seen = new Set();
+
+      (entry.exercises || []).forEach(exercise => {
+        const key = getExerciseRecordKey(exercise);
+        if (seen.has(key)) return;
+        seen.add(key);
+
+        const old = before.get(key);
+        const now = after.get(key);
+
+        // Na primeira vez que o exercício é feito, não há recorde a bater.
+        if (!old || !old.sessions || !now) return;
+
+        const name = now.name;
+        const found = [];
+
+        if (now.type === "timed") {
+          if (now.maxDuration && now.maxDuration.value > (old.maxDuration?.value || 0)) {
+            found.push(`${name}: isometria de ${formatDuration(now.maxDuration.value)}`);
+          }
+        } else {
+          if (old.maxWeight && now.maxWeight && now.maxWeight.value > old.maxWeight.value) {
+            found.push(`${name}: +${formatKg(now.maxWeight.value)} kg × ${now.maxWeight.reps}`);
+          }
+
+          if (old.maxReps && now.maxReps && now.maxReps.value > old.maxReps.value) {
+            found.push(`${name}: ${now.maxReps.value} repetições`);
+          }
+
+          // A 1RM só é anunciada quando nenhum outro recorde do exercício foi batido,
+          // para captar ganhos como "mais repetições com a mesma carga".
+          if (!found.length && old.oneRepMax && now.oneRepMax &&
+            roundKg(now.oneRepMax.total) > roundKg(old.oneRepMax.total)) {
+            found.push(`${name}: 1RM estimada ${formatOneRepMax(now.oneRepMax)}`);
+          }
+        }
+
+        messages.push(...found);
+      });
+
+      return messages;
+    }
+
+    function formatOneRepMax(oneRepMax) {
+      const added = roundKg(oneRepMax.added);
+      return `${added > 0 ? "+" : ""}${formatKg(added)} kg (total ${formatKg(roundKg(oneRepMax.total))} kg)`;
+    }
+
     function saveWorkoutToHistory() {
       const history = loadHistory();
       const completedReps = executionLog.reduce((total, exercise) =>
@@ -6435,32 +7599,9 @@
         schemaVersion: 2
       };
 
-      const newRecords = [];
-      const previousEntries = history;
-      entry.exercises.forEach(exercise => {
-        const sets = (exercise.completedSets || []).filter(set => set.status === "completed");
-        if (!sets.length) return;
-        const oldSets = previousEntries.flatMap(oldEntry =>
-          (oldEntry.exercises || [])
-            .filter(oldExercise => oldExercise.name === exercise.name)
-            .flatMap(oldExercise => oldExercise.completedSets || [])
-            .filter(set => set.status === "completed")
-        );
-        const previousMaxReps = Math.max(0, ...oldSets.map(set => Number(set.reps || 0)));
-        const previousMaxWeight = Math.max(0, ...oldSets.map(set => Number(set.weight || 0)));
-        const newMaxReps = Math.max(0, ...sets.map(set => Number(set.reps || 0)));
-        const newMaxWeight = Math.max(0, ...sets.map(set => Number(set.weight || 0)));
-        if (newMaxReps > previousMaxReps && previousMaxReps > 0) {
-          newRecords.push(`${exercise.name}: ${newMaxReps} repetições`);
-        } else if (newMaxReps > 0 && previousMaxReps === 0 && previousEntries.some(oldEntry => (oldEntry.exercises || []).some(oldExercise => oldExercise.name === exercise.name))) {
-          newRecords.push(`${exercise.name}: ${newMaxReps} repetições registradas`);
-        }
-        if (newMaxWeight > previousMaxWeight && newMaxWeight > 0 && previousMaxWeight > 0) {
-          newRecords.push(`${exercise.name}: +${newMaxWeight} kg`);
-        }
-      });
+      const newRecords = detectNewRecords(entry, history);
 
-      history.unshift(entry);
+      addHistoryEntry(entry);
 
       if (executionWorkoutId) {
         const savedIndex = savedWorkouts.findIndex(
@@ -6473,11 +7614,6 @@
         }
       }
 
-      localStorage.setItem(
-        HISTORY_STORAGE,
-        JSON.stringify(history.slice(0, 100))
-      );
-
       renderHistory();
       renderSavedWorkouts();
       renderTrainingStats();
@@ -6489,24 +7625,6 @@
         ), 250);
       }
       return entry;
-    }
-
-    function loadHistory() {
-      try {
-        const saved = localStorage.getItem(HISTORY_STORAGE);
-
-        if (!saved) {
-          return [];
-        }
-
-        const parsed = JSON.parse(saved);
-
-        return Array.isArray(parsed) ? parsed : [];
-
-      } catch (error) {
-        console.error("Erro ao carregar histórico:", error);
-        return [];
-      }
     }
 
     function formatDuration(totalSeconds) {
@@ -6522,6 +7640,10 @@
       return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
     }
 
+    // Com o histórico completo, a lista mostra os treinos aos poucos.
+    const HISTORY_PAGE_SIZE = 30;
+    let historyVisibleCount = HISTORY_PAGE_SIZE;
+
     function renderHistory() {
       if (!historyList || !emptyHistory) {
         return;
@@ -6536,7 +7658,7 @@
         history.length > 0
       );
 
-      history.forEach(entry => {
+      history.slice(0, historyVisibleCount).forEach(entry => {
         const item = document.createElement("div");
 
         item.className = "history-item";
@@ -6578,6 +7700,16 @@
 
         historyList.appendChild(item);
       });
+
+      if (history.length > historyVisibleCount) {
+        const remaining = history.length - historyVisibleCount;
+        const more = document.createElement("button");
+        more.type = "button";
+        more.className = "btn btn-ghost width-full";
+        more.dataset.historyMore = "1";
+        more.textContent = `Mostrar mais (${remaining} treino${remaining === 1 ? "" : "s"} anteriores)`;
+        historyList.appendChild(more);
+      }
     }
 
     function formatHistorySetChip(exercise, set) {
@@ -6646,25 +7778,10 @@
       const weekly = history.filter(entry => new Date(entry.completedAt) >= weekStart).length;
       const volume = history.reduce((sum, entry) => sum + (entry.exercises || []).reduce((subtotal, ex) =>
         subtotal + (ex.completedSets || []).filter(set => set.status === "completed").reduce((v, set) => v + Number(set.weight || 0) * Number(set.reps || 0), 0), 0), 0);
-      const exerciseProgress = {};
-      const prs = {};
-      history.slice().reverse().forEach(entry => (entry.exercises || []).forEach(ex => {
-        const name = ex.name || "Exercício";
-        const sets = Array.isArray(ex.completedSets) ? ex.completedSets : [];
-        sets.filter(set => set.status === "completed").forEach(set => {
-          const load = Number(set.weight || 0);
-          const reps = Number(set.reps || 0);
-          const score = load > 0 ? load : reps;
-          if (!prs[name] || score > prs[name].score) prs[name] = { score, load, reps, date: entry.completedAt };
-          if (load > 0) {
-            if (!exerciseProgress[name]) exerciseProgress[name] = [];
-            exerciseProgress[name].push({ date: entry.completedAt, value: load });
-          } else {
-            if (!exerciseProgress[name]) exerciseProgress[name] = [];
-            exerciseProgress[name].push({ date: entry.completedAt, value: reps });
-          }
-        });
-      }));
+      const bodyWeight = getBodyWeight();
+      const records = [...computeExerciseRecords(history, bodyWeight).values()]
+        .filter(record => record.sessions > 0)
+        .sort((a, b) => (new Date(b.lastDate).getTime() || 0) - (new Date(a.lastDate).getTime() || 0));
       const frequency = Array.from({ length: 7 }, (_, i) => {
         const day = new Date(weekStart);
         day.setDate(weekStart.getDate() + i);
@@ -6683,12 +7800,52 @@
       const mondayOffset = (monthStart.getDay() + 6) % 7;
       const trainingDates = new Set(history.filter(entry => { const d = new Date(entry.completedAt); return d.getFullYear() === calendarYear && d.getMonth() === calendarMonthIndex; }).map(entry => new Date(entry.completedAt).getDate()));
       const calendarHTML = `<div class="calendar-header"><button class="btn btn-small btn-ghost" type="button" data-calendar-shift="-1" aria-label="Mês anterior">‹</button><strong>${escapeHtml(calendarMonth.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }))}</strong><button class="btn btn-small btn-ghost" type="button" data-calendar-shift="1" aria-label="Próximo mês">›</button></div><div class="calendar-grid">${["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map(day => `<div class="calendar-day-label">${day}</div>`).join("")}${Array.from({ length: mondayOffset }, () => `<div class="calendar-day empty-day"></div>`).join("")}${Array.from({ length: monthDays }, (_, i) => { const day = i + 1; const isToday = new Date().getFullYear() === calendarYear && new Date().getMonth() === calendarMonthIndex && new Date().getDate() === day; return `<div class="calendar-day ${trainingDates.has(day) ? "has-workout" : ""} ${isToday ? "today" : ""}" title="${trainingDates.has(day) ? "Treino registrado" : "Sem treino registrado"}">${day}</div>`; }).join("")}</div><p class="saved-workout-details">${trainingDates.size} dia${trainingDates.size === 1 ? "" : "s"} com treino neste mês</p>`;
-      const progressionHTML = Object.entries(exerciseProgress).slice(0, 8).map(([name, values]) => {
-        const recent = values.slice(-8);
-        const max = Math.max(1, ...recent.map(v => v.value));
-        return `<h4 class="modal-section-title">${escapeHtml(name)} · ${recent.some(v => v.value > 0) && prs[name]?.load > 0 ? "carga (kg)" : "repetições"}</h4>` + recent.map((v, i) => `<div class="chart-row"><span>${escapeHtml(new Date(v.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }))}</span><div class="chart-track"><div class="chart-fill" style="width:${Math.max(3, v.value / max * 100)}%"></div></div><strong>${v.value}</strong></div>`).join("");
+      // Evolução: melhor marca de cada sessão (até 8 sessões), por exercício.
+      const progressionHTML = records.slice(0, 8).map(record => {
+        const metric = record.type === "timed"
+          ? { label: "isometria", value: session => session.duration, format: formatDuration }
+          : record.maxWeight
+            ? { label: "carga adicional (kg)", value: session => session.weight, format: value => formatKg(value) }
+            : { label: "repetições", value: session => session.reps, format: value => String(value) };
+        const recent = record.history.slice(-8);
+        const max = Math.max(1, ...recent.map(metric.value));
+
+        return `<h4 class="modal-section-title">${escapeHtml(record.name)} · ${metric.label}</h4>` + recent.map(session => `<div class="chart-row"><span>${escapeHtml(new Date(session.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }))}</span><div class="chart-track"><div class="chart-fill" style="width:${Math.max(3, metric.value(session) / max * 100)}%"></div></div><strong>${escapeHtml(metric.format(metric.value(session)))}</strong></div>`).join("");
       }).join("") || "<p class='saved-workout-details'>Ainda não há dados suficientes para gráficos. Os treinos novos passarão a registrar os resultados por série.</p>";
-      const prHTML = Object.entries(prs).map(([name, pr]) => `<div class="history-exercise"><strong>${escapeHtml(name)}</strong><div class="saved-workout-details">Recorde registrado: ${pr.load > 0 ? `+${pr.load} kg × ${pr.reps} reps` : `${pr.reps} repetições`}</div></div>`).join("") || "<p class='saved-workout-details'>Os recordes serão calculados conforme novos treinos forem registrados.</p>";
+
+      const prHTML = records.map(record => {
+        const lines = [];
+
+        if (record.type === "timed") {
+          if (record.maxDuration) lines.push(`Maior isometria: <strong>${escapeHtml(formatDuration(record.maxDuration.value))}</strong>`);
+        } else {
+          if (record.maxReps) {
+            lines.push(`Máx. repetições: <strong>${record.maxReps.value}</strong>${record.maxReps.weight > 0 ? ` com +${escapeHtml(formatKg(record.maxReps.weight))} kg` : ""}`);
+          }
+          if (record.maxWeight) {
+            lines.push(`Maior carga: <strong>+${escapeHtml(formatKg(record.maxWeight.value))} kg</strong> × ${record.maxWeight.reps}`);
+          }
+          if (record.oneRepMax) {
+            lines.push(`1RM estimada: <strong>${escapeHtml(formatOneRepMax(record.oneRepMax))}</strong>`);
+          }
+        }
+
+        if (!lines.length) return "";
+
+        return `<div class="history-exercise"><strong>${escapeHtml(record.name)}${record.type === "timed" ? " · isometria" : ""}</strong><div class="saved-workout-details record-lines">${lines.join("<br>")}</div></div>`;
+      }).join("") || "<p class='saved-workout-details'>Os recordes serão calculados conforme novos treinos forem registrados.</p>";
+
+      const bodyWeightHTML = `
+        <div class="body-weight-row">
+          <label for="bodyWeightInput">Seu peso corporal, para estimar a 1RM</label>
+          <div class="body-weight-field">
+            <input id="bodyWeightInput" type="number" inputmode="decimal" min="20" max="400" step="0.1" placeholder="ex.: 75" value="${bodyWeight ?? ""}">
+            <span>kg</span>
+          </div>
+          <p class="saved-workout-details">${bodyWeight
+          ? `1RM estimada pela fórmula de Epley, com séries de até ${EPLEY_MAX_REPS} repetições, somando seu peso corporal à carga adicional. O valor mostrado é a carga adicional estimada para 1 repetição.`
+          : "Informe seu peso para ver a 1RM estimada (carga máxima para 1 repetição) dos exercícios com repetições."}</p>
+        </div>`;
       document.getElementById("statsContent").innerHTML = `
         ${latestWorkoutHTML}
         <div class="stats-grid">
@@ -6702,7 +7859,7 @@
         <h3 class="modal-section-title">Frequência semanal</h3>
         ${frequency.map(day => `<div class="chart-row"><span>${escapeHtml(day.label)}</span><div class="chart-track"><div class="chart-fill" style="width:${day.count / maxFrequency * 100}%"></div></div><strong>${day.count}</strong></div>`).join("")}
         <h3 class="modal-section-title">Evolução de cargas e repetições</h3>${progressionHTML}
-        <h3 class="modal-section-title">Recordes pessoais (PR)</h3>${prHTML}
+        <h3 class="modal-section-title">Recordes pessoais (PR)</h3>${bodyWeightHTML}${prHTML}
       `;
     }
 
@@ -6741,7 +7898,7 @@
       if (!confirmed) return;
 
       createDataBackup("Antes de limpar o histórico");
-      localStorage.removeItem(HISTORY_STORAGE);
+      clearHistoryData();
       renderHistory();
       renderTrainingStats();
       document.querySelectorAll(".dropdown-menu-options.active").forEach(menu => menu.classList.remove("active"));
@@ -6749,13 +7906,12 @@
       await showMessage("O histórico e as estatísticas foram limpos.", "Dados apagados");
     });
 
-    renderTrainingStats();
-    renderBackupStatus();
-
     document.getElementById("openLibraryBtn").addEventListener("click", () => {
       libraryModalOverlay.classList.add("visible"); libraryModalOverlay.setAttribute("aria-hidden", "false");
     });
     document.getElementById("openHistoryBtn").addEventListener("click", () => {
+      historyVisibleCount = HISTORY_PAGE_SIZE;
+      renderHistory();
       historyModalOverlay.classList.add("visible"); historyModalOverlay.setAttribute("aria-hidden", "false");
     });
     document.getElementById("closeLibraryModalBtn").addEventListener("click", () => closeOverlay("libraryModalOverlay"));
@@ -6766,6 +7922,12 @@
         if (event.target.id === id) closeOverlay(id);
       });
     });
+    document.getElementById("statsContent").addEventListener("change", event => {
+      if (event.target.id !== "bodyWeightInput") return;
+      setBodyWeight(event.target.value);
+      renderTrainingStats();
+    });
+
     document.getElementById("statsContent").addEventListener("click", event => {
       const button = event.target.closest("[data-calendar-shift]");
       if (!button) return;
@@ -6816,6 +7978,12 @@
     });
 
     historyList.addEventListener("click", event => {
+      if (event.target.closest("[data-history-more]")) {
+        historyVisibleCount += HISTORY_PAGE_SIZE;
+        renderHistory();
+        return;
+      }
+
       const card = event.target.closest("[data-history-id]");
       if (!card) return;
       const entry = loadHistory().find(item => item.id === card.dataset.historyId);
@@ -6881,6 +8049,7 @@
 
     async function finishWorkout() {
       hideUndoToast();
+      closeExerciseList();
       stopExecutionTimer();
       clearInterval(restInterval);
       restInterval = null;
@@ -6973,7 +8142,9 @@
           // O tempo em que o app ficou fechado não é contado: a retomada
           // funciona como uma pausa.
           lastTickAt: null,
-          lastCompletedSet: session.lastCompletedSet || null
+          lastCompletedSet: session.lastCompletedSet || null,
+          restDuration: Number(session.restDuration || session.restTimer || 0),
+          prepRemaining: Number(session.prepRemaining || 0)
         };
 
         recoveryInfo.textContent = `${exercise.name} · Série ${workoutState.currentSet} de ${exercise.sets}`;
@@ -7059,7 +8230,10 @@
         exportedAt: new Date().toISOString(),
         workouts: savedWorkouts.map(cloneWorkoutForExport),
         exerciseLibrary: cloneWorkout(exerciseLibrary),
-        history
+        history,
+        settings: {
+          bodyWeightKg: getBodyWeight()
+        }
       };
 
       const blob = new Blob(
@@ -7155,7 +8329,12 @@
             saveSavedWorkouts();
           }
           if (importedHistory !== null) {
-            localStorage.setItem(HISTORY_STORAGE, JSON.stringify(importedHistory));
+            replaceHistory(importedHistory);
+          }
+
+          const importedBodyWeight = Number(data.settings?.bodyWeightKg);
+          if (Number.isFinite(importedBodyWeight) && importedBodyWeight > 0) {
+            setBodyWeight(importedBodyWeight);
           }
 
           exerciseLibrary = importedLibrary && importedLibrary.length > 0
@@ -7215,10 +8394,10 @@
       }
 
       backupList.innerHTML = backups.map((backup, index) => {
-        const workoutsCount = backup.savedWorkouts.length;
-        const historyCount = Array.isArray(backup.history) ? backup.history.length : 0;
+        const workoutsCount = backup.workoutsCount;
+        const historyCount = backup.historyCount;
         return `
-          <button type="button" class="backup-item" data-backup-index="${index}">
+          <button type="button" class="backup-item" data-backup-id="${escapeHtml(backup.id)}">
             <strong>${escapeHtml(formatBackupDate(backup.createdAt))}${index === 0 ? " · mais recente" : ""}</strong>
             <span>${escapeHtml(backup.reason || "Proteção automática")}</span>
             <span>${workoutsCount} treino${workoutsCount === 1 ? "" : "s"} · ${historyCount} registro${historyCount === 1 ? "" : "s"} no histórico</span>
@@ -7236,15 +8415,19 @@
     });
 
     backupList.addEventListener("click", async event => {
-      const button = event.target.closest("[data-backup-index]");
+      const button = event.target.closest("[data-backup-id]");
       if (!button) return;
 
-      const backup = loadDataBackups()[Number(button.dataset.backupIndex)];
       closeBackupModal();
 
-      if (backup) {
-        await restoreDataBackup(backup);
+      const backup = await getDataBackup(button.dataset.backupId);
+
+      if (!backup) {
+        await showMessage("Não foi possível ler este backup.", "Erro no backup");
+        return;
       }
+
+      await restoreDataBackup(backup);
     });
 
     async function restoreDataBackup(backup) {
@@ -7291,7 +8474,7 @@
       createDataBackup("Antes de restaurar outro backup");
 
       savedWorkouts = normalizedWorkouts;
-      if (Array.isArray(backup.history)) localStorage.setItem(HISTORY_STORAGE, JSON.stringify(backup.history));
+      if (Array.isArray(backup.history)) replaceHistory(backup.history);
       currentWorkoutId = backup.currentWorkoutId || null;
       workout = normalizedCurrent;
 
@@ -7332,7 +8515,8 @@
     }
 
     window.addEventListener("beforeunload", event => {
-      if (!hasUnsavedChanges()) {
+      // Avisa também se ainda há gravações no banco em andamento.
+      if (!hasUnsavedChanges() && AppStorage.pendingWrites === 0) {
         return;
       }
 
@@ -7593,8 +8777,59 @@
       }
     }
 
-    // Inicializa e restaura os dados persistidos no localStorage.
-    init();
+    function playTone(frequency, duration, peak = 0.6, type = "square") {
+      try {
+        const audioContext = getAudioContext();
+        if (!audioContext) return;
+
+        const now = audioContext.currentTime;
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        oscillator.frequency.value = frequency;
+        oscillator.type = type;
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(peak, now + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.start(now);
+        oscillator.stop(now + duration + 0.02);
+      } catch (error) {
+        console.log("Áudio não disponível.", error);
+      }
+    }
+
+    // Bipe curto dos 3 últimos segundos (3, 2, 1).
+    function playCountdownBeep() {
+      playTone(880, 0.12);
+      vibrate(30);
+    }
+
+    // Bipe longo de "largada": fim da contagem.
+    function playGoSound() {
+      playTone(1320, 0.5);
+    }
+
+    /*
+     * Toca o bipe de contagem quando o tempo restante passa por 3, 2 ou 1
+     * neste tick. Se o app voltou do segundo plano e pulou direto para 0,
+     * não toca a contagem (só o som de fim, tratado por quem chamou).
+     */
+    function countdownCue(before, after) {
+      if (after >= 1 && after <= 3 && before > after) {
+        playCountdownBeep();
+      }
+    }
+
+    // Abre o banco, migra dados antigos (se houver) e desenha a tela.
+    init().catch(error => {
+      console.error("Erro ao iniciar o app:", error);
+      showMessage("Não foi possível carregar seus dados. Recarregue a página; se o problema continuar, exporte um backup assim que possível.", "Erro ao iniciar");
+    });
   </script>
 </body>
 
