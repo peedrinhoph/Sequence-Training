@@ -1565,8 +1565,9 @@
       margin: 8px 0 12px;
     }
 
-    .calendar-header strong {
-      text-transform: capitalize;
+    /* Só a primeira letra maiúscula ("Outubro de 2026", não "Outubro De 2026") */
+    .calendar-header strong::first-letter {
+      text-transform: uppercase;
     }
 
     .calendar-grid {
@@ -2304,6 +2305,767 @@
         margin-bottom: 8px;
       }
     }
+
+    /* ========================================
+       LAYOUT: ABAS, TELA INICIAL, AJUSTES,
+       EDITOR E CADASTRO DE EXERCÍCIO
+    ======================================== */
+
+    /* Cabeçalho de cada aba */
+    #builderScreen {
+      padding-bottom: calc(96px + env(safe-area-inset-bottom));
+    }
+
+    .app-header {
+      margin-bottom: 16px;
+    }
+
+    .app-header h1 {
+      margin: 0 0 4px;
+      font-size: 26px;
+      letter-spacing: -.02em;
+    }
+
+    .app-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+    }
+
+    /* Barra de abas */
+    .tab-bar {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      z-index: 50;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      width: 100%;
+      max-width: 760px;
+      padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      transform: translateX(-50%);
+    }
+
+    .tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      min-height: 52px;
+      padding: 6px 2px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .tab svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .tab.is-active {
+      color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 12%, transparent);
+    }
+
+    /* Ordenação discreta */
+    .saved-workouts-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .sort-control {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      margin: 0;
+    }
+
+    .sort-icon {
+      position: absolute;
+      left: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    .saved-workouts-sort,
+    .sort-control .saved-workouts-sort {
+      width: auto;
+      min-width: 0;
+      height: 34px;
+      padding: 0 10px 0 28px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    /* Próximo treino sugerido */
+    .next-workout {
+      margin-bottom: 16px;
+      padding: 18px;
+      border: 1px solid color-mix(in srgb, var(--primary) 55%, var(--border));
+      border-radius: 18px;
+      background: linear-gradient(145deg, color-mix(in srgb, var(--primary) 14%, var(--card)), var(--card));
+    }
+
+    .next-workout-label {
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .next-workout h2 {
+      margin: 6px 0 4px;
+      font-size: 22px;
+      overflow-wrap: anywhere;
+    }
+
+    .next-workout-meta,
+    .next-workout-preview {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .next-workout-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .next-workout-actions .btn-primary {
+      flex: 1;
+      min-height: 48px;
+      font-size: 16px;
+    }
+
+    /* Menus ⋮ */
+    .dropdown-menu-options button:disabled {
+      opacity: .4;
+      cursor: default;
+    }
+
+    .dropdown-menu-options .menu-danger {
+      color: var(--danger);
+    }
+
+    /* Ajustes */
+    .settings-group h2 {
+      margin-bottom: 6px;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .settings-group h2+.setting-row {
+      border-top: 0;
+    }
+
+    .setting-text {
+      min-width: 0;
+    }
+
+    .setting-text strong,
+    .setting-text label {
+      display: block;
+      margin: 0;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .setting-text span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .setting-select {
+      width: 72px;
+      text-align: center;
+    }
+
+    .unit-field {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      color: var(--muted);
+    }
+
+    .unit-field input {
+      width: 80px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .settings-group #backupStatus {
+      margin: 0 0 12px;
+      line-height: 1.5;
+    }
+
+    .danger-zone {
+      border-color: color-mix(in srgb, var(--danger) 45%, var(--border));
+    }
+
+    .danger-zone h2 {
+      color: var(--danger);
+    }
+
+    .danger-zone p {
+      margin: 0 0 12px;
+    }
+
+    .btn-danger-line {
+      background: transparent;
+      color: var(--danger);
+    }
+
+    /* Grupo segmentado (tema, visualização, tipo de execução) */
+    .segmented {
+      display: inline-flex;
+      flex-shrink: 0;
+      padding: 3px;
+      gap: 3px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+    }
+
+    .segmented button {
+      min-height: 34px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .segmented button.is-active {
+      background: var(--primary);
+      color: #111;
+    }
+
+    .segmented-full {
+      display: flex;
+      width: 100%;
+    }
+
+    .segmented-full button {
+      flex: 1;
+      min-height: 40px;
+      font-size: 14px;
+    }
+
+    /* Editor de treino */
+    .workout-editor-modal .workout-editor-modal-header {
+      margin-bottom: 10px;
+    }
+
+    .editor-name-input {
+      flex: 1;
+      min-width: 0;
+      height: 48px;
+      padding: 0 12px;
+      border-color: transparent;
+      background: transparent;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .editor-name-input:hover {
+      border-color: var(--border);
+    }
+
+    .editor-name-input:focus {
+      border-color: var(--primary);
+      background: var(--card2);
+    }
+
+    .editor-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+      padding: 0 2px;
+    }
+
+    .editor-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .editor-footer #workoutNameBtn {
+      min-width: 150px;
+    }
+
+    .btn-link-danger {
+      min-height: 40px;
+      padding: 0 6px;
+      background: transparent;
+      color: var(--danger);
+      font-size: 13px;
+    }
+
+    .exercise-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 6px 10px 4px;
+      cursor: pointer;
+      transition: border-color .15s ease;
+    }
+
+    .exercise-item:hover,
+    .exercise-item:focus-visible {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .exercise-item .exercise-number {
+      width: 26px;
+      height: 26px;
+      flex-basis: 26px;
+      font-size: 12px;
+    }
+
+    .exercise-item .exercise-name {
+      margin-bottom: 6px;
+    }
+
+    .exercise-item .dropdown-menu-options {
+      right: 2.6rem;
+      bottom: auto;
+      top: -4px;
+      min-width: 170px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .chip {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .chip-muted {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Cadastro de exercício */
+    .exercise-modal .workout-editor-modal-header h3 {
+      margin: 0;
+    }
+
+    .exercise-modal .modal-form {
+      margin-top: 8px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .picker-search-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .picker-search-row .btn {
+      flex-shrink: 0;
+    }
+
+    .chip-filter {
+      display: flex;
+      gap: 6px;
+      margin: 10px 0 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .chip-filter::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip-btn {
+      flex-shrink: 0;
+      min-height: 32px;
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--card2);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .chip-btn.is-active {
+      border-color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 16%, var(--card2));
+      color: var(--text);
+    }
+
+    .picker-list {
+      display: grid;
+      gap: 4px;
+      max-height: 210px;
+      overflow-y: auto;
+      padding: 4px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .picker-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      min-height: 42px;
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+    }
+
+    .picker-item small {
+      flex-shrink: 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .picker-item:hover {
+      background: var(--card);
+    }
+
+    .picker-item.is-selected {
+      border-color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 14%, var(--card));
+      font-weight: 700;
+    }
+
+    .picker-empty {
+      padding: 16px 10px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .picker-selected {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .picker-selected strong {
+      color: var(--primary);
+    }
+
+    .stepper-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 12px;
+    }
+
+    .num-stepper {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) 44px;
+      gap: 6px;
+    }
+
+    .num-stepper button {
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card2);
+      color: var(--text);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .num-stepper button:active {
+      background: var(--border);
+    }
+
+    .num-stepper input {
+      height: 44px;
+      padding: 0 4px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 800;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .num-stepper input::-webkit-outer-spin-button,
+    .num-stepper input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .num-stepper-wide {
+      max-width: 240px;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 0 0;
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .check-row input {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+    }
+
+    #weightsInputs {
+      margin-top: 10px;
+    }
+
+    .field-hint {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .exercise-modal .form-actions {
+      position: sticky;
+      bottom: -20px;
+      flex-direction: row;
+      margin: 8px -20px -20px;
+      padding: 12px 20px 16px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+    }
+
+    .exercise-modal .form-actions .btn {
+      width: auto;
+    }
+
+    .exercise-modal .form-actions .btn-primary {
+      flex: 1;
+    }
+
+    /* Evolução */
+    .goal-card {
+      margin-bottom: 14px;
+      padding: 14px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .goal-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .goal-top span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .goal-top strong {
+      font-size: 18px;
+    }
+
+    .goal-card .progress {
+      display: block;
+      height: 8px;
+    }
+
+    .goal-card .progress-bar {
+      display: block;
+    }
+
+    .goal-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .goal-card p strong {
+      color: var(--text);
+    }
+
+    .link-btn {
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .stats-section {
+      border-top: 1px solid var(--border);
+    }
+
+    .stats-section summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .stats-section summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .stats-section summary::after {
+      content: "›";
+      color: var(--muted);
+      font-size: 22px;
+      line-height: 1;
+      transform: rotate(90deg);
+      transition: transform .15s ease;
+    }
+
+    .stats-section:not([open]) summary::after {
+      transform: rotate(0deg);
+    }
+
+    .stats-section-body {
+      padding-bottom: 14px;
+    }
+
+    .stats-select {
+      margin-bottom: 4px;
+    }
+
+    .chart-caption {
+      margin: 6px 0 4px;
+    }
+
+    .records-hint {
+      margin: 0 0 6px;
+    }
+
+    .empty-state {
+      padding: 26px 10px;
+      text-align: center;
+    }
+
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .empty-state p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #statsContent .stats-grid {
+      grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+      margin-top: 0;
+    }
+
+    #statsContent .stat-tile strong {
+      font-size: 18px;
+    }
+
+    .setting-row .btn {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .editor-name-input {
+      margin-left: -8px;
+      padding: 0 8px;
+    }
+
+    @media (max-width: 380px) {
+      .tab span {
+        font-size: 10px;
+      }
+
+      .segmented button {
+        padding: 0 9px;
+      }
+
+      .num-stepper {
+        grid-template-columns: 38px minmax(0, 1fr) 38px;
+      }
+    }
   </style>
 
   <script>
@@ -2336,245 +3098,313 @@
 
 <body>
   <main class="app" id="builderScreen">
-    <header>
-      <div class="header-row">
-        <div>
-          <h1>Sequence Training</h1>
-          <p>Physical & Athletic Training</p>
-        </div>
-        <div class="dropdown-menu">
-          <button type="button" class="dropdown-menu-toggle" aria-label="Configurações" aria-expanded="false">
-            ⚙
-          </button>
-          <div class="dropdown-menu-options dropdown-menu-bottom">
-            <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">☀️</button>
-            <button id="workoutViewToggleBtn" type="button" aria-pressed="true">Visualização: Carrossel</button>
-            <button id="newSavedWorkoutBtn" type="button">Novo treino</button>
-            <button id="openLibraryBtn" type="button" aria-label="Base de exercicios">Exercícios</button>
-            <button id="openHistoryBtn" type="button" aria-label="Lista historico">Histórico</button>
-            <button id="notificationsBtn" type="button">Alertas de descanso: ativar</button>
-            <button id="clearHistoryBtn" type="button">Limpar histórico e estatísticas</button>
-          </div>
-        </div>
-      </div>
+    <header class="app-header">
+      <h1 id="viewTitle">Sequence Training</h1>
+      <p id="viewSubtitle">Physical &amp; Athletic Training</p>
     </header>
-    <!-- Recuperação de treino -->
-    <section id="recoveryBox" class="recovery hidden">
-      <div class="recovery-title">
-        Treino em andamento
-      </div>
-      <div class="recovery-info" id="recoveryInfo"></div>
-      <div class="recovery-actions">
-        <button class="btn btn-primary" id="continueBtn">
-          Continuar treino
-        </button>
-        <button class="btn btn-ghost" id="newWorkoutBtn">
-          Começar novo
-        </button>
-      </div>
-    </section>
-    <!-- Meus treinos -->
-    <section class="card">
-      <div class="header-row">
-        <div class="header-row-actions">
+
+    <!-- =====================================================
+         ABA: TREINOS
+    ====================================================== -->
+    <div class="view" id="view-treinos" data-title="Sequence Training" data-subtitle="Physical &amp; Athletic Training">
+      <!-- Recuperação de treino -->
+      <section id="recoveryBox" class="recovery hidden">
+        <div class="recovery-title">Treino em andamento</div>
+        <div class="recovery-info" id="recoveryInfo"></div>
+        <div class="recovery-actions">
+          <button class="btn btn-primary" id="continueBtn">Continuar treino</button>
+          <button class="btn btn-ghost" id="newWorkoutBtn">Começar novo</button>
+        </div>
+      </section>
+      <!-- Sugestão de próximo treino -->
+      <section class="next-workout hidden" id="nextWorkoutCard" aria-label="Sugestão de treino"></section>
+      <!-- Meus treinos -->
+      <section class="card">
+        <div class="section-header">
           <h2>Meus treinos</h2>
+          <button class="btn btn-small btn-primary" id="newSavedWorkoutBtn" type="button">+ Novo treino</button>
         </div>
-      </div>
-      <div class="saved-workouts-toolbar">
-        <span class="saved-workouts-count" id="savedWorkoutsCount"></span>
-        <select id="savedWorkoutsSort" class="saved-workouts-sort" aria-label="Ordenar meus treinos">
-          <option value="lastUsed">Último uso</option>
-          <option value="favorites">Favoritos primeiro</option>
-          <option value="nameAsc">Nome A → Z</option>
-          <option value="nameDesc">Nome Z → A</option>
-          <option value="createdDesc">Mais recentes</option>
-        </select>
-      </div>
-      <div id="savedWorkoutsList" class="saved-workouts-list"></div>
-      <div id="emptySavedWorkouts" class="empty">
-        Nenhum treino salvo ainda.
-      </div>
-    </section>
-    <!-- Estatísticas sempre visíveis abaixo dos treinos -->
-    <section class="card" id="trainingStatsCard">
-      <div class="header-row">
-        <h2>Evolução e estatísticas</h2>
-      </div>
-      <div id="statsContent"></div>
-    </section>
-    <!-- Editor do treino (abre somente como modal) -->
+        <div class="saved-workouts-toolbar">
+          <span class="saved-workouts-count" id="savedWorkoutsCount"></span>
+          <label class="sort-control">
+            <span class="sort-icon" aria-hidden="true">⇅</span>
+            <select id="savedWorkoutsSort" class="saved-workouts-sort" aria-label="Ordenar meus treinos">
+              <option value="lastUsed">Último uso</option>
+              <option value="favorites">Favoritos</option>
+              <option value="nameAsc">Nome A → Z</option>
+              <option value="nameDesc">Nome Z → A</option>
+              <option value="createdDesc">Mais recentes</option>
+            </select>
+          </label>
+        </div>
+        <div id="savedWorkoutsList" class="saved-workouts-list"></div>
+        <div id="emptySavedWorkouts" class="empty">
+          Nenhum treino salvo ainda. Toque em “+ Novo treino” para montar o primeiro.
+        </div>
+      </section>
+    </div>
+
+    <!-- =====================================================
+         ABA: HISTÓRICO
+    ====================================================== -->
+    <div class="view hidden" id="view-historico" data-title="Histórico" data-subtitle="Treinos concluídos">
+      <section class="card">
+        <div id="historyList" class="history-list"></div>
+        <div id="emptyHistory" class="empty">Nenhum treino concluído ainda.</div>
+      </section>
+    </div>
+
+    <!-- =====================================================
+         ABA: EVOLUÇÃO
+    ====================================================== -->
+    <div class="view hidden" id="view-evolucao" data-title="Evolução" data-subtitle="Frequência, progresso e recordes">
+      <section class="card" id="trainingStatsCard">
+        <div id="statsContent"></div>
+      </section>
+    </div>
+
+    <!-- =====================================================
+         ABA: EXERCÍCIOS
+    ====================================================== -->
+    <div class="view hidden" id="view-exercicios" data-title="Exercícios" data-subtitle="Sua biblioteca de exercícios">
+      <section class="card">
+        <div class="section-header">
+          <span id="libraryCount" class="saved-workouts-count"></span>
+          <button type="button" class="btn btn-small btn-primary" id="customExerciseBibliotecaBtn">+ Novo exercício</button>
+        </div>
+        <div class="library-toolbar">
+          <input id="librarySearch" type="search" placeholder="Buscar exercício..."
+            aria-label="Buscar exercício na biblioteca">
+          <select id="libraryCategory" aria-label="Filtrar biblioteca por grupo muscular"></select>
+        </div>
+        <div id="exerciseLibraryList" class="library-list"></div>
+        <div id="emptyExerciseLibrary" class="empty hidden">Nenhum exercício encontrado.</div>
+      </section>
+    </div>
+
+    <!-- =====================================================
+         ABA: AJUSTES
+    ====================================================== -->
+    <div class="view hidden" id="view-ajustes" data-title="Ajustes" data-subtitle="Preferências e dados">
+      <section class="card settings-group">
+        <h2>Aparência</h2>
+        <div class="setting-row">
+          <div class="setting-text">
+            <strong>Tema</strong>
+          </div>
+          <div class="segmented" role="group" aria-label="Tema">
+            <button type="button" data-theme-choice="dark">Escuro</button>
+            <button type="button" data-theme-choice="light">Claro</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-text">
+            <strong>Meus treinos</strong>
+            <span>Como a lista aparece na aba Treinos</span>
+          </div>
+          <div class="segmented" role="group" aria-label="Visualização dos treinos">
+            <button type="button" data-view-choice="carousel">Carrossel</button>
+            <button type="button" data-view-choice="list">Lista</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card settings-group">
+        <h2>Treino</h2>
+        <div class="setting-row">
+          <div class="setting-text">
+            <strong>Alertas de descanso</strong>
+            <span id="notificationsStatus">Vibração e notificação quando o descanso acaba</span>
+          </div>
+          <button type="button" class="btn btn-small btn-ghost" id="notificationsBtn">Ativar</button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-text">
+            <strong>Meta semanal</strong>
+            <span>Treinos por semana, usada na aba Evolução</span>
+          </div>
+          <select id="weeklyGoalSelect" class="setting-select" aria-label="Meta de treinos por semana">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div class="setting-text">
+            <label for="bodyWeightInput"><strong>Peso corporal</strong></label>
+            <span>Usado para estimar a 1RM nos recordes</span>
+          </div>
+          <div class="unit-field">
+            <input id="bodyWeightInput" type="number" inputmode="decimal" min="20" max="400" step="0.1" placeholder="—">
+            <span>kg</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card settings-group">
+        <h2>Dados</h2>
+        <div id="backupStatus" class="saved-workout-details" aria-live="polite"></div>
+        <div class="tools">
+          <button class="btn btn-small" id="exportBtn">Exportar treinos</button>
+          <button class="btn btn-small" id="importBtn">Importar treinos</button>
+          <button class="btn btn-small" id="restoreBackupBtn">Restaurar backup</button>
+          <input type="file" id="importFile" accept=".json,application/json" class="hidden">
+        </div>
+      </section>
+
+      <section class="card settings-group danger-zone">
+        <h2>Zona de perigo</h2>
+        <p class="saved-workout-details">Apaga o histórico e as estatísticas. Os treinos e a biblioteca são mantidos, e um backup automático é feito antes.</p>
+        <button class="btn btn-small btn-danger-line" id="clearHistoryBtn" type="button">Limpar histórico e estatísticas</button>
+      </section>
+    </div>
+
+    <!-- Navegação principal -->
+    <nav class="tab-bar" id="tabBar" aria-label="Seções do app">
+      <button type="button" class="tab" data-tab="treinos">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5v11M3.5 9v6M17.5 6.5v11M20.5 9v6M6.5 12h11" /></svg>
+        <span>Treinos</span>
+      </button>
+      <button type="button" class="tab" data-tab="historico">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></svg>
+        <span>Histórico</span>
+      </button>
+      <button type="button" class="tab" data-tab="evolucao">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20h17M6.5 16.5v-4M11 16.5V7.5M15.5 16.5v-6M20 16.5V4.5" /></svg>
+        <span>Evolução</span>
+      </button>
+      <button type="button" class="tab" data-tab="exercicios">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5h11M9 12h11M9 17.5h11" /><circle cx="4.5" cy="6.5" r="1.2" /><circle cx="4.5" cy="12" r="1.2" /><circle cx="4.5" cy="17.5" r="1.2" /></svg>
+        <span>Exercícios</span>
+      </button>
+      <button type="button" class="tab" data-tab="ajustes">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1" /><circle cx="15" cy="7" r="2" /><circle cx="9" cy="12" r="2" /><circle cx="17" cy="17" r="2" /></svg>
+        <span>Ajustes</span>
+      </button>
+    </nav>
+
+    <!-- Editor do treino (modal) -->
     <div class="modal-overlay" id="workoutEditorModalOverlay" aria-hidden="true">
-      <div class="modal workout-editor-modal" role="dialog" aria-modal="true" aria-labelledby="workoutEditorModalTitle">
+      <div class="modal workout-editor-modal" role="dialog" aria-modal="true" aria-label="Editor de treino">
         <div class="workout-editor-modal-header">
-          <h2 id="workoutEditorModalTitle">
-            Seu treino
-            <span id="loadedWorkoutName" class="custom-badge hidden"></span>
-          </h2>
-          <button class="icon-btn" id="closeWorkoutEditorModalBtn" type="button" aria-label="Fechar editor">
-            x
-          </button>
+          <input id="editorNameInput" class="editor-name-input" type="text" maxlength="80"
+            placeholder="Nome do treino (ex.: Treino A)" aria-label="Nome do treino">
+          <button class="icon-btn" id="closeWorkoutEditorModalBtn" type="button" aria-label="Fechar editor">×</button>
         </div>
-        <section class="card">
-          <div class="header-row">
-            <!-- <h2>Exercícios</h2> -->
-            <div class="header-row-actions width-full">
-              <button class="btn btn-small btn-info-line" id="addExerciseBtn" type="button">
-                +1 Exercício
-              </button>
-              <button class="btn btn-small btn-primary" id="workoutNameBtn">
-                Salvar
-              </button>
-            </div>
-          </div>
-          <div id="workoutList" class="workout-list"></div>
-          <div id="emptyWorkout" class="empty">
-            Nenhum exercício adicionado ainda.
-          </div>
-          <div class="bottom-actions">
-            <button class="btn btn-primary full-btn hidden" id="startWorkoutBtn">
-              ▶ Iniciar
-            </button>
-            <button class="btn" id="clearWorkoutBtn">
-              Limpar treino
-            </button>
-          </div>
-        </section>
+        <div class="editor-toolbar">
+          <span class="saved-workouts-count" id="editorSummary"></span>
+          <button class="btn btn-small btn-ghost" id="addExerciseBtn" type="button">+ Exercício</button>
+        </div>
+        <div id="workoutList" class="workout-list"></div>
+        <div id="emptyWorkout" class="empty">
+          Nenhum exercício ainda. Toque em “+ Exercício” para adicionar.
+        </div>
+        <div class="editor-footer">
+          <button class="btn btn-link-danger" id="clearWorkoutBtn" type="button">Limpar treino</button>
+          <button class="btn btn-primary hidden" id="startWorkoutBtn" type="button">▶ Iniciar</button>
+          <button class="btn btn-primary" id="workoutNameBtn" type="button">Salvar treino</button>
+        </div>
       </div>
     </div>
+
     <!-- Modal de adicionar/editar exercício -->
     <div class="modal-overlay" id="addExerciseModalOverlay" aria-hidden="true">
       <div class="modal exercise-modal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
-        <h3 id="formTitle">
-          Adicionar exercício ao treino
-        </h3>
-        <form id="exerciseForm" class="modal-form">
-          <div class="form-grid">
-            <div class="full">
-              <label for="exerciseCategoryFilter">Grupo muscular</label>
-              <select id="exerciseCategoryFilter" aria-label="Filtrar exercícios por grupo muscular"></select>
+        <div class="workout-editor-modal-header">
+          <h3 id="formTitle">Adicionar exercício</h3>
+          <button class="icon-btn" id="closeExerciseModalBtn" type="button" aria-label="Fechar">×</button>
+        </div>
+        <form id="exerciseForm" class="modal-form" novalidate>
+          <!-- Valores do formulário (a escolha é feita pela lista abaixo) -->
+          <select id="exerciseCategoryFilter" class="hidden" aria-hidden="true" tabindex="-1"></select>
+          <select id="exerciseSelect" class="hidden" aria-hidden="true" tabindex="-1"></select>
+
+          <div class="field">
+            <label for="exerciseSearch">Exercício</label>
+            <div class="picker-search-row">
+              <input id="exerciseSearch" type="search" placeholder="Buscar exercício..." autocomplete="off">
+              <button type="button" class="btn btn-ghost" id="customExerciseBtn" title="Criar exercício personalizado">+ Novo</button>
             </div>
-            <div class="full">
-              <label for="exerciseSelect">Exercício</label>
-              <div style="display: flex; gap: 10px;">
-                <select id="exerciseSelect" required>
-                  <option value="">
-                    Selecione um exercício
-                  </option>
-                </select>
-                <button type="button" class="btn btn-ghost" id="customExerciseBtn">+</button>
+            <div class="chip-filter" id="exerciseCategoryChips" role="group" aria-label="Grupo muscular"></div>
+            <div class="picker-list" id="exercisePickerList" role="listbox" aria-label="Exercícios"></div>
+            <div class="picker-selected" id="exercisePickerSelected"></div>
+          </div>
+
+          <div class="field">
+            <label>Tipo de execução</label>
+            <div class="segmented segmented-full" id="executionTypeChoice" role="group" aria-label="Tipo de execução">
+              <button type="button" data-exec-type="reps">Repetições</button>
+              <button type="button" data-exec-type="timed">Por tempo</button>
+            </div>
+            <select id="executionTypeSelect" class="hidden" aria-hidden="true" tabindex="-1">
+              <option value="reps" selected>Repetições</option>
+              <option value="timed">Por tempo</option>
+            </select>
+          </div>
+
+          <div class="stepper-grid">
+            <div class="field">
+              <label for="setsInput">Séries</label>
+              <div class="num-stepper">
+                <button type="button" data-adjust="setsInput" data-delta="-1" aria-label="Menos séries">−</button>
+                <input id="setsInput" type="number" inputmode="numeric" min="1" max="99" step="1" value="3">
+                <button type="button" data-adjust="setsInput" data-delta="1" aria-label="Mais séries">+</button>
               </div>
             </div>
-            <div class="full">
-              <label for="executionTypeSelect">Tipo de execução</label>
-              <select id="executionTypeSelect">
-                <option value="reps" selected>Repetições</option>
-                <option value="timed">Isométrico / por tempo</option>
-              </select>
-            </div>
-            <div class="inputs-row">
-              <div class="hidden" id="durationField">
-                <label for="durationInput">Duração de cada série</label>
-                <input class="text-center" id="durationInput" type="number" inputmode="numeric" min="1" max="3600"
-                  value="30">
-              </div>
-              <div>
-                <label for="setsInput">
-                  Séries
-                </label>
-                <input class="text-center" id="setsInput" type="number" inputmode="decimal" min="1" max="99" value="3"
-                  required>
-              </div>
-              <div id="repsInputsRow">
-                <label for="repsInput">
-                  Repetições
-                </label>
-                <input class="text-center" id="repsInput" type="number" inputmode="decimal" min="1" max="999"
-                  value="10">
+            <div class="field" id="repsInputsRow">
+              <label for="repsInput">Repetições</label>
+              <div class="num-stepper">
+                <button type="button" data-adjust="repsInput" data-delta="-1" aria-label="Menos repetições">−</button>
+                <input id="repsInput" type="number" inputmode="numeric" min="1" max="999" step="1" value="10">
+                <button type="button" data-adjust="repsInput" data-delta="1" aria-label="Mais repetições">+</button>
               </div>
             </div>
-            <div class="full" id="weightsField">
-              <label>
-                Carga por série (kg)
-              </label>
-              <div id="weightsInputs" class="weights-grid"></div>
+            <div class="field hidden" id="durationField">
+              <label for="durationInput">Duração (s)</label>
+              <div class="num-stepper">
+                <button type="button" data-adjust="durationInput" data-delta="-5" aria-label="Menos 5 segundos">−</button>
+                <input id="durationInput" type="number" inputmode="numeric" min="1" max="3600" step="1" value="30">
+                <button type="button" data-adjust="durationInput" data-delta="5" aria-label="Mais 5 segundos">+</button>
+              </div>
             </div>
-            <div class="full">
-              <label for="restSelect">
-                Intervalo
-              </label>
-              <select id="restSelect" required>
-                <option value="15">
-                  15 segundos
-                </option>
-                <option value="30" selected>
-                  30 segundos
-                </option>
-                <option value="45">
-                  45 segundos
-                </option>
-                <option value="60">
-                  60 segundos
-                </option>
-                <option value="75">
-                  75 segundos
-                </option>
-                <option value="90">
-                  90 segundos
-                </option>
-              </select>
+            <div class="field">
+              <label for="restInput">Descanso (s)</label>
+              <div class="num-stepper">
+                <button type="button" data-adjust="restInput" data-delta="-15" aria-label="Menos 15 segundos">−</button>
+                <input id="restInput" type="number" inputmode="numeric" min="0" max="600" step="1" value="30">
+                <button type="button" data-adjust="restInput" data-delta="15" aria-label="Mais 15 segundos">+</button>
+              </div>
             </div>
           </div>
+
+          <div class="field" id="weightsField">
+            <label for="uniformWeightInput">Carga adicional (kg)</label>
+            <div class="num-stepper num-stepper-wide" id="uniformWeightRow">
+              <button type="button" data-adjust="uniformWeightInput" data-delta="-2.5" aria-label="Menos 2,5 kg">−</button>
+              <input id="uniformWeightInput" type="number" inputmode="decimal" min="0" max="500" step="0.25" value="0">
+              <button type="button" data-adjust="uniformWeightInput" data-delta="2.5" aria-label="Mais 2,5 kg">+</button>
+            </div>
+            <label class="check-row">
+              <input type="checkbox" id="varyWeightsToggle">
+              <span>Variar a carga por série</span>
+            </label>
+            <div id="weightsInputs" class="weights-grid hidden"></div>
+            <p class="field-hint">0 = só o peso corporal.</p>
+          </div>
+
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary" id="submitExerciseBtn">
-              Adicionar exercício
-            </button>
-            <button type="button" class="btn btn-ghost hidden" id="cancelEditBtn">
-              Cancelar
-            </button>
+            <button type="button" class="btn btn-ghost" id="cancelEditBtn">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="submitExerciseBtn">Adicionar exercício</button>
           </div>
         </form>
       </div>
     </div>
-    <!-- Biblioteca de exercícios (modal) -->
-    <div class="modal-overlay" id="libraryModalOverlay" aria-hidden="true">
-      <div class="modal dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="libraryModalTitle">
-        <div class="workout-editor-modal-header">
-          <h2 id="libraryModalTitle">Exercícios disponíveis</h2>
-          <button class="icon-btn" id="closeLibraryModalBtn" type="button" aria-label="Fechar">×</button>
-        </div>
-        <section class="card">
-          <div class="header-row">
-            <div>
-              <div id="libraryCount" class="library-exercise-meta"></div>
-            </div>
-            <div class="header-row-actions">
-              <button type="button" class="btn btn-small btn-ghost" id="customExerciseBibliotecaBtn">
-                + Adicionar
-              </button>
-            </div>
-          </div>
-          <div class="library-toolbar margin-top-8">
-            <input id="librarySearch" type="search" placeholder="Localizar exercício..."
-              aria-label="Buscar exercício na biblioteca">
-            <select id="libraryCategory" aria-label="Filtrar biblioteca por grupo muscular">
-            </select>
-          </div>
-          <div id="exerciseLibraryList" class="library-list"></div>
-          <div id="emptyExerciseLibrary" class="empty hidden">Nenhum exercício encontrado.</div>
-        </section>
-      </div>
-    </div>
-    <!-- Histórico (modal) -->
-    <div class="modal-overlay" id="historyModalOverlay" aria-hidden="true">
-      <div class="modal dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
-        <div class="workout-editor-modal-header">
-          <h2 id="historyModalTitle">Histórico de treinos</h2>
-          <button class="icon-btn" id="closeHistoryModalBtn" type="button" aria-label="Fechar">×</button>
-        </div>
-        <div id="historyList" class="history-list"></div>
-        <div id="emptyHistory" class="empty">Nenhum treino concluído ainda.</div>
-      </div>
-    </div>
+
+    <!-- Detalhes de um treino do histórico (modal) -->
     <div class="modal-overlay" id="historyDetailOverlay" aria-hidden="true">
       <div class="modal dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="historyDetailTitle">
         <div class="workout-editor-modal-header">
@@ -2586,23 +3416,6 @@
             type="button">↻ Repetir este treino</button></div>
       </div>
     </div>
-    <!-- Dados -->
-    <section class="card">
-      <h2>Dados</h2>
-      <div id="backupStatus" class="saved-workout-details" style="margin-bottom:10px" aria-live="polite"></div>
-      <div class="tools">
-        <button class="btn btn-small" id="exportBtn">
-          Exportar treinos
-        </button>
-        <button class="btn btn-small" id="importBtn">
-          Importar treinos
-        </button>
-        <button class="btn btn-small" id="restoreBackupBtn">
-          Restaurar backup
-        </button>
-        <input type="file" id="importFile" accept=".json,application/json" class="hidden">
-      </div>
-    </section>
   </main>
   <!-- =====================================================
        TELA DE EXECUÇÃO
@@ -3086,7 +3899,15 @@
     const durationField = document.getElementById("durationField");
     const repsInputsRow = document.getElementById("repsInputsRow");
     const weightsInputs = document.getElementById("weightsInputs");
-    const restSelect = document.getElementById("restSelect");
+    const restInput = document.getElementById("restInput");
+    const exerciseSearch = document.getElementById("exerciseSearch");
+    const exerciseCategoryChips = document.getElementById("exerciseCategoryChips");
+    const exercisePickerList = document.getElementById("exercisePickerList");
+    const exercisePickerSelected = document.getElementById("exercisePickerSelected");
+    const uniformWeightInput = document.getElementById("uniformWeightInput");
+    const uniformWeightRow = document.getElementById("uniformWeightRow");
+    const varyWeightsToggle = document.getElementById("varyWeightsToggle");
+    const editorNameInput = document.getElementById("editorNameInput");
     const submitExerciseBtn = document.getElementById("submitExerciseBtn");
     const cancelEditBtn = document.getElementById("cancelEditBtn");
     const customExerciseBtn = document.getElementById("customExerciseBtn");
@@ -3116,10 +3937,7 @@
     const recoveryInfo = document.getElementById("recoveryInfo");
     const continueBtn = document.getElementById("continueBtn");
     const newWorkoutBtn = document.getElementById("newWorkoutBtn");
-    const themeBtn = document.getElementById("themeBtn");
     const historyList = document.getElementById("historyList");
-    const libraryModalOverlay = document.getElementById("libraryModalOverlay");
-    const historyModalOverlay = document.getElementById("historyModalOverlay");
     const historyDetailOverlay = document.getElementById("historyDetailOverlay");
     const emptyHistory = document.getElementById("emptyHistory");
 
@@ -3322,10 +4140,51 @@
       nameModalOverlay.setAttribute("aria-hidden", "true");
     }
 
-    workoutNameBtn.addEventListener(
-      "click",
-      openNameModal
-    );
+    // O nome do treino é editado direto no título do editor.
+    editorNameInput.addEventListener("input", () => {
+      workout.name = editorNameInput.value.trim() || "Meu treino";
+      saveWorkout();
+    });
+
+    editorNameInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        editorNameInput.blur();
+      }
+    });
+
+    async function saveEditorWorkout() {
+      const name = editorNameInput.value.trim();
+
+      if (!name) {
+        await showMessage("Dê um nome ao treino antes de salvar.", "Nome do treino");
+        editorNameInput.focus();
+        return;
+      }
+
+      workout.name = name;
+      const isNew = !currentWorkoutId;
+
+      if (isNew) {
+        saveCurrentWorkoutAsNew();
+      } else {
+        updateSavedWorkout();
+      }
+
+      saveWorkout();
+      updateWorkoutName();
+      renderSavedWorkouts();
+      updateWorkoutNameButton();
+      workoutEditorModalOverlay.classList.remove("visible");
+      workoutEditorModalOverlay.setAttribute("aria-hidden", "true");
+
+      await showMessage(
+        isNew ? `“${name}” foi salvo.` : `As alterações em “${name}” foram salvas.`,
+        "Treino salvo"
+      );
+    }
+
+    workoutNameBtn.addEventListener("click", saveEditorWorkout);
 
     closeNameModalBtn.addEventListener(
       "click",
@@ -3396,8 +4255,15 @@
       addExerciseModalOverlay.classList.add("visible");
       addExerciseModalOverlay.setAttribute("aria-hidden", "false");
 
+      focusExercisePicker();
+    }
+
+    // No celular, focar a busca abriria o teclado sobre o formulário.
+    function focusExercisePicker() {
       setTimeout(() => {
-        exerciseSelect.focus();
+        if (!window.matchMedia?.("(pointer: coarse)").matches) {
+          exerciseSearch.focus({ preventScroll: true });
+        }
       }, 50);
     }
 
@@ -3546,15 +4412,7 @@
           return;
         }
 
-        if (isOpen(historyModalOverlay)) {
-          closeOverlay("historyModalOverlay");
-          return;
-        }
 
-        if (isOpen(libraryModalOverlay)) {
-          closeOverlay("libraryModalOverlay");
-          return;
-        }
       }
     );
 
@@ -4083,6 +4941,13 @@
 
       exerciseLibraryList.innerHTML = "";
 
+      const libraryCount = document.getElementById("libraryCount");
+      if (libraryCount) {
+        const total = exerciseLibrary.length;
+        const custom = exerciseLibrary.filter(exercise => exercise.custom).length;
+        libraryCount.textContent = `${total} exercício${total === 1 ? "" : "s"}${custom ? ` · ${custom} personalizado${custom === 1 ? "" : "s"}` : ""}`;
+      }
+
       if (emptyExerciseLibrary) {
         emptyExerciseLibrary.classList.toggle("hidden", filtered.length > 0);
       }
@@ -4160,14 +5025,13 @@
       if (!exerciseSelect) return;
 
       const currentValue = exerciseSelect.value;
-      const category = exerciseCategoryFilter?.value || "Todos";
 
+      // O <select> oculto guarda o valor escolhido e contém todos os exercícios;
+      // a lista visível (renderExercisePicker) aplica busca e grupo muscular.
       exerciseSelect.innerHTML = `<option value="">Selecione um exercício</option>`;
 
       exerciseLibrary
-        .filter(exercise => {
-          return exerciseMatchesCategory(exercise, category);
-        })
+        .slice()
         .sort((a, b) => a.name.localeCompare(b.name, "pt-BR", { sensitivity: "base" }))
         .forEach(exercise => {
           const option = document.createElement("option");
@@ -4183,6 +5047,56 @@
       if ([...exerciseSelect.options].some(option => option.value === currentValue)) {
         exerciseSelect.value = currentValue;
       }
+
+      renderExercisePicker();
+    }
+
+    /* ---------- Seletor de exercício (busca + grupo muscular) ---------- */
+
+    function renderCategoryChips() {
+      const active = exerciseCategoryFilter.value || "Todos";
+
+      exerciseCategoryChips.innerHTML = MUSCLE_GROUPS
+        .filter(group => group === "Todos" || exerciseLibrary.some(exercise => exerciseMatchesCategory(exercise, group)))
+        .map(group => `<button type="button" class="chip-btn ${group === active ? "is-active" : ""}" data-category="${escapeHtml(group)}" aria-pressed="${group === active}">${escapeHtml(group)}</button>`)
+        .join("");
+    }
+
+    function renderExercisePicker() {
+      if (!exercisePickerList) return;
+
+      const category = exerciseCategoryFilter.value || "Todos";
+      const search = String(exerciseSearch.value || "").trim().toLocaleLowerCase("pt-BR");
+      const selected = exerciseSelect.value;
+
+      const items = exerciseLibrary
+        .filter(exercise => exerciseMatchesCategory(exercise, category))
+        .filter(exercise => !search || exercise.name.toLocaleLowerCase("pt-BR").includes(search))
+        .sort((a, b) => a.name.localeCompare(b.name, "pt-BR", { sensitivity: "base" }));
+
+      renderCategoryChips();
+
+      exercisePickerList.innerHTML = items.length
+        ? items.map(exercise => `
+            <button type="button" role="option" class="picker-item ${exercise.name === selected ? "is-selected" : ""}"
+              aria-selected="${exercise.name === selected}" data-pick-name="${escapeHtml(exercise.name)}">
+              <span>${escapeHtml(exercise.name)}${exercise.custom ? ' <small class="custom-badge">PERSONALIZADO</small>' : ""}</span>
+              <small>${escapeHtml(exercise.muscleGroup || "Outros")}</small>
+            </button>
+          `).join("")
+        : `<div class="picker-empty">Nenhum exercício encontrado. Use “+ Novo” para criar.</div>`;
+
+      exercisePickerSelected.innerHTML = selected
+        ? `Selecionado: <strong>${escapeHtml(selected)}</strong>`
+        : "Nenhum exercício selecionado.";
+    }
+
+    function selectExercise(name) {
+      exerciseSelect.value = name;
+      renderExercisePicker();
+
+      const selectedItem = exercisePickerList.querySelector(".picker-item.is-selected");
+      if (selectedItem?.scrollIntoView) selectedItem.scrollIntoView({ block: "nearest" });
     }
 
     function normalizeWorkout(data) {
@@ -4508,8 +5422,8 @@
 
     function updateWorkoutNameButton() {
       workoutNameBtn.textContent = currentWorkoutId
-        ? "Atualizar treino"
-        : "Salvar";
+        ? "Salvar alterações"
+        : "Salvar treino";
     }
 
     function getLastWorkoutExecution(saved) {
@@ -4637,12 +5551,9 @@
           </div>
 
           <div class="bottom-actions">
-            <button
-              class="btn btn-small btn-primary"
-              data-action="train"
-              data-id="${saved.id}">
-              ▶ Iniciar
-            </button>
+            ${exercisesCount
+              ? `<button class="btn btn-small btn-primary" data-action="train" data-id="${saved.id}">▶ Iniciar</button>`
+              : `<button class="btn btn-small btn-ghost" data-action="view" data-id="${saved.id}">+ Adicionar exercícios</button>`}
 
             <div class="dropdown-menu">
               <button
@@ -4670,6 +5581,7 @@
 
                 <button
                   type="button"
+                  class="menu-danger"
                   data-action="delete"
                   data-id="${saved.id}">
                   Excluir
@@ -4681,7 +5593,67 @@
 
         savedWorkoutsList.appendChild(item);
       });
+
+      renderNextWorkout();
     }
+
+    /*
+     * Sugestão de próximo treino: o treino (com exercícios) feito há mais
+     * tempo, ou nunca feito. Em rotinas A/B/C, é o próximo da sequência.
+     * Só aparece com 2 ou mais treinos (com 1, o cartão da lista basta)
+     * e quando não há treino em andamento para retomar.
+     */
+    function pickNextWorkout() {
+      const candidates = savedWorkouts.filter(saved => saved.exercises?.length);
+      if (candidates.length < 2) return null;
+
+      return candidates.slice().sort((a, b) =>
+        getSavedWorkoutSortTime(a) - getSavedWorkoutSortTime(b) ||
+        (new Date(a.createdAt).getTime() || 0) - (new Date(b.createdAt).getTime() || 0)
+      )[0];
+    }
+
+    function renderNextWorkout() {
+      const card = document.getElementById("nextWorkoutCard");
+      const next = pickNextWorkout();
+      const hasSession = !recoveryBox.classList.contains("hidden");
+
+      if (!next || hasSession) {
+        card.classList.add("hidden");
+        card.innerHTML = "";
+        return;
+      }
+
+      const lastUsedAt = getSavedWorkoutLastUsed(next);
+      const names = next.exercises.map(exercise => exercise.name);
+      const preview = names.slice(0, 3).join(" · ") + (names.length > 3 ? ` · +${names.length - 3}` : "");
+
+      card.innerHTML = `
+        <span class="next-workout-label">Próximo treino sugerido</span>
+        <h2>${escapeHtml(next.name)}</h2>
+        <p class="next-workout-meta">${escapeHtml(lastUsedAt ? `Feito ${formatRelativeDate(lastUsedAt).toLocaleLowerCase("pt-BR")}` : "Ainda não feito")} · ${names.length} exercício${names.length === 1 ? "" : "s"}</p>
+        <p class="next-workout-preview">${escapeHtml(preview)}</p>
+        <div class="next-workout-actions">
+          <button type="button" class="btn btn-primary" data-next-action="train" data-id="${next.id}">▶ Iniciar treino</button>
+          <button type="button" class="btn btn-ghost" data-next-action="view" data-id="${next.id}">Ver</button>
+        </div>
+      `;
+      card.classList.remove("hidden");
+    }
+
+    document.getElementById("nextWorkoutCard").addEventListener("click", async event => {
+      const button = event.target.closest("[data-next-action]");
+      if (!button) return;
+
+      const saved = savedWorkouts.find(item => item.id === button.dataset.id);
+      if (!saved) return;
+
+      if (button.dataset.nextAction === "train") {
+        await startWorkoutExecution(saved, saved.id);
+      } else {
+        await loadSavedWorkout(saved.id);
+      }
+    });
 
     async function loadSavedWorkout(id) {
       const saved = savedWorkouts.find(item => item.id === id);
@@ -4772,8 +5744,7 @@
         setTimeout(() => {
           exerciseCategoryFilter.value = "Todos";
           populateExerciseSelect();
-          exerciseSelect.value = item.name;
-          exerciseSelect.focus();
+          selectExercise(item.name);
         }, 60);
         return;
       }
@@ -4970,6 +5941,7 @@
       checkForActiveSession();
       updateNotificationsButton();
       requestPersistentStorage();
+      showView("treinos");
     }
 
     /* =========================================================
@@ -5059,6 +6031,12 @@
 
     function updateExecutionTypeFields() {
       const timed = executionTypeSelect.value === "timed";
+
+      document.querySelectorAll("[data-exec-type]").forEach(button => {
+        const active = button.dataset.execType === executionTypeSelect.value;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
       durationField.classList.toggle("hidden", !timed);
       repsInputsRow.classList.toggle("hidden", timed);
 
@@ -5083,12 +6061,10 @@
         const executionType = executionTypeSelect.value === "timed" ? "timed" : "reps";
         const reps = executionType === "timed" ? 0 : Number(repsInput.value);
         const durationSeconds = executionType === "timed" ? Number(durationInput.value) : 0;
-        const rest = Number(restSelect.value);
-        const weights =
-          getWeightValues(
-            weightsInputs,
-            sets
-          );
+        const rest = Number(restInput.value);
+        const weights = executionType === "timed"
+          ? Array.from({ length: Math.max(0, sets) }, () => 0)
+          : getFormWeights(sets);
 
         if (!name) {
           showMessage(
@@ -5119,9 +6095,9 @@
           return;
         }
 
-        if (![15, 30, 45, 60, 75, 90].includes(rest)) {
+        if (!Number.isInteger(rest) || rest < 0 || rest > 600) {
           showMessage(
-            "Selecione um intervalo válido."
+            "Informe um descanso entre 0 e 600 segundos."
           );
 
           return;
@@ -5259,8 +6235,9 @@
         populateExerciseSelect();
 
         exerciseCategoryFilter.value = "Todos";
+        exerciseSearch.value = "";
         populateExerciseSelect();
-        exerciseSelect.value = name;
+        selectExercise(name);
 
         closeCustomModal();
       }
@@ -5271,6 +6248,7 @@
       exerciseForm.reset();
 
       if (exerciseCategoryFilter) exerciseCategoryFilter.value = "Todos";
+      exerciseSearch.value = "";
       populateExerciseSelect();
 
       setsInput.value = 3;
@@ -5278,25 +6256,112 @@
       executionTypeSelect.value = "reps";
       durationInput.value = 30;
       updateExecutionTypeFields();
-      restSelect.value = 30;
+      restInput.value = 30;
 
-      renderWeightInputs(
-        weightsInputs,
-        3,
-        [0, 0, 0]
-      );
+      setFormWeights([0, 0, 0]);
 
       submitExerciseBtn.textContent = "Adicionar exercício";
 
-      cancelEditBtn.classList.add("hidden");
-
       document.getElementById("formTitle").textContent = "Adicionar exercício";
     }
+
+    /* ---------- Carga: valor único ou por série ---------- */
+
+    function getFormWeights(sets) {
+      if (varyWeightsToggle.checked) {
+        return getWeightValues(weightsInputs, sets);
+      }
+
+      const value = Number(uniformWeightInput.value);
+      const weight = Number.isFinite(value) && value >= 0 ? value : 0;
+      return Array.from({ length: Math.max(0, sets) }, () => weight);
+    }
+
+    // Preenche o formulário: carga única se todas as séries forem iguais,
+    // senão abre a grade por série.
+    function setFormWeights(weights) {
+      const allEqual = weights.every(weight => weight === weights[0]);
+
+      varyWeightsToggle.checked = !allEqual;
+      uniformWeightInput.value = weights[0] ?? 0;
+      renderWeightInputs(weightsInputs, weights.length, weights);
+      updateWeightMode();
+    }
+
+    function updateWeightMode() {
+      const vary = varyWeightsToggle.checked;
+      weightsInputs.classList.toggle("hidden", !vary);
+      uniformWeightRow.classList.toggle("hidden", vary);
+    }
+
+    varyWeightsToggle.addEventListener("change", () => {
+      const sets = Math.max(1, Math.min(99, Number(setsInput.value) || 1));
+
+      if (varyWeightsToggle.checked) {
+        // Começa a grade com a carga única em todas as séries.
+        const value = Number(uniformWeightInput.value) || 0;
+        renderWeightInputs(weightsInputs, sets, Array.from({ length: sets }, () => value));
+      } else {
+        uniformWeightInput.value = getWeightValues(weightsInputs, sets)[0] ?? 0;
+      }
+
+      updateWeightMode();
+    });
+
+    /* ---------- Botões − / + dos campos numéricos ---------- */
+
+    exerciseForm.addEventListener("click", event => {
+      const button = event.target.closest("[data-adjust]");
+      if (!button) return;
+
+      const input = document.getElementById(button.dataset.adjust);
+      if (!input) return;
+
+      const min = input.min !== "" ? Number(input.min) : -Infinity;
+      const max = input.max !== "" ? Number(input.max) : Infinity;
+      const delta = Number(button.dataset.delta);
+      let value = (Number(input.value) || 0) + delta;
+
+      // Arredonda para o passo do botão (ex.: 2,5 kg, 15 s).
+      const decimals = (String(button.dataset.delta).split(".")[1] || "").length;
+      value = Number(value.toFixed(decimals));
+      value = Math.min(max, Math.max(min, value));
+
+      input.value = value;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
+    /* ---------- Escolha do exercício ---------- */
+
+    exercisePickerList.addEventListener("click", event => {
+      const item = event.target.closest("[data-pick-name]");
+      if (item) selectExercise(item.dataset.pickName);
+    });
+
+    exerciseCategoryChips.addEventListener("click", event => {
+      const chip = event.target.closest("[data-category]");
+      if (!chip) return;
+
+      exerciseCategoryFilter.value = chip.dataset.category;
+      renderExercisePicker();
+    });
+
+    exerciseSearch.addEventListener("input", renderExercisePicker);
+
+    document.getElementById("executionTypeChoice").addEventListener("click", event => {
+      const button = event.target.closest("[data-exec-type]");
+      if (!button || executionTypeSelect.value === button.dataset.execType) return;
+
+      executionTypeSelect.value = button.dataset.execType;
+      updateExecutionTypeFields();
+    });
 
     cancelEditBtn.addEventListener(
       "click",
       closeAddExerciseModal
     );
+
+    document.getElementById("closeExerciseModalBtn").addEventListener("click", closeAddExerciseModal);
 
     /* =========================================================
        LISTA
@@ -5320,6 +6385,9 @@
 
           item.className = "exercise-item";
           item.dataset.index = index;
+          item.setAttribute("role", "button");
+          item.setAttribute("tabindex", "0");
+          item.setAttribute("aria-label", `Editar ${exercise.name}`);
           item.innerHTML = `
             <button
               type="button"
@@ -5327,63 +6395,21 @@
               aria-label="Arrastar ${escapeHtml(exercise.name)} para reordenar"
               title="Arraste para reordenar"
             >⠿</button>
-            <div class="exercise-number">
-              ${index + 1}
-            </div>
+            <div class="exercise-number">${index + 1}</div>
             <div class="exercise-info">
               <div class="exercise-name">
-                ${escapeHtml(exercise.name)}
-				        ${exercise.custom ? '<span class="custom-badge">PERSONALIZADO</span>' : ''}
+                ${escapeHtml(exercise.name)}${exercise.custom ? '<span class="custom-badge">PERSONALIZADO</span>' : ""}
               </div>
-              <div class="exercise-details">
-                ${exercise.sets} série${exercise.sets > 1 ? "s" : ""}
-                ×
-                ${exercise.executionType === "timed" ? `${formatDuration(exercise.durationSeconds || 30)} isometria` : `${exercise.reps} repetiç${exercise.reps > 1 ? "ões" : "ão"}`}
-                ·
-                ${exercise.rest}s descanso
-                ·
-                ${normalizeWeights(exercise).map(weight => `${weight}kg`).join(" / ")}
-                ·
-                ${escapeHtml(exercise.muscleGroup || getExerciseLibraryItemByName(exercise.name)?.muscleGroup || "Outros")}
-              </div>
+              <div class="chip-row">${getExerciseChips(exercise).map(chip => `<span class="chip ${chip.muted ? "chip-muted" : ""}">${escapeHtml(chip.text)}</span>`).join("")}</div>
             </div>
-            <div class="exercise-actions">
-              <button
-                class="icon-btn"
-                title="Subir"
-                data-action="up"
-                data-index="${index}"
-                ${index === 0 ? "disabled" : ""}
-              >
-                ↑
-              </button>
-              <button
-                class="icon-btn"
-                title="Descer"
-                data-action="down"
-                data-index="${index}"
-                ${index ===
-              workout.exercises.length - 1 ? "disabled" : ""
-            }
-              >
-                ↓
-              </button>
-              <button
-                class="icon-btn btn-info"
-                title="Editar"
-                data-action="edit"
-                data-index="${index}"
-              >
-                ✎
-              </button>
-              <button
-                class="icon-btn btn-danger"
-                title="Excluir"
-                data-action="delete"
-                data-index="${index}"
-              >
-                ×
-              </button>
+            <div class="dropdown-menu">
+              <button type="button" class="dropdown-menu-toggle" aria-label="Mais opções para ${escapeHtml(exercise.name)}" aria-expanded="false">⋮</button>
+              <div class="dropdown-menu-options">
+                <button type="button" data-action="edit" data-index="${index}">Editar</button>
+                <button type="button" data-action="up" data-index="${index}" ${index === 0 ? "disabled" : ""}>Mover para cima</button>
+                <button type="button" data-action="down" data-index="${index}" ${index === workout.exercises.length - 1 ? "disabled" : ""}>Mover para baixo</button>
+                <button type="button" class="menu-danger" data-action="delete" data-index="${index}">Excluir</button>
+              </div>
             </div>
           `;
           workoutList.appendChild(
@@ -5396,44 +6422,73 @@
       setupDragAndDrop();
     }
 
-    workoutList.addEventListener(
-      "click",
-      event => {
-        const button =
-          event.target.closest(
-            "button"
-          );
+    // Resumo do exercício em "chips": 3×8 · +5 kg · 60s descanso · grupo.
+    function getExerciseChips(exercise) {
+      const timed = getExecutionType(exercise) === "timed";
+      const chips = [{
+        text: timed
+          ? `${exercise.sets}× ${formatDuration(exercise.durationSeconds || 30)}`
+          : `${exercise.sets}×${exercise.reps}`
+      }];
 
-        if (!button) {
-          return;
-        }
+      const weights = normalizeWeights(exercise);
+      const withLoad = weights.filter(weight => weight > 0);
 
-        const index = Number(button.dataset.index);
-        const action = button.dataset.action;
-
-        if (action === "up") {
-          moveExercise(
-            index,
-            index - 1
-          );
-        }
-
-        if (action === "down") {
-          moveExercise(
-            index,
-            index + 1
-          );
-        }
-
-        if (action === "edit") {
-          startEdit(index);
-        }
-
-        if (action === "delete") {
-          deleteExercise(index);
-        }
+      if (!timed && withLoad.length) {
+        const min = Math.min(...weights);
+        const max = Math.max(...weights);
+        chips.push({
+          text: min === max ? `+${formatKg(max)} kg` : `+${formatKg(min)}–${formatKg(max)} kg`
+        });
       }
-    );
+
+      chips.push({ text: `${Number(exercise.rest || 0)}s descanso` });
+
+      // A biblioteca é a fonte do grupo muscular (treinos antigos podem ter "Outros").
+      const libraryItem = exerciseLibrary.find(item => item.id === exercise.libraryId) || getExerciseLibraryItemByName(exercise.name);
+      const group = libraryItem?.muscleGroup || exercise.muscleGroup;
+      if (group) chips.push({ text: group, muted: true });
+
+      return chips;
+    }
+
+    function closeDropdownMenus() {
+      document.querySelectorAll(".dropdown-menu-options.active")
+        .forEach(menu => menu.classList.remove("active"));
+      document.querySelectorAll(".dropdown-menu-toggle")
+        .forEach(button => button.setAttribute("aria-expanded", "false"));
+    }
+
+    // Tocar no cartão edita; as demais ações ficam no menu ⋮.
+    workoutList.addEventListener("click", event => {
+      const actionButton = event.target.closest("button[data-action]");
+
+      if (actionButton) {
+        const index = Number(actionButton.dataset.index);
+        const action = actionButton.dataset.action;
+
+        closeDropdownMenus();
+
+        if (action === "up") moveExercise(index, index - 1);
+        if (action === "down") moveExercise(index, index + 1);
+        if (action === "edit") startEdit(index);
+        if (action === "delete") deleteExercise(index);
+        return;
+      }
+
+      // Alça de arraste e menu ⋮ não abrem a edição.
+      if (event.target.closest(".drag-handle, .dropdown-menu")) return;
+
+      const card = event.target.closest(".exercise-item");
+      if (card) startEdit(Number(card.dataset.index));
+    });
+
+    workoutList.addEventListener("keydown", event => {
+      if ((event.key === "Enter" || event.key === " ") && event.target.matches(".exercise-item")) {
+        event.preventDefault();
+        startEdit(Number(event.target.dataset.index));
+      }
+    });
 
     function moveExercise(
       from,
@@ -5500,26 +6555,21 @@
       }
 
       exerciseCategoryFilter.value = "Todos";
+      exerciseSearch.value = "";
       populateExerciseSelect();
-      exerciseSelect.value = exercise.name;
       setsInput.value = exercise.sets;
       repsInput.value = exercise.reps || 10;
       executionTypeSelect.value = exercise.executionType === "timed" ? "timed" : "reps";
       durationInput.value = exercise.durationSeconds || 30;
       updateExecutionTypeFields();
 
-      renderWeightInputs(
-        weightsInputs,
-        exercise.sets,
-        normalizeWeights(exercise)
-      );
+      setFormWeights(normalizeWeights(exercise));
 
-      restSelect.value = exercise.rest;
+      restInput.value = exercise.rest;
 
       editingIndex = index;
 
-      submitExerciseBtn.textContent = "Salvar";
-      cancelEditBtn.classList.remove("hidden");
+      submitExerciseBtn.textContent = "Salvar alterações";
 
       document.getElementById(
         "formTitle"
@@ -5528,9 +6578,8 @@
       addExerciseModalOverlay.classList.add("visible");
       addExerciseModalOverlay.setAttribute("aria-hidden", "false");
 
-      setTimeout(() => {
-        exerciseSelect.focus();
-      }, 50);
+      // Mostra o exercício escolhido na lista (precisa estar visível para rolar).
+      selectExercise(exercise.name);
     }
 
     /* =========================================================
@@ -5661,12 +6710,20 @@
        NOME
     ========================================================= */
 
+    // Título editável e resumo do editor.
     function updateWorkoutName() {
-      const name = workout.name || "Meu treino";
-      const loadedWorkoutName = document.getElementById("loadedWorkoutName");
+      // Um treino novo começa com o campo vazio (placeholder), não "Meu treino".
+      const isDefaultName = !currentWorkoutId && (!workout.name || workout.name === "Meu treino");
 
-      loadedWorkoutName.textContent = name;
-      loadedWorkoutName.classList.toggle("hidden", !currentWorkoutId);
+      if (document.activeElement !== editorNameInput) {
+        editorNameInput.value = isDefaultName ? "" : workout.name;
+      }
+
+      const count = workout.exercises.length;
+      const sets = workout.exercises.reduce((total, exercise) => total + Number(exercise.sets || 0), 0);
+      document.getElementById("editorSummary").textContent = count
+        ? `${count} exercício${count === 1 ? "" : "s"} · ${sets} série${sets === 1 ? "" : "s"}`
+        : "Sem exercícios";
     }
 
     // O nome exibido nas telas de execução e descanso vem do treino em execução,
@@ -7349,6 +8406,7 @@
       executionLog = [];
 
       showScreen(builderScreen);
+      showView("treinos");
       renderWorkout();
       checkForActiveSession();
     }
@@ -7759,39 +8817,106 @@
     }
 
     let statsCalendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    // Exercício escolhido no gráfico de evolução e seções abertas.
+    let statsSelectedRecordKey = null;
+    const statsSectionsOpen = { calendar: true, progress: true, records: true };
+
+    function getWeekStart(date) {
+      const start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+      start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+      return start;
+    }
+
+    // Treinos desta semana e quantas semanas seguidas a meta foi batida.
+    // A semana atual entra na sequência só depois de bater a meta.
+    function computeWeeklyGoal(history, goal) {
+      const counts = new Map();
+
+      history.forEach(entry => {
+        const date = new Date(entry.completedAt);
+        if (Number.isNaN(date.getTime())) return;
+        const key = getWeekStart(date).getTime();
+        counts.set(key, (counts.get(key) || 0) + 1);
+      });
+
+      const thisWeek = getWeekStart(new Date());
+      const thisCount = counts.get(thisWeek.getTime()) || 0;
+      const cursor = new Date(thisWeek);
+
+      if (thisCount < goal) cursor.setDate(cursor.getDate() - 7);
+
+      let streak = 0;
+      while ((counts.get(cursor.getTime()) || 0) >= goal) {
+        streak++;
+        cursor.setDate(cursor.getDate() - 7);
+      }
+
+      return { thisCount, streak };
+    }
+
+    function statsSection(id, title, content) {
+      return `
+        <details class="stats-section" data-stats-section="${id}" ${statsSectionsOpen[id] ? "open" : ""}>
+          <summary>${title}</summary>
+          <div class="stats-section-body">${content}</div>
+        </details>`;
+    }
+
     function renderTrainingStats() {
+      const container = document.getElementById("statsContent");
       const history = loadHistory().filter(entry => entry.completedAt);
+
+      if (!history.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <strong>Nenhum treino concluído ainda</strong>
+            <p>Conclua seu primeiro treino para ver aqui a meta semanal, a evolução e os recordes.</p>
+            <button type="button" class="btn btn-primary" data-goto="treinos">Ver meus treinos</button>
+          </div>`;
+        return;
+      }
+
       const latestWorkout = history.slice().sort((a, b) =>
         new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
       )[0];
-      const latestWorkoutHTML = latestWorkout
-        ? `<div class="latest-workout-highlight">
-            <div class="latest-label">Último treino realizado</div>
-            <div class="latest-name">${escapeHtml(latestWorkout.workoutName || latestWorkout.name || "Treino")}</div>
-            <div class="latest-meta">${escapeHtml(new Date(latestWorkout.completedAt).toLocaleString("pt-BR", { dateStyle: "medium", timeStyle: "short" }))} · ${escapeHtml(formatDuration(latestWorkout.durationSeconds || 0))}</div>
-          </div>`
-        : `<div class="latest-workout-highlight"><div class="latest-label">Último treino realizado</div><div class="latest-meta">Nenhum treino concluído registrado.</div></div>`;
+      const latestWorkoutHTML = `
+        <div class="latest-workout-highlight">
+          <div class="latest-label">Último treino</div>
+          <div class="latest-name">${escapeHtml(latestWorkout.workoutName || "Treino")}</div>
+          <div class="latest-meta">${escapeHtml(new Date(latestWorkout.completedAt).toLocaleString("pt-BR", { dateStyle: "medium", timeStyle: "short" }))} · ${escapeHtml(formatDuration(latestWorkout.durationSeconds || 0))}</div>
+        </div>`;
+
+      // Meta semanal e sequência
+      const goal = getWeeklyGoal();
+      const { thisCount, streak } = computeWeeklyGoal(history, goal);
+      const remaining = Math.max(0, goal - thisCount);
+      const goalHTML = `
+        <div class="goal-card">
+          <div class="goal-top">
+            <span>Meta da semana</span>
+            <strong>${thisCount} de ${goal} treino${goal === 1 ? "" : "s"}</strong>
+          </div>
+          <div class="progress"><span class="progress-bar" style="width:${Math.min(100, thisCount / goal * 100)}%"></span></div>
+          <p>
+            ${remaining ? `Faltam ${remaining} treino${remaining === 1 ? "" : "s"}.` : "Meta batida! 🎉"}
+            ${streak ? ` · Sequência: <strong>${streak} semana${streak === 1 ? "" : "s"}</strong> seguida${streak === 1 ? "" : "s"}.` : ""}
+            <button type="button" class="link-btn" data-goto="ajustes">Alterar meta</button>
+          </p>
+        </div>`;
+
       const totalSeconds = history.reduce((sum, entry) => sum + Number(entry.durationSeconds || 0), 0);
-      const weekStart = new Date();
-      weekStart.setHours(0, 0, 0, 0);
-      weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7));
-      const weekly = history.filter(entry => new Date(entry.completedAt) >= weekStart).length;
       const volume = history.reduce((sum, entry) => sum + (entry.exercises || []).reduce((subtotal, ex) =>
         subtotal + (ex.completedSets || []).filter(set => set.status === "completed").reduce((v, set) => v + Number(set.weight || 0) * Number(set.reps || 0), 0), 0), 0);
-      const bodyWeight = getBodyWeight();
-      const records = [...computeExerciseRecords(history, bodyWeight).values()]
-        .filter(record => record.sessions > 0)
-        .sort((a, b) => (new Date(b.lastDate).getTime() || 0) - (new Date(a.lastDate).getTime() || 0));
-      const frequency = Array.from({ length: 7 }, (_, i) => {
-        const day = new Date(weekStart);
-        day.setDate(weekStart.getDate() + i);
-        return {
-          label: day.toLocaleDateString("pt-BR", { weekday: "short" }), count: history.filter(entry => {
-            const d = new Date(entry.completedAt); return d.toDateString() === day.toDateString();
-          }).length
-        };
-      });
-      const maxFrequency = Math.max(1, ...frequency.map(x => x.count));
+
+      // Só mostra o volume quando há treino com carga externa.
+      const tilesHTML = `
+        <div class="stats-grid">
+          <div class="stat-tile"><span>Treinos registrados</span><strong>${history.length}</strong></div>
+          <div class="stat-tile"><span>Tempo total</span><strong>${escapeHtml(formatDuration(totalSeconds))}</strong></div>
+          ${volume > 0 ? `<div class="stat-tile"><span>Volume com carga</span><strong>${Math.round(volume).toLocaleString("pt-BR")} kg</strong></div>` : ""}
+        </div>`;
+
       const calendarMonth = statsCalendarMonth || new Date(new Date().getFullYear(), new Date().getMonth(), 1);
       const calendarYear = calendarMonth.getFullYear();
       const calendarMonthIndex = calendarMonth.getMonth();
@@ -7800,18 +8925,35 @@
       const mondayOffset = (monthStart.getDay() + 6) % 7;
       const trainingDates = new Set(history.filter(entry => { const d = new Date(entry.completedAt); return d.getFullYear() === calendarYear && d.getMonth() === calendarMonthIndex; }).map(entry => new Date(entry.completedAt).getDate()));
       const calendarHTML = `<div class="calendar-header"><button class="btn btn-small btn-ghost" type="button" data-calendar-shift="-1" aria-label="Mês anterior">‹</button><strong>${escapeHtml(calendarMonth.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }))}</strong><button class="btn btn-small btn-ghost" type="button" data-calendar-shift="1" aria-label="Próximo mês">›</button></div><div class="calendar-grid">${["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map(day => `<div class="calendar-day-label">${day}</div>`).join("")}${Array.from({ length: mondayOffset }, () => `<div class="calendar-day empty-day"></div>`).join("")}${Array.from({ length: monthDays }, (_, i) => { const day = i + 1; const isToday = new Date().getFullYear() === calendarYear && new Date().getMonth() === calendarMonthIndex && new Date().getDate() === day; return `<div class="calendar-day ${trainingDates.has(day) ? "has-workout" : ""} ${isToday ? "today" : ""}" title="${trainingDates.has(day) ? "Treino registrado" : "Sem treino registrado"}">${day}</div>`; }).join("")}</div><p class="saved-workout-details">${trainingDates.size} dia${trainingDates.size === 1 ? "" : "s"} com treino neste mês</p>`;
-      // Evolução: melhor marca de cada sessão (até 8 sessões), por exercício.
-      const progressionHTML = records.slice(0, 8).map(record => {
-        const metric = record.type === "timed"
-          ? { label: "isometria", value: session => session.duration, format: formatDuration }
-          : record.maxWeight
-            ? { label: "carga adicional (kg)", value: session => session.weight, format: value => formatKg(value) }
-            : { label: "repetições", value: session => session.reps, format: value => String(value) };
-        const recent = record.history.slice(-8);
+
+      const bodyWeight = getBodyWeight();
+      const records = [...computeExerciseRecords(history, bodyWeight).values()]
+        .filter(record => record.sessions > 0)
+        .sort((a, b) => (new Date(b.lastDate).getTime() || 0) - (new Date(a.lastDate).getTime() || 0));
+
+      // Evolução de um exercício por vez, escolhido no seletor.
+      let progressionHTML = "<p class='saved-workout-details'>Ainda não há resultados por série registrados.</p>";
+      const selected = records.find(record => record.key === statsSelectedRecordKey) || records[0];
+
+      if (selected) {
+        statsSelectedRecordKey = selected.key;
+
+        const metric = selected.type === "timed"
+          ? { label: "Isometria", value: session => session.duration, format: formatDuration }
+          : selected.maxWeight
+            ? { label: "Carga adicional (kg)", value: session => session.weight, format: value => formatKg(value) }
+            : { label: "Repetições (melhor série)", value: session => session.reps, format: value => String(value) };
+        const recent = selected.history.slice(-10);
         const max = Math.max(1, ...recent.map(metric.value));
 
-        return `<h4 class="modal-section-title">${escapeHtml(record.name)} · ${metric.label}</h4>` + recent.map(session => `<div class="chart-row"><span>${escapeHtml(new Date(session.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }))}</span><div class="chart-track"><div class="chart-fill" style="width:${Math.max(3, metric.value(session) / max * 100)}%"></div></div><strong>${escapeHtml(metric.format(metric.value(session)))}</strong></div>`).join("");
-      }).join("") || "<p class='saved-workout-details'>Ainda não há dados suficientes para gráficos. Os treinos novos passarão a registrar os resultados por série.</p>";
+        progressionHTML = `
+          <select id="statsExerciseSelect" class="stats-select" aria-label="Exercício do gráfico">
+            ${records.map(record => `<option value="${escapeHtml(record.key)}" ${record.key === selected.key ? "selected" : ""}>${escapeHtml(record.name)}${record.type === "timed" ? " · isometria" : ""}</option>`).join("")}
+          </select>
+          <p class="saved-workout-details chart-caption">${metric.label} · últimas ${recent.length} sessões</p>
+          ${recent.map(session => `<div class="chart-row"><span>${escapeHtml(new Date(session.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }))}</span><div class="chart-track"><div class="chart-fill" style="width:${Math.max(3, metric.value(session) / max * 100)}%"></div></div><strong>${escapeHtml(metric.format(metric.value(session)))}</strong></div>`).join("")}
+          ${recent.length < 2 ? "<p class='saved-workout-details'>Faça mais sessões deste exercício para ver a evolução.</p>" : ""}`;
+      }
 
       const prHTML = records.map(record => {
         const lines = [];
@@ -7835,53 +8977,148 @@
         return `<div class="history-exercise"><strong>${escapeHtml(record.name)}${record.type === "timed" ? " · isometria" : ""}</strong><div class="saved-workout-details record-lines">${lines.join("<br>")}</div></div>`;
       }).join("") || "<p class='saved-workout-details'>Os recordes serão calculados conforme novos treinos forem registrados.</p>";
 
-      const bodyWeightHTML = `
-        <div class="body-weight-row">
-          <label for="bodyWeightInput">Seu peso corporal, para estimar a 1RM</label>
-          <div class="body-weight-field">
-            <input id="bodyWeightInput" type="number" inputmode="decimal" min="20" max="400" step="0.1" placeholder="ex.: 75" value="${bodyWeight ?? ""}">
-            <span>kg</span>
-          </div>
-          <p class="saved-workout-details">${bodyWeight
-          ? `1RM estimada pela fórmula de Epley, com séries de até ${EPLEY_MAX_REPS} repetições, somando seu peso corporal à carga adicional. O valor mostrado é a carga adicional estimada para 1 repetição.`
-          : "Informe seu peso para ver a 1RM estimada (carga máxima para 1 repetição) dos exercícios com repetições."}</p>
-        </div>`;
-      document.getElementById("statsContent").innerHTML = `
+
+      const needsBodyWeight = !bodyWeight && records.some(record => record.type === "reps");
+      const bodyWeightHint = needsBodyWeight
+        ? `<p class="saved-workout-details records-hint">Informe seu peso corporal em <button type="button" class="link-btn" data-goto="ajustes">Ajustes</button> para ver a 1RM estimada.</p>`
+        : "";
+
+      container.innerHTML = `
+        ${goalHTML}
         ${latestWorkoutHTML}
-        <div class="stats-grid">
-          <div class="stat-tile"><span>Treinos nesta semana</span><strong>${weekly}</strong></div>
-          <div class="stat-tile"><span>Tempo total treinado</span><strong>${escapeHtml(formatDuration(totalSeconds))}</strong></div>
-          <div class="stat-tile"><span>Volume com carga externa</span><strong>${Math.round(volume).toLocaleString("pt-BR")} kg</strong></div>
-          <div class="stat-tile"><span>Treinos registrados</span><strong>${history.length}</strong></div>
-        </div>
-        <h3 class="modal-section-title">Calendário de treinos</h3>
-        ${calendarHTML}
-        <h3 class="modal-section-title">Frequência semanal</h3>
-        ${frequency.map(day => `<div class="chart-row"><span>${escapeHtml(day.label)}</span><div class="chart-track"><div class="chart-fill" style="width:${day.count / maxFrequency * 100}%"></div></div><strong>${day.count}</strong></div>`).join("")}
-        <h3 class="modal-section-title">Evolução de cargas e repetições</h3>${progressionHTML}
-        <h3 class="modal-section-title">Recordes pessoais (PR)</h3>${bodyWeightHTML}${prHTML}
+        ${tilesHTML}
+        ${statsSection("calendar", "Calendário de treinos", calendarHTML)}
+        ${statsSection("progress", "Evolução por exercício", progressionHTML)}
+        ${statsSection("records", "Recordes pessoais", bodyWeightHint + prHTML)}
       `;
     }
 
     const WORKOUT_VIEW_STORAGE = "calisthenics_workouts_view";
-    const workoutViewToggleBtn = document.getElementById("workoutViewToggleBtn");
+    const WEEKLY_GOAL_STORAGE = "calisthenics_weekly_goal";
     const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+
+    // Marca o botão ativo de um grupo segmentado.
+    function setSegmented(selector, attribute, value) {
+      document.querySelectorAll(selector).forEach(button => {
+        const active = button.dataset[attribute] === value;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+    }
 
     function applySavedWorkoutsView(view) {
       const useCarousel = view === "carousel";
       savedWorkoutsList.classList.toggle("carousel-view", useCarousel);
-      workoutViewToggleBtn.textContent = `Visualização: ${useCarousel ? "Carrossel" : "Lista"}`;
-      workoutViewToggleBtn.setAttribute("aria-pressed", String(useCarousel));
+      setSegmented("[data-view-choice]", "viewChoice", useCarousel ? "carousel" : "list");
       localStorage.setItem(WORKOUT_VIEW_STORAGE, useCarousel ? "carousel" : "list");
     }
 
     applySavedWorkoutsView(localStorage.getItem(WORKOUT_VIEW_STORAGE) || "carousel");
 
-    workoutViewToggleBtn.addEventListener("click", () => {
-      const currentlyCarousel = savedWorkoutsList.classList.contains("carousel-view");
-      applySavedWorkoutsView(currentlyCarousel ? "list" : "carousel");
-      document.querySelectorAll(".dropdown-menu-options.active").forEach(menu => menu.classList.remove("active"));
-      document.querySelectorAll(".dropdown-menu-toggle").forEach(button => button.setAttribute("aria-expanded", "false"));
+    /* =========================================================
+       NAVEGAÇÃO POR ABAS
+    ========================================================= */
+
+    const VIEWS = ["treinos", "historico", "evolucao", "exercicios", "ajustes"];
+    let currentView = "treinos";
+
+    function showView(name) {
+      if (!VIEWS.includes(name)) name = "treinos";
+      currentView = name;
+
+      VIEWS.forEach(view => {
+        document.getElementById(`view-${view}`).classList.toggle("hidden", view !== name);
+      });
+
+      document.querySelectorAll("#tabBar [data-tab]").forEach(tab => {
+        const active = tab.dataset.tab === name;
+        tab.classList.toggle("is-active", active);
+        if (active) tab.setAttribute("aria-current", "page");
+        else tab.removeAttribute("aria-current");
+      });
+
+      const view = document.getElementById(`view-${name}`);
+      document.getElementById("viewTitle").textContent = view.dataset.title;
+      document.getElementById("viewSubtitle").textContent = view.dataset.subtitle;
+
+      // Cada aba é desenhada ao ser aberta, com os dados atuais.
+      if (name === "historico") {
+        historyVisibleCount = HISTORY_PAGE_SIZE;
+        renderHistory();
+      } else if (name === "evolucao") {
+        renderTrainingStats();
+      } else if (name === "exercicios") {
+        renderExerciseLibrary();
+      } else if (name === "ajustes") {
+        renderSettings();
+      }
+
+      closeDropdownMenus();
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    document.getElementById("tabBar").addEventListener("click", event => {
+      const tab = event.target.closest("[data-tab]");
+      if (tab) showView(tab.dataset.tab);
+    });
+
+    // Links internos (ex.: "Definir em Ajustes").
+    document.addEventListener("click", event => {
+      const link = event.target.closest("[data-goto]");
+      if (link) showView(link.dataset.goto);
+    });
+
+    /* =========================================================
+       AJUSTES
+    ========================================================= */
+
+    function getWeeklyGoal() {
+      const value = Number(localStorage.getItem(WEEKLY_GOAL_STORAGE));
+      return Number.isInteger(value) && value >= 1 && value <= 7 ? value : 3;
+    }
+
+    function setWeeklyGoal(value) {
+      const number = Number(value);
+      if (Number.isInteger(number) && number >= 1 && number <= 7) {
+        localStorage.setItem(WEEKLY_GOAL_STORAGE, String(number));
+      }
+    }
+
+    function renderSettings() {
+      setSegmented("[data-theme-choice]", "themeChoice", document.documentElement.dataset.theme || "dark");
+      setSegmented("[data-view-choice]", "viewChoice", savedWorkoutsList.classList.contains("carousel-view") ? "carousel" : "list");
+      document.getElementById("weeklyGoalSelect").value = String(getWeeklyGoal());
+
+      const bodyWeightInput = document.getElementById("bodyWeightInput");
+      if (document.activeElement !== bodyWeightInput) {
+        bodyWeightInput.value = getBodyWeight() ?? "";
+      }
+
+      updateNotificationsButton();
+      renderBackupStatus();
+    }
+
+    document.getElementById("view-ajustes").addEventListener("click", event => {
+      const themeButton = event.target.closest("[data-theme-choice]");
+      if (themeButton) {
+        applyTheme(themeButton.dataset.themeChoice);
+        renderSettings();
+        return;
+      }
+
+      const viewButton = event.target.closest("[data-view-choice]");
+      if (viewButton) {
+        applySavedWorkoutsView(viewButton.dataset.viewChoice);
+      }
+    });
+
+    document.getElementById("weeklyGoalSelect").addEventListener("change", event => {
+      setWeeklyGoal(event.target.value);
+    });
+
+    document.getElementById("bodyWeightInput").addEventListener("change", event => {
+      setBodyWeight(event.target.value);
+      event.target.value = getBodyWeight() ?? "";
     });
 
     clearHistoryBtn.addEventListener("click", async () => {
@@ -7901,32 +9138,28 @@
       clearHistoryData();
       renderHistory();
       renderTrainingStats();
-      document.querySelectorAll(".dropdown-menu-options.active").forEach(menu => menu.classList.remove("active"));
-      document.querySelectorAll(".dropdown-menu-toggle").forEach(button => button.setAttribute("aria-expanded", "false"));
+      renderSavedWorkouts();
       await showMessage("O histórico e as estatísticas foram limpos.", "Dados apagados");
     });
 
-    document.getElementById("openLibraryBtn").addEventListener("click", () => {
-      libraryModalOverlay.classList.add("visible"); libraryModalOverlay.setAttribute("aria-hidden", "false");
-    });
-    document.getElementById("openHistoryBtn").addEventListener("click", () => {
-      historyVisibleCount = HISTORY_PAGE_SIZE;
-      renderHistory();
-      historyModalOverlay.classList.add("visible"); historyModalOverlay.setAttribute("aria-hidden", "false");
-    });
-    document.getElementById("closeLibraryModalBtn").addEventListener("click", () => closeOverlay("libraryModalOverlay"));
-    document.getElementById("closeHistoryModalBtn").addEventListener("click", () => closeOverlay("historyModalOverlay"));
     document.getElementById("closeHistoryDetailBtn").addEventListener("click", () => closeOverlay("historyDetailOverlay"));
-    ["libraryModalOverlay", "historyModalOverlay", "historyDetailOverlay"].forEach(id => {
-      document.getElementById(id).addEventListener("click", event => {
-        if (event.target.id === id) closeOverlay(id);
-      });
+    historyDetailOverlay.addEventListener("click", event => {
+      if (event.target === historyDetailOverlay) closeOverlay("historyDetailOverlay");
     });
+
+    // Seletor de exercício no gráfico de evolução.
     document.getElementById("statsContent").addEventListener("change", event => {
-      if (event.target.id !== "bodyWeightInput") return;
-      setBodyWeight(event.target.value);
+      if (event.target.id !== "statsExerciseSelect") return;
+      statsSelectedRecordKey = event.target.value;
       renderTrainingStats();
     });
+
+    // Guarda quais seções da Evolução estão abertas entre um desenho e outro.
+    // ("toggle" não propaga; por isso o listener é de captura.)
+    document.getElementById("statsContent").addEventListener("toggle", event => {
+      const section = event.target.dataset?.statsSection;
+      if (section) statsSectionsOpen[section] = event.target.open;
+    }, true);
 
     document.getElementById("statsContent").addEventListener("click", event => {
       const button = event.target.closest("[data-calendar-shift]");
@@ -7973,7 +9206,7 @@
       if (!repeatWorkout.exercises.length) { await showMessage("Esta sessão não possui exercícios que possam ser repetidos.", "Repetir treino"); return; }
       const confirmed = await showConfirm(`Iniciar uma nova sessão baseada em “${entry.workoutName || "Treino"}”? O histórico original será mantido.`, { title: "Repetir treino", confirmText: "Iniciar treino" });
       if (!confirmed) return;
-      closeOverlay("historyDetailOverlay"); closeOverlay("historyModalOverlay");
+      closeOverlay("historyDetailOverlay");
       await startWorkoutExecution(repeatWorkout, entry.workoutId || null);
     });
 
@@ -8015,14 +9248,11 @@
 
       localStorage.setItem(THEME_STORAGE, normalized);
 
-      if (themeBtn) {
-        themeBtn.textContent =
-          normalized === "dark"
-            ? "☀️"
-            : "🌙";
+      // Cor da barra do sistema acompanha o tema.
+      document.querySelector('meta[name="theme-color"]')
+        ?.setAttribute("content", normalized === "dark" ? "#0f1115" : "#f3f4f6");
 
-        themeBtn.setAttribute("aria-label", normalized === "dark" ? "Ativar tema claro" : "Ativar tema escuro");
-      }
+      setSegmented("[data-theme-choice]", "themeChoice", normalized);
     }
 
     function loadTheme() {
@@ -8031,11 +9261,7 @@
       applyTheme(saved === "light" ? "light" : "dark");
     }
 
-    themeBtn.addEventListener("click", () => {
-      const current = document.documentElement.dataset.theme || "dark";
-      applyTheme(current === "dark" ? "light" : "dark");
-    }
-    );
+
     /* =========================================================
        FINALIZAÇÃO
     ========================================================= */
@@ -8076,13 +9302,21 @@
 
     document.getElementById("finishBackBtn").addEventListener("click", () => {
       showScreen(builderScreen);
+      showView("treinos");
       renderWorkout();
     }
     );
     /* =========================================================
        RECUPERAÇÃO
     ========================================================= */
+    // Mostra ou esconde o aviso de treino em andamento e, com ele,
+    // a sugestão de próximo treino (que só aparece sem treino a retomar).
     function checkForActiveSession() {
+      readActiveSession();
+      renderNextWorkout();
+    }
+
+    function readActiveSession() {
       const saved = localStorage.getItem(SESSION_WORKOUT_EXECUTION_STORAGE);
 
       if (!saved) {
@@ -8211,6 +9445,7 @@
         workoutState = createInitialWorkoutState();
 
         recoveryBox.classList.add("hidden");
+        renderNextWorkout();
       }
     );
     /* =========================================================
@@ -8232,7 +9467,8 @@
         exerciseLibrary: cloneWorkout(exerciseLibrary),
         history,
         settings: {
-          bodyWeightKg: getBodyWeight()
+          bodyWeightKg: getBodyWeight(),
+          weeklyGoal: getWeeklyGoal()
         }
       };
 
@@ -8335,6 +9571,10 @@
           const importedBodyWeight = Number(data.settings?.bodyWeightKg);
           if (Number.isFinite(importedBodyWeight) && importedBodyWeight > 0) {
             setBodyWeight(importedBodyWeight);
+          }
+
+          if (data.settings?.weeklyGoal) {
+            setWeeklyGoal(data.settings.weeklyGoal);
           }
 
           exerciseLibrary = importedLibrary && importedLibrary.length > 0
@@ -8557,20 +9797,28 @@
     function updateNotificationsButton() {
       if (!notificationsBtn) return;
 
+      const status = document.getElementById("notificationsStatus");
+
       if (!notificationsSupported()) {
-        notificationsBtn.textContent = "Alertas de descanso: indisponível neste navegador";
+        status.textContent = "Este navegador não permite notificações. A vibração continua funcionando.";
+        notificationsBtn.textContent = "Indisponível";
         notificationsBtn.disabled = true;
         return;
       }
 
       if (Notification.permission === "denied") {
-        notificationsBtn.textContent = "Alertas de descanso: bloqueados no navegador";
+        status.textContent = "Bloqueados nas permissões do navegador.";
+        notificationsBtn.textContent = "Como liberar";
         return;
       }
 
-      notificationsBtn.textContent = notificationsEnabled()
-        ? "Alertas de descanso: ativados"
-        : "Alertas de descanso: ativar";
+      const enabled = notificationsEnabled();
+      status.textContent = enabled
+        ? "Ativados: vibração e notificação quando o descanso acaba."
+        : "Vibração e notificação quando o descanso acaba.";
+      notificationsBtn.textContent = enabled ? "Desativar" : "Ativar";
+      notificationsBtn.classList.toggle("btn-primary", !enabled);
+      notificationsBtn.classList.toggle("btn-ghost", enabled);
     }
 
     async function showAppNotification(title, body) {
