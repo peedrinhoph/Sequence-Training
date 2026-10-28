@@ -346,27 +346,17 @@ Também é possível adicionar **qualquer exercício personalizado**.
 
 A interface foi desenvolvida seguindo uma abordagem **mobile-first**, considerando principalmente o uso durante o treino.
 
-### Tela de montagem
-
-Permite criar, configurar e organizar todos os exercícios antes de iniciar.
-
 <img width="757" height="524" alt="Screenshot 2026-09-07 183855" src="https://github.com/user-attachments/assets/ef73327d-90d3-41a4-a909-8e52e83bc54a" />
 
-### Tela de execução
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/10376488-cbd7-4ab1-9204-8e6ea1341524" />
 
-As informações mais importantes ficam em destaque para facilitar a visualização durante o exercício.
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/42ab0e84-2c6a-48e2-8f3f-494113139e2c" />
 
-<img width="783" height="740" alt="Screenshot 2026-09-07 183925" src="https://github.com/user-attachments/assets/259e93a0-b222-401c-980c-d6629e1bb8a4" />
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/04ed9550-53ba-4b9f-b896-3a324014e360" />
 
-### Tela de descanso
+<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/d7c290cc-ce5f-418e-84a0-3f8c3c5e62ae" />
 
-Apresenta um cronômetro grande para indicar o tempo restante até a próxima série.
-
-<img width="748" height="708" alt="Screenshot 2026-09-07 183934" src="https://github.com/user-attachments/assets/c0150974-aa66-4e71-a5d8-bbb529fc287d" />
-
-### Outras telas
-
-<img width="458" height="297" alt="Screenshot 2026-09-07 183945" src="https://github.com/user-attachments/assets/3dbd56b9-e916-4aa9-b95e-b1daf77b6655" />
+<img width="330" height="1568" alt="image" src="https://github.com/user-attachments/assets/6e3f4047-46e1-4f45-ab26-203fb834d065" />
 
 <img width="734" height="689" alt="Screenshot 2026-09-07 183906" src="https://github.com/user-attachments/assets/56b7147c-773b-4672-9952-db94f6dccfc7" />
 
