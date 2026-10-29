@@ -62,20 +62,13 @@ Monte rotinas de acordo com seus objetivos e organize os exercícios na ordem de
 ### 📚 2. Biblioteca de exercícios
 A aplicação possui exercícios pré-configurados, organizados de acordo com os grupos musculares trabalhados.
 
-```text
-Grupo muscular	Exercícios
-Peito	        Flexão
-Tríceps	        Flexão diamante
-Peito / Tríceps	Paralelas
-Costas	        Barra fixa
-Costas	        Barra supinada
-Pernas	        Agachamento
-Glúteos	        Avanço
-Abdômen	        Abdominal
-Abdômen	        Abdominal infra
-Abdômen	        Elevação de pernas
-Abdômen	        Prancha
-```
+| Categoria | Exercícios                                     |
+| --------- | ---------------------------------------------- |
+| Empurrar  | Flexão, Flexão diamante, Paralelas             |
+| Puxar     | Barra fixa, Barra supinada                     |
+| Pernas    | Agachamento, Avanço                            |
+| Abdômen   | Abdominal, Abdominal infra, Elevação de pernas |
+| Isometria | Prancha                                        |
 
 A biblioteca pode ser complementada com exercícios personalizados, permitindo adaptar as rotinas a diferentes níveis e preferências.
 
@@ -197,6 +190,7 @@ Os recursos de gerenciamento de dados incluem:
 - Compatibilidade com formatos anteriores.
 - Backup automático.
 - Restauração de backups disponíveis.
+  
 Recomendação: mantenha exportações periódicas dos seus treinos. O armazenamento local não substitui um backup independente.
 
 ## 🌗 12. Tema claro e escuro
@@ -204,22 +198,25 @@ A aplicação oferece dois temas:
 
 - ☀️ Claro.
 - 🌙 Escuro.
+  
 A preferência visual é persistida no navegador para que a interface mantenha o tema escolhido nas próximas visitas.
 
 ## 🧩 Tecnologias utilizadas
 
-Tecnologia	Aplicação no projeto
-HTML5	Estrutura e conteúdo da interface
-CSS3	Layout, responsividade, componentes e temas
-JavaScript Vanilla	Lógica, interações e gerenciamento das sessões
-IndexedDB	Persistência principal dos dados
-LocalStorage API	Persistência alternativa e compatibilidade com dados legados
-File API	Leitura e manipulação de arquivos importados
-Web Audio API	Geração de sinais sonoros
-Vibration API	Vibração em dispositivos compatíveis
-Web App Manifest	Configuração da instalação como aplicativo
-Service Worker	Cache, atualização e suporte à experiência PWA
-GitHub Pages	Hospedagem da aplicação
+| Tecnologia | Aplicação no projeto                                      |
+| ---------  | --------------------------------------------------------- |
+|HTML5       |	Estrutura e conteúdo da interface|
+|CSS3        |	Layout, responsividade, componentes e temas|
+|JavaScript  | Vanilla	Lógica, interações e gerenciamento das sessões|
+|IndexedDB   |	Persistência principal dos dados|
+|LocalStorage| API	Persistência alternativa e compatibilidade com dados legados|
+|File API    |	Leitura e manipulação de arquivos importados|
+|Web Audio API|	Geração de sinais sonoros|
+|Vibration API|	Vibração em dispositivos compatíveis|
+|Web App Manifest|	Configuração da instalação como aplicativo|
+|Service Worker|	Cache, atualização e suporte à experiência PWA|
+|GitHub Pages|	Hospedagem da aplicação|
+
 O projeto não depende de frameworks JavaScript ou bibliotecas externas obrigatórias para sua execução.
 
 ## 📱 Progressive Web App (PWA)
