@@ -206,35 +206,6 @@ A aplicação oferece dois temas:
 - 🌙 Escuro.
 A preferência visual é persistida no navegador para que a interface mantenha o tema escolhido nas próximas visitas.
 
-## 🖥️ Demonstração da interface
-As imagens abaixo são capturas reais da aplicação, preservadas a partir dos arquivos já utilizados no README do projeto.
-
-A interface foi desenvolvida com abordagem mobile-first, priorizando legibilidade, controles acessíveis e uso prático durante os exercícios.
-
-<img width="750" height="1398" alt="Interface do Sequence Training" src="https://github.com/user-attachments/assets/67e340a4-9684-4f7f-9982-181a9ec8436b" />
-
-<img width="370" height="1568" alt="Interface mobile do Sequence Training" src="https://github.com/user-attachments/assets/054b9636-7126-4cd6-b2d9-99acd4fcc52a" />
-
-<img width="750" height="1334" alt="Tela da aplicação" src="https://github.com/user-attachments/assets/aa2e31d1-c1b4-45e9-9124-8fb23d464f1e" />
-
-<img width="509" height="1568" alt="Tela mobile da aplicação" src="https://github.com/user-attachments/assets/f6a123c3-a1e2-477d-8c53-07f575f610cb" />
-
-<img width="750" height="1334" alt="Visualização de treino" src="https://github.com/user-attachments/assets/e8a72701-6ba8-4a4c-9de0-29e5787f636a" />
-
-<img width="750" height="1334" alt="Tela de execução do treino" src="https://github.com/user-attachments/assets/6f012870-ebc8-4e5a-95fb-bcfd4160c2d8" />
-
-<img width="750" height="1334" alt="Acompanhamento da sessão" src="https://github.com/user-attachments/assets/8e1ebb96-be23-461e-a05a-6ae91f73334e" />
-
-<img width="750" height="1334" alt="Controles da aplicação" src="https://github.com/user-attachments/assets/bded2ae3-2cc0-4bf5-b0e7-2b50e8baff40" />
-
-<img width="750" height="1334" alt="Detalhes da interface" src="https://github.com/user-attachments/assets/8cf6689c-5f0b-49d5-a263-899385e8b68a" />
-
-<img width="750" height="1334" alt="Tela adicional da aplicação" src="https://github.com/user-attachments/assets/b11fa374-1945-4b61-95f5-be8e44c0dc5a" />
-
-<img width="750" height="1398" alt="Interface da aplicação" src="https://github.com/user-attachments/assets/a4d369fb-6782-49fd-80c2-2182edfe2bdc" />
-
-<img width="384" height="1568" alt="Interface mobile adicional" src="https://github.com/user-attachments/assets/1f41d04a-6fcf-4d53-9bae-bef7b2013028" />
-
 ## 🧩 Tecnologias utilizadas
 
 Tecnologia	Aplicação no projeto
@@ -422,6 +393,35 @@ Esta fase depende de uma possível evolução para uma arquitetura com backend.
 - [ ] Recuperação de dados em outros dispositivos.
   
 O roadmap representa o planejamento do projeto e pode ser atualizado conforme as prioridades de desenvolvimento.
+
+## 🖥️ Demonstração da interface
+As imagens abaixo são capturas reais da aplicação, preservadas a partir dos arquivos já utilizados no README do projeto.
+
+A interface foi desenvolvida com abordagem mobile-first, priorizando legibilidade, controles acessíveis e uso prático durante os exercícios.
+
+<img width="750" height="1398" alt="Interface do Sequence Training" src="https://github.com/user-attachments/assets/67e340a4-9684-4f7f-9982-181a9ec8436b" />
+
+<img width="370" height="1568" alt="Interface mobile do Sequence Training" src="https://github.com/user-attachments/assets/054b9636-7126-4cd6-b2d9-99acd4fcc52a" />
+
+<img width="750" height="1334" alt="Tela da aplicação" src="https://github.com/user-attachments/assets/aa2e31d1-c1b4-45e9-9124-8fb23d464f1e" />
+
+<img width="509" height="1568" alt="Tela mobile da aplicação" src="https://github.com/user-attachments/assets/f6a123c3-a1e2-477d-8c53-07f575f610cb" />
+
+<img width="750" height="1334" alt="Visualização de treino" src="https://github.com/user-attachments/assets/e8a72701-6ba8-4a4c-9de0-29e5787f636a" />
+
+<img width="750" height="1334" alt="Tela de execução do treino" src="https://github.com/user-attachments/assets/6f012870-ebc8-4e5a-95fb-bcfd4160c2d8" />
+
+<img width="750" height="1334" alt="Acompanhamento da sessão" src="https://github.com/user-attachments/assets/8e1ebb96-be23-461e-a05a-6ae91f73334e" />
+
+<img width="750" height="1334" alt="Controles da aplicação" src="https://github.com/user-attachments/assets/bded2ae3-2cc0-4bf5-b0e7-2b50e8baff40" />
+
+<img width="750" height="1334" alt="Detalhes da interface" src="https://github.com/user-attachments/assets/8cf6689c-5f0b-49d5-a263-899385e8b68a" />
+
+<img width="750" height="1334" alt="Tela adicional da aplicação" src="https://github.com/user-attachments/assets/b11fa374-1945-4b61-95f5-be8e44c0dc5a" />
+
+<img width="750" height="1398" alt="Interface da aplicação" src="https://github.com/user-attachments/assets/a4d369fb-6782-49fd-80c2-2182edfe2bdc" />
+
+<img width="384" height="1568" alt="Interface mobile adicional" src="https://github.com/user-attachments/assets/1f41d04a-6fcf-4d53-9bae-bef7b2013028" />
 
 ## 🤝 Contribuição
 Contribuições, sugestões e melhorias são bem-vindas.
