@@ -1,925 +1,473 @@
-# 💪 Sequence Training
+💪 Sequence Training
+Crie, personalize, execute e acompanhe seus treinos de calistenia em uma aplicação web rápida, responsiva e instalável.
+<p align="center">
+<a href="https://peedrinhoph.github.io/Sequence-Training/">
+<img src="https://img.shields.io/badge/ACESSAR%20APLICAÇÃO-84CC16?style=for-the-badge&logo=githubpages&logoColor=111111" alt="Acessar Sequence Training">
+</a>
+</p>
 
-> Aplicação web para criação, personalização e execução de treinos de calistenia diretamente pelo navegador.
+<p align="center">
+<img src="https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white" alt="HTML5">
+<img src="https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white" alt="CSS3">
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript">
+<img src="https://img.shields.io/badge/PWA-Installable-5A0FC8?logo=pwa" alt="PWA">
+<img src="https://img.shields.io/badge/Backend-Not%20Required-22C55E" alt="Sem backend">
+<img src="https://img.shields.io/badge/License-See%20Repository-64748B" alt="Licença">
+</p>
 
-[![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5\&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3\&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/CSS)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript\&logoColor=black)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
-[![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222222?logo=github)](https://pages.github.com/)
-[![PWA](https://img.shields.io/badge/PWA-Installable-5A0FC8?logo=pwa)](https://web.dev/progressive-web-apps/)
-[![No Backend](https://img.shields.io/badge/Backend-None-success)](#-arquitetura)
+## 📌 Sobre o projeto
+O **Sequence Training** é uma aplicação web desenvolvida para facilitar a organização e a execução de treinos de calistenia.
 
----
+O projeto reúne a criação de rotinas personalizadas, o acompanhamento de séries e repetições, o controle de descanso e o registro do histórico de treinos em uma única aplicação.
 
-## 🌐 Acesse
+A proposta é oferecer uma ferramenta prática para o dia a dia, sem exigir cadastro, login ou conexão com um servidor próprio.
 
-[**Sequence Training**](https://peedrinhoph.github.io/Sequence-Training/)
+### Principais características
 
----
+- 🏋️ Criação e personalização de treinos.
+- 📚 Gerenciamento de múltiplas rotinas.
+- ⚖️ Configuração de carga individual por série.
+- ⏱️ Cronômetros de execução e descanso.
+- ⏸️ Pausa e retomada de sessões.
+- 📊 Acompanhamento do progresso do treino.
+- 📜 Histórico de sessões concluídas.
+- 📈 Estatísticas e evolução do desempenho.
+- 💾 Salvamento local e recuperação de dados.
+- 📤 Importação e exportação de treinos.
+- 🌗 Temas claro e escuro.
+- 📱 Instalação como Progressive Web App (PWA).
 
-## 📱 Sobre o projeto
+A aplicação é publicada pelo GitHub Pages e pode ser acessada diretamente pelo navegador, sem instalação obrigatória.
 
-O **Sequence Training** é uma aplicação web leve e independente criada para facilitar a montagem, personalização e execução de treinos de calistenia.
+## ✨ Funcionalidades
+### 🏋️ 1. Criação e personalização de treinos
+Monte rotinas de acordo com seus objetivos e organize os exercícios na ordem desejada.
 
-A aplicação permite criar diferentes treinos, configurar seus exercícios e acompanhar a execução em tempo real.
+- Criação de múltiplos treinos.
+- Nome personalizado para cada rotina.
+- Biblioteca de exercícios pré-cadastrados.
+- Cadastro de exercícios personalizados.
+- Organização por grupos musculares.
+- Configuração de séries e repetições.
+- Intervalo de descanso configurável.
+- Carga individual para cada série.
+- Edição e exclusão de exercícios.
+- Reordenação por arrastar e soltar (drag and drop).
+- Controles alternativos para movimentar os exercícios.
+- Duplicação, atualização e exclusão de treinos salvos.
+- Marcação de treinos favoritos.
+- Ordenação dos treinos e consulta ao último uso.
+- O editor também oferece mecanismos para proteger alterações ainda não salvas, reduzindo o risco de perder modificações acidentalmente.
 
-O projeto foi desenvolvido com foco em:
-
-* Simplicidade.
-* Rapidez.
-* Uso durante o treino.
-* Responsividade.
-* Funcionamento local.
-* Privacidade dos dados.
-* Instalação como PWA.
-
-Tudo funciona **diretamente no navegador**, sem necessidade de conta, servidor ou banco de dados.
-
----
-
-## ✨ Principais recursos
-
-### 🏋️ Criação e montagem de treinos
-
-* Exercícios pré-cadastrados.
-* Exercícios personalizados.
-* Configuração individual de séries.
-* Configuração de repetições por série.
-* Configuração do intervalo de descanso.
-* Configuração de carga/peso por série.
-* Edição dos exercícios.
-* Exclusão dos exercícios.
-* Reordenação dos exercícios.
-* Drag & drop para organização.
-* Controles para movimentação dos exercícios.
-* Nome personalizado para cada treino.
-
-### 📚 Múltiplos treinos
-
-É possível manter diversos treinos salvos no navegador.
-
-Cada treino pode ser:
-
-* Criado.
-* Visualizado.
-* Editado.
-* Atualizado.
-* Duplicado.
-* Excluído.
-* Executado.
-
-Ao carregar um treino existente, suas alterações podem ser salvas através da opção **Atualizar treino**, evitando a criação de cópias desnecessárias.
-
-Exemplo:
+### 📚 2. Biblioteca de exercícios
+A aplicação possui exercícios pré-configurados, organizados de acordo com os grupos musculares trabalhados.
 
 ```text
-Meus treinos
-
-┌─────────────────────────────┐
-│ Push                        │
-│ 5 exercícios                │
-│                             │
-│ [Visualizar] [Duplicar]  ×  │
-└─────────────────────────────┘
-
-┌─────────────────────────────┐
-│ Pernas                      │
-│ 6 exercícios                │
-│                             │
-│ [Visualizar] [Duplicar]  ×  │
-└─────────────────────────────┘
-
-        + Novo treino
+Grupo muscular	Exercícios
+Peito	        Flexão
+Tríceps	        Flexão diamante
+Peito / Tríceps	Paralelas
+Costas	        Barra fixa
+Costas	        Barra supinada
+Pernas	        Agachamento
+Glúteos	        Avanço
+Abdômen	        Abdominal
+Abdômen	        Abdominal infra
+Abdômen	        Elevação de pernas
+Abdômen	        Prancha
 ```
 
-### ⚖️ Carga por série
+A biblioteca pode ser complementada com exercícios personalizados, permitindo adaptar as rotinas a diferentes níveis e preferências.
 
-Cada série pode possuir uma carga específica.
+### ⚖️ 3. Carga individual por série
+Cada série pode ter uma carga diferente, permitindo registrar a progressão de exercícios com peso adicional.
 
 Exemplo:
+
 
 ```text
 Barra fixa
 
-Série 1 → 0 kg
-Série 2 → 0 kg
-Série 3 → 5 kg
-Série 4 → 5 kg
+Série 1: peso corporal
+Série 2: peso corporal
+Série 3: +5 kg
+Série 4: +5 kg
 ```
+O valor zero representa a execução com peso corporal, sem carga externa adicional.
+
+### ⏱️ 4. Execução do treino em tempo real
+Durante a sessão, a interface apresenta as informações necessárias para acompanhar o treino sem precisar voltar ao editor.
+
+- Exercício atual.
+- Série atual e total de séries.
+- Repetições previstas.
+- Carga da série.
+- Cronômetro de execução.
+- Cronômetro de descanso.
+- Próxima série ou exercício.
+- Barra e percentual de progresso.
+- Tempo total da sessão.
+- Controles para avançar ou interromper a execução.
+- A interface prioriza a leitura rápida das informações, especialmente em telas menores.
 
-O valor `0 kg` representa treino com peso corporal.
+### ⏸️ 5. Controle da sessão
+A execução pode ser pausada e retomada conforme a necessidade.
 
----
+Os controles incluem:
 
-## ⏱️ Execução do treino
+- Pausar e continuar o treino.
+- Pular uma série.
+- Pular um exercício.
+- Pular o descanso.
+- Ajustar o descanso com incrementos de +15s e -15s.
+- Consultar a próxima etapa do treino.
+- Encerrar a sessão.
+- O tempo em pausa não é contabilizado como tempo efetivo de treino.
 
-Durante o treino, a aplicação apresenta:
+### 🔔 6. Descanso, sons e vibração
+O intervalo configurado é utilizado entre as séries.
 
-* Exercício atual.
-* Série atual.
-* Repetições previstas.
-* Carga da série atual.
-* Cronômetro de execução.
-* Intervalo de descanso.
-* Próximo exercício.
-* Próxima série.
-* Barra de progresso.
-* Percentual de conclusão.
+A aplicação também oferece sinais sonoros para eventos da sessão e suporte à vibração em dispositivos e navegadores compatíveis.
 
-Exemplo:
+Os sons são gerados pela Web Audio API, sem depender de arquivos de áudio externos.
 
-```text
-17% concluído
-████░░░░░░░░░░░░░░░░
-```
+A vibração utiliza a Vibration API quando disponível.
 
-O progresso é calculado com base nas **repetições previstas e concluídas ao longo de todo o treino**.
+### 🔄 7. Recuperação da sessão
+O estado de uma sessão em andamento é persistido para facilitar a retomada após uma atualização ou reabertura da página.
 
----
+Isso permite recuperar informações como o exercício atual, a série, o progresso e os dados da sessão armazenados.
 
-## 🔄 Continuidade do treino
+A recuperação depende da disponibilidade e integridade dos dados locais no navegador.
 
-O estado da sessão é salvo automaticamente no navegador.
+### 📜 8. Histórico detalhado
+Ao concluir um treino, a aplicação registra a sessão no histórico.
 
-Se a página for atualizada ou fechada durante um treino, a aplicação pode identificar a sessão anterior e permitir que o usuário continue de onde parou.
+Entre as informações disponíveis estão:
 
-São preservados dados como:
+- Nome do treino.
+- Data e horário da conclusão.
+- Duração.
+- Exercícios realizados.
+- Total de repetições.
+- Séries concluídas ou puladas.
+- Cargas utilizadas.
+- Detalhes de execução por exercício.
+- O histórico permanece separado da configuração dos treinos. Assim, editar uma rotina não exige apagar os registros de sessões anteriores.
 
-* Exercício atual.
-* Série atual.
-* Progresso.
-* Tempo de execução.
-* Tempo de descanso.
-* Estado da sessão.
+### 📈 9. Estatísticas e progressão
+A aplicação reúne informações sobre o desempenho acumulado para facilitar o acompanhamento da evolução.
 
----
+Os recursos incluem:
 
-## ⏸️ Pausar e continuar
+- Frequência semanal de treinos.
+- Metas semanais e acompanhamento de consistência.
+- Tempo total treinado.
+- Volume de treino quando há carga externa registrada.
+- Histórico de cargas e repetições.
+- Gráficos de evolução.
+- Recordes pessoais (personal records ou PRs).
+- Notificações de novos recordes.
+- Comparação com desempenhos anteriores.
+- Sugestões de progressão após sessões elegíveis.
+Essas informações ajudam a visualizar tendências e identificar oportunidades para aumentar gradualmente o desafio.
 
-O treino pode ser pausado a qualquer momento.
+### 💾 10. Persistência e proteção de dados
+Os dados são armazenados no próprio navegador.
 
-Opções disponíveis:
+O IndexedDB é utilizado como armazenamento principal, com localStorage como alternativa quando o IndexedDB não está disponível. O sistema também contempla a migração de dados legados.
 
-* Continuar treino.
-* Encerrar treino.
+A persistência abrange, entre outros elementos:
 
-O tempo em pausa não é contabilizado no tempo efetivo do treino.
+- Treinos salvos.
+- Biblioteca de exercícios.
+- Histórico de sessões.
+- Backups.
+- Metadados de migração.
+- A aplicação possui mecanismos de proteção para operações que podem substituir dados existentes, além de recursos para recuperação de backups.
 
----
+### 📤 11. Exportação e importação
+Os dados podem ser exportados para JSON, facilitando a criação de cópias de segurança e a transferência entre ambientes.
 
-## 🔔 Descanso
+Os recursos de gerenciamento de dados incluem:
 
-Após a conclusão de uma série, o intervalo configurado é iniciado automaticamente.
+- Exportação de treinos.
+- Importação de arquivos JSON compatíveis.
+- Suporte a múltiplos treinos.
+- Compatibilidade com formatos anteriores.
+- Backup automático.
+- Restauração de backups disponíveis.
+Recomendação: mantenha exportações periódicas dos seus treinos. O armazenamento local não substitui um backup independente.
 
-Ao finalizar o descanso:
+## 🌗 12. Tema claro e escuro
+A aplicação oferece dois temas:
 
-* A próxima série é liberada.
-* O cronômetro de execução é iniciado.
-* Um sinal sonoro pode ser reproduzido.
-* O dispositivo pode vibrar quando suportado pelo navegador/dispositivo.
+- ☀️ Claro.
+- 🌙 Escuro.
+A preferência visual é persistida no navegador para que a interface mantenha o tema escolhido nas próximas visitas.
 
-Também existem controles para pular o descanso quando necessário.
+## 🖥️ Demonstração da interface
+As imagens abaixo são capturas reais da aplicação, preservadas a partir dos arquivos já utilizados no README do projeto.
 
----
+A interface foi desenvolvida com abordagem mobile-first, priorizando legibilidade, controles acessíveis e uso prático durante os exercícios.
 
-## 🔊 Sons
+<img width="750" height="1398" alt="Interface do Sequence Training" src="https://github.com/user-attachments/assets/67e340a4-9684-4f7f-9982-181a9ec8436b" />
 
-A aplicação utiliza a **Web Audio API** para reproduzir sinais sonoros durante o treino.
+<img width="370" height="1568" alt="Interface mobile do Sequence Training" src="https://github.com/user-attachments/assets/054b9636-7126-4cd6-b2d9-99acd4fcc52a" />
 
-São utilizados diferentes sinais para eventos como:
+<img width="750" height="1334" alt="Tela da aplicação" src="https://github.com/user-attachments/assets/aa2e31d1-c1b4-45e9-9124-8fb23d464f1e" />
 
-* Início.
-* Finalização do descanso.
-* Finalização do treino.
+<img width="509" height="1568" alt="Tela mobile da aplicação" src="https://github.com/user-attachments/assets/f6a123c3-a1e2-477d-8c53-07f575f610cb" />
 
-Não são necessários arquivos de áudio externos.
+<img width="750" height="1334" alt="Visualização de treino" src="https://github.com/user-attachments/assets/e8a72701-6ba8-4a4c-9de0-29e5787f636a" />
 
----
+<img width="750" height="1334" alt="Tela de execução do treino" src="https://github.com/user-attachments/assets/6f012870-ebc8-4e5a-95fb-bcfd4160c2d8" />
 
-## 📊 Tempo total de treino
+<img width="750" height="1334" alt="Acompanhamento da sessão" src="https://github.com/user-attachments/assets/8e1ebb96-be23-461e-a05a-6ae91f73334e" />
 
-A aplicação contabiliza o tempo efetivo do treino.
+<img width="750" height="1334" alt="Controles da aplicação" src="https://github.com/user-attachments/assets/bded2ae3-2cc0-4bf5-b0e7-2b50e8baff40" />
 
-O cálculo considera:
+<img width="750" height="1334" alt="Detalhes da interface" src="https://github.com/user-attachments/assets/8cf6689c-5f0b-49d5-a263-899385e8b68a" />
 
-* Tempo de execução.
-* Tempo de descanso.
+<img width="750" height="1334" alt="Tela adicional da aplicação" src="https://github.com/user-attachments/assets/b11fa374-1945-4b61-95f5-be8e44c0dc5a" />
 
-O período em pausa é excluído da contagem.
+<img width="750" height="1398" alt="Interface da aplicação" src="https://github.com/user-attachments/assets/a4d369fb-6782-49fd-80c2-2182edfe2bdc" />
 
-O tempo total é armazenado na sessão e também registrado no histórico após a conclusão do treino.
+<img width="384" height="1568" alt="Interface mobile adicional" src="https://github.com/user-attachments/assets/1f41d04a-6fcf-4d53-9bae-bef7b2013028" />
 
----
+## 🧩 Tecnologias utilizadas
 
-## 📜 Histórico
+Tecnologia	Aplicação no projeto
+HTML5	Estrutura e conteúdo da interface
+CSS3	Layout, responsividade, componentes e temas
+JavaScript Vanilla	Lógica, interações e gerenciamento das sessões
+IndexedDB	Persistência principal dos dados
+LocalStorage API	Persistência alternativa e compatibilidade com dados legados
+File API	Leitura e manipulação de arquivos importados
+Web Audio API	Geração de sinais sonoros
+Vibration API	Vibração em dispositivos compatíveis
+Web App Manifest	Configuração da instalação como aplicativo
+Service Worker	Cache, atualização e suporte à experiência PWA
+GitHub Pages	Hospedagem da aplicação
+O projeto não depende de frameworks JavaScript ou bibliotecas externas obrigatórias para sua execução.
 
-Treinos concluídos são registrados no histórico local.
+## 📱 Progressive Web App (PWA)
+O Sequence Training possui estrutura de Progressive Web App, permitindo sua instalação em dispositivos compatíveis.
 
-O histórico armazena informações como:
+A implementação utiliza:
 
-* Nome do treino.
-* Data e horário.
-* Duração.
-* Total de repetições.
-* Resumo dos exercícios executados.
+- Web App Manifest.
+- Service Worker.
+- Ícones de instalação.
+- Cache de recursos.
+- HTTPS por meio do GitHub Pages.
+- Verificação de atualizações do Service Worker.
+- Quando suportada pelo navegador, a instalação permite acessar a aplicação de maneira semelhante a um aplicativo convencional.
 
-O histórico é independente dos treinos salvos.
-
-Isso permite manter os treinos configurados mesmo depois de várias execuções.
-
----
-
-## 💾 Persistência local
-
-Os dados são armazenados utilizando a API:
-
-```javascript
-localStorage
-```
-
-Não existe banco de dados externo.
-
-Entre os dados persistidos estão:
-
-* Treinos salvos.
-* Treino atualmente carregado.
-* Rascunho do editor.
-* Sessão de treino em andamento.
-* Histórico.
-* Tema selecionado.
-* Backup automático.
-
-Principais chaves utilizadas:
-
-```text
-calisthenics_workouts
-calisthenics_workout
-calisthenics_session
-calisthenics_history
-calisthenics_theme
-calisthenics_backup
-```
-
-Ao fechar e abrir novamente a aplicação no mesmo navegador/origem, os dados podem ser restaurados automaticamente.
-
----
-
-## 🛡️ Backup e proteção de dados
-
-A aplicação possui um sistema de proteção contra operações que podem causar perda de dados.
-
-Antes de operações destrutivas, um backup automático pode ser criado.
-
-Entre essas operações estão:
-
-* Criar um novo treino abandonando o atual.
-* Limpar o treino.
-* Importar treinos.
-* Restaurar um backup.
-* Outras operações que possam substituir dados existentes.
-
-Também existe proteção contra alterações não salvas.
-
-Quando existem modificações no treino atual que ainda não foram salvas, a aplicação alerta o usuário antes de permitir que o conteúdo seja substituído.
-
-### 🔄 Restaurar backup
-
-Um backup automático pode ser restaurado através da opção:
-
-```text
-Restaurar backup
-```
-
-O objetivo é reduzir o risco de perda acidental dos treinos durante alterações ou operações de substituição.
-
----
-
-## 📤 Exportação e importação
-
-Os treinos podem ser:
-
-* Exportados para JSON.
-* Importados posteriormente.
-
-A exportação permite realizar backups manuais e transportar os treinos para outro navegador ou dispositivo.
-
-O formato atual de exportação suporta **múltiplos treinos**.
-
-A aplicação também mantém compatibilidade com formatos anteriores de exportação.
-
-Arquivo gerado:
-
-```text
-treinos-calistenia.json
-```
-
----
-
-## 🌗 Tema
-
-A aplicação possui suporte aos temas:
-
-* Claro.
-* Escuro.
-
-A preferência selecionada é armazenada no navegador e restaurada automaticamente quando a aplicação é aberta novamente.
-
----
-
-## 🧩 Exercícios disponíveis
-
-A aplicação possui exercícios pré-configurados:
-
-| Categoria | Exercícios                                     |
-| --------- | ---------------------------------------------- |
-| Empurrar  | Flexão, Flexão diamante, Paralelas             |
-| Puxar     | Barra fixa, Barra supinada                     |
-| Pernas    | Agachamento, Avanço                            |
-| Abdômen   | Abdominal, Abdominal infra, Elevação de pernas |
-| Isometria | Prancha                                        |
-
-Também é possível adicionar **qualquer exercício personalizado**.
-
----
-
-## 🖥️ Interface
-
-A interface foi desenvolvida seguindo uma abordagem **mobile-first**, considerando principalmente o uso durante o treino.
-
-<img width="750" height="1398" alt="image" src="https://github.com/user-attachments/assets/67e340a4-9684-4f7f-9982-181a9ec8436b" />
-
-<img width="370" height="1568" alt="image" src="https://github.com/user-attachments/assets/054b9636-7126-4cd6-b2d9-99acd4fcc52a" />
-
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/aa2e31d1-c1b4-45e9-9124-8fb23d464f1e" />
-
-<img width="509" height="1568" alt="image" src="https://github.com/user-attachments/assets/f6a123c3-a1e2-477d-8c53-07f575f610cb" />
-
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/e8a72701-6ba8-4a4c-9de0-29e5787f636a" />
-
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/6f012870-ebc8-4e5a-95fb-bcfd4160c2d8" />
-
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/8e1ebb96-be23-461e-a05a-6ae91f73334e" />
-
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/bded2ae3-2cc0-4bf5-b0e7-2b50e8baff40" />
-
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/8cf6689c-5f0b-49d5-a263-899385e8b68a" />
-
-<img width="750" height="1334" alt="image" src="https://github.com/user-attachments/assets/b11fa374-1945-4b61-95f5-be8e44c0dc5a" />
-
-<img width="750" height="1398" alt="image" src="https://github.com/user-attachments/assets/a4d369fb-6782-49fd-80c2-2182edfe2bdc" />
-
-<img width="384" height="1568" alt="image" src="https://github.com/user-attachments/assets/1f41d04a-6fcf-4d53-9bae-bef7b2013028" />
-
----
-
-## 📱 PWA
-
-O Sequence Training possui estrutura de **Progressive Web App (PWA)**.
-
-Isso permite instalar a aplicação no dispositivo e utilizá-la com uma experiência semelhante a um aplicativo.
-
-Estrutura:
-
-```text
-Sequence-Training/
-│
-├── index.html
-├── manifest.json
-├── service-worker.js
-├── icons/
-│   ├── icon-192.png
-│   ├── icon-512.png
-│   └── icon-512-maskable.png
-└── README.md
-```
-
-O PWA utiliza:
-
-* Web App Manifest.
-* Service Worker.
-* Ícones para instalação.
-* Cache dos arquivos principais.
-* HTTPS através do GitHub Pages.
-
-> O funcionamento offline e a estratégia de cache continuam sendo aprimorados no roadmap.
-
----
+A disponibilidade de instalação, notificações, vibração e recursos offline varia conforme o navegador e o dispositivo. A presença de um Service Worker não garante que todas as funcionalidades estejam disponíveis offline.
 
 ## 🏗️ Arquitetura
+A aplicação foi concebida sem backend próprio, utilizando recursos nativos da plataforma web.
 
-O projeto foi desenvolvido propositalmente sem backend.
 
 ```text
-┌─────────────────────────────┐
-│          Browser            │
-│                             │
-│  ┌───────────────────────┐  │
-│  │        HTML            │  │
-│  │        CSS             │  │
-│  │     JavaScript         │  │
-│  └───────────┬───────────┘  │
-│              │              │
-│              ▼              │
-│       localStorage          │
-│              │              │
-│              ▼              │
-│       Dados locais          │
-│                             │
-└─────────────────────────────┘
+┌───────────────────────────────────────┐
+│                Browser                │
+│                                       │
+│  ┌─────────────────────────────────┐  │
+│  │          index.html             │  │
+│  │                                 │  │
+│  │   HTML + CSS + JavaScript       │  │
+│  └────────────────┬────────────────┘  │
+│                   │                   │
+│          ┌────────┴────────┐          │
+│          │                 │          │
+│          ▼                 ▼          │
+│      IndexedDB         localStorage   │
+│      Principal          Alternativo   │
+│          │                 │          │
+│          └────────┬────────┘          │
+│                   ▼                   │
+│       Treinos, histórico,             │
+│       biblioteca e backups            │
+│                                       │
+│             Service Worker            │
+│          Cache e atualizações         │
+└───────────────────────────────────────┘
 ```
+Características da arquitetura
+- Não exige servidor de aplicação.
+- Não exige cadastro ou autenticação.
+- Não depende de banco de dados remoto.
+- Armazena os dados no ambiente local do navegador.
+- Mantém o código principal concentrado no index.html.
+- Utiliza arquivos complementares para configuração do PWA.
+- Privacidade e limitações
 
-### Tecnologias
+A ausência de backend próprio significa que a aplicação não oferece sincronização automática entre dispositivos.
 
-* HTML5
-* CSS3
-* JavaScript Vanilla
-* LocalStorage API
-* File API
-* Web Audio API
-* Vibration API
-* Service Worker
-* Web App Manifest
-
-Não são utilizados frameworks ou bibliotecas externas obrigatórias.
-
----
+Os dados locais também podem ser perdidos se o armazenamento do site for apagado ou se ocorrer uma falha no dispositivo. Por isso, é importante exportar backups regularmente.
 
 ## 📁 Estrutura do projeto
 
-A estrutura atual utiliza uma arquitetura propositalmente simples:
-
 ```text
 Sequence-Training/
 │
 ├── index.html
 ├── manifest.json
 ├── service-worker.js
+├── favicon.ico
 ├── icons/
 │   ├── icon-192.png
 │   ├── icon-512.png
 │   └── icon-512-maskable.png
+│
 └── README.md
 ```
-
-O aplicativo permanece concentrado principalmente no `index.html`, enquanto os arquivos adicionais são utilizados pelo PWA.
-
-Essa abordagem facilita:
-
-* Desenvolvimento.
-* Manutenção.
-* Portabilidade.
-* Hospedagem.
-* Deploy no GitHub Pages.
-
----
-
-## 🚀 Como executar
-
-### Clonar o projeto
-
-```bash
-git clone https://github.com/peedrinhoph/Sequence-Training.git
-```
-
-Entrar no diretório:
-
-```bash
-cd Sequence-Training
-```
-
-### Executar
-
-Como é uma aplicação estática, pode ser utilizado um servidor local:
-
-```bash
-python -m http.server 8000
-```
-
-Depois acesse:
-
-```text
-http://localhost:8000
-```
-
-Também é possível abrir o `index.html` diretamente no navegador para utilização básica.
-
-> Para testar corretamente recursos relacionados ao PWA, Service Worker e instalação, recomenda-se utilizar um servidor HTTP ou o GitHub Pages.
-
----
-
-## 🌐 Deploy no GitHub Pages
-
-O projeto pode ser publicado gratuitamente utilizando o GitHub Pages.
-
-No repositório:
-
-```text
-Settings
-   ↓
-Pages
-   ↓
-Build and deployment
-   ↓
-Deploy from a branch
-```
-
-Selecione:
-
-```text
-Branch: main
-Folder: / (root)
-```
-
-Após o deploy, o aplicativo estará disponível através da URL fornecida pelo GitHub Pages.
-
----
-
-## 🔐 Privacidade
-
-O aplicativo não possui backend e não envia os dados dos treinos para servidores externos.
-
-Os dados ficam armazenados localmente no navegador.
-
-Isso significa que o projeto não necessita de:
-
-* Cadastro.
-* Login.
-* Banco de dados.
-* API.
-* Servidor.
-
-### ⚠️ Importante
-
-Os dados armazenados no `localStorage` podem ser perdidos caso os dados do site sejam apagados pelo navegador.
-
-Por isso, recomenda-se utilizar a função de **Exportar treinos** para manter uma cópia dos dados.
-
----
-
-## 📦 Formato dos dados
-
-A versão atual de exportação utiliza o formato:
-
-```json
-{
-  "version": 4,
-  "exportedAt": "2026-10-15T12:15:29.282Z",
-  "workouts": [
-    {
-      "id": "fb426c52-f840-4abe-a581-80fa78872961",
-      "name": "Quarta",
-      "exercises": [
-        {
-          "id": "5d6a34d2-5ab9-47c1-a183-995c29fd110c",
-          "name": "Abdominal",
-          "sets": 2,
-          "reps": 10,
-          "rest": 15,
-          "weights": [
-            0,
-            10
-          ],
-          "custom": false,
-          "libraryId": "abdominal",
-          "muscleGroup": "Abdômen"
-        }
-      ],
-      "createdAt": "2026-09-15T20:32:47.853Z",
-      "updatedAt": "2026-09-15T21:41:40.053Z",
-      "lastUsedAt": "2026-10-15T12:13:16.898Z"
-    }
-  ],
-  "exerciseLibrary": [
-    {
-      "id": "flexao",
-      "name": "Flexão",
-      "muscleGroup": "Peito",
-      "custom": false
-    },
-    {
-      "id": "flexao-diamante",
-      "name": "Flexão diamante",
-      "muscleGroup": "Tríceps",
-      "custom": false
-    },
-    {
-      "id": "barra-fixa",
-      "name": "Barra fixa",
-      "muscleGroup": "Costas",
-      "custom": false
-    },
-    {
-      "id": "barra-supinada",
-      "name": "Barra supinada",
-      "muscleGroup": "Costas / Bíceps",
-      "custom": false
-    },
-    {
-      "id": "paralelas",
-      "name": "Paralelas",
-      "muscleGroup": "Peito / Tríceps",
-      "custom": false
-    },
-    {
-      "id": "agachamento",
-      "name": "Agachamento",
-      "muscleGroup": "Pernas",
-      "custom": false
-    },
-    {
-      "id": "avanco",
-      "name": "Avanço",
-      "muscleGroup": "Pernas / Glúteos",
-      "custom": false
-    },
-    {
-      "id": "abdominal",
-      "name": "Abdominal",
-      "muscleGroup": "Abdômen",
-      "custom": false
-    },
-    {
-      "id": "abdominal-infra",
-      "name": "Abdominal infra",
-      "muscleGroup": "Abdômen",
-      "custom": false
-    },
-    {
-      "id": "elevacao-pernas",
-      "name": "Elevação de pernas",
-      "muscleGroup": "Abdômen",
-      "custom": false
-    },
-    {
-      "id": "prancha",
-      "name": "Prancha",
-      "muscleGroup": "Abdômen",
-      "custom": false
-    }
-  ]
-}
-```
-
-O formato suporta:
-
-* Múltiplos treinos.
-* Identificação individual dos treinos.
-* Exercícios personalizados.
-* Séries.
-* Repetições.
-* Intervalos.
-* Carga individual por série.
-* Data de criação.
-* Data de atualização.
-
-A aplicação mantém compatibilidade com formatos anteriores de exportação.
-
----
-
-## 🔄 Fluxo do treino
-
-```text
-┌──────────────────┐
-│ Criar treino     │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Adicionar        │
-│ exercícios       │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Configurar       │
-│ séries/reps      │
-│ carga/descanso   │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Organizar        │
-│ exercícios       │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Salvar treino    │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Iniciar treino   │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Executar série   │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Série concluída  │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Descanso         │
-└────────┬─────────┘
-         ↓
-    Próxima série
-         │
-         └──────────────┐
-                        ↓
-              Próximo exercício
-                        │
-                        ↓
-                ┌──────────────┐
-                │ 100%         │
-                │ concluído    │
-                └──────────────┘
-                        ↓
-                ┌──────────────┐
-                │ Histórico    │
-                └──────────────┘
-```
-
----
-
-# 🗺️ Roadmap
-
-A evolução do Sequence Training será feita priorizando primeiro **estabilidade e confiabilidade**, depois **experiência de treino**, **acompanhamento de evolução** e, por último, recursos mais avançados.
-
-## 🟢 Fase 1 — Consolidar a base
-
-* [x] Persistência dos treinos no `localStorage`
-* [x] Persistência do histórico
-* [x] Persistência do tema
-* [x] Persistência da sessão em andamento
-* [x] Backup automático
-* [x] Restauração de backup
-* [x] Proteção contra alterações não salvas
-* [x] Testes completos de persistência
-* [x] Versionamento dos dados e sistema de migração
-* [x] Melhorar gerenciamento de versões do Service Worker/cache
-
-## 🟢 Fase 2 — Melhorar a criação dos treinos
-
-* [x] Suporte a múltiplos treinos
-* [x] Criar novo treino
-* [x] Visualizar treino salvo
-* [x] Atualizar treino existente
-* [x] Duplicar treino
-* [x] Excluir treino
-* [x] Exercícios personalizados
-* [x] Carga individual por série
-* [x] Melhorar interface de **Meus treinos**
-* [x] Ordenar treinos por nome ou último uso
-* [x] Mostrar última execução
-* [x] Criar biblioteca de exercícios
-* [x] Categorizar exercícios por grupo muscular
-* [x] Melhorar cadastro de exercícios personalizados
-* [x] Melhorar o acesso a opções de ação com dropdown
-* [x] Melhorar a lista de exercícios da biblioteca
-
-## 🟡 Fase 3 — Evoluir a execução do treino
-
-* [x] Controle de séries
-* [x] Controle de repetições
-* [x] Cronômetro de execução
-* [x] Cronômetro de descanso
-* [x] Pausar e continuar
-* [x] Pular série
-* [x] Pular descanso
-* [x] Pular exercício
-* [x] Indicação do próximo exercício
-* [x] Sinais sonoros
-* [x] Suporte à vibração
-* [x] Controles de `+15s` e `-15s` no descanso
-* [x] Melhorar indicação da próxima série/exercício
-
-## 🟡 Fase 4 — Evoluir o histórico
-
-* [x] Registro de treinos concluídos
-* [x] Registro da duração
-* [x] Registro de repetições
-* [x] Resumo dos exercícios
-* [x] Histórico detalhado por exercício
-* [x] Histórico de cargas e repetições
-* [x] Gráficos de evolução
-* [x] Frequência semanal de treinos
-* [x] Volume total de treino
-* [x] Tempo total treinado
-* [x] Recordes pessoais (PR)
-* [x] Notificação de novo recorde
-
-## 🟠 Fase 5 — Progressão
-
-* [ ] Comparar desempenho com o treino anterior
-* [ ] Exibir desempenho anterior durante o treino
-* [ ] Sugestão de progressão
-* [ ] Criar metas de repetições
-* [ ] Criar metas de carga
-* [ ] Indicador visual de progresso
-* [ ] Avaliação de dificuldade/RPE
-
-## 🔵 Fase 6 — Dashboard
-
-* [ ] Criar dashboard inicial
-* [ ] Resumo dos treinos da semana
-* [ ] Total de séries
-* [ ] Total de repetições
-* [ ] Tempo total treinado
-* [ ] Evolução dos principais exercícios
-* [ ] Resumo de recordes pessoais
-* [ ] Último treino realizado
-* [ ] Próximo treino sugerido
-
-## 🔵 Fase 7 — Recursos avançados
-
-* [ ] Suporte a circuitos
-* [ ] Timer para HIIT
-* [ ] Timer EMOM
-* [ ] Timer AMRAP
-* [ ] Suporte a exercícios isométricos
-* [ ] Suporte a técnicas avançadas de treino
-* [ ] Configuração de tempo de execução
-* [ ] Tempo sob tensão
-
-## ⚫ Fase 8 — Sincronização
-
-> Futuramente, caso o projeto evolua para uma arquitetura com backend.
-
-* [ ] Sistema de usuários/login
-* [ ] Banco de dados
-* [ ] Sincronização entre dispositivos
-* [ ] Backup na nuvem
-* [ ] Recuperação de dados em outro dispositivo
-
----
-
-## 🎯 Prioridades atuais
-
-A ordem planejada para as próximas evoluções é:
-
-```text
-1. Estabilidade e persistência
-        ↓
-2. Backup e recuperação
-        ↓
-3. Experiência durante a execução
-        ↓
-4. Histórico e evolução
-        ↓
-5. Progressão
-        ↓
-6. Dashboard
-        ↓
-7. Recursos avançados
-        ↓
-8. Sincronização em nuvem
-```
-
-### Objetivo
-
-> Evoluir o Sequence Training de um simples organizador de treinos para um **diário de calistenia completo**, mantendo a proposta de ser rápido, simples, funcional e acessível tanto no celular quanto no desktop.
-
----
+O index.html concentra a maior parte da interface, dos estilos e da lógica da aplicação.
+
+Os arquivos adicionais dão suporte à identidade visual, à instalação e ao funcionamento do PWA.
+
+## 🔐 Privacidade e segurança dos dados
+O Sequence Training não necessita de uma conta para funcionar e não possui backend próprio para armazenar os dados dos usuários.
+
+As informações dos treinos permanecem no armazenamento local do navegador.
+
+Isso oferece algumas vantagens:
+
+- Uso sem cadastro.
+- Maior autonomia sobre os dados.
+- Funcionamento independente de uma API própria.
+- Ausência de sincronização obrigatória com a nuvem.
+- Entretanto, o armazenamento local não é uma garantia de backup permanente.
+
+Boas práticas
+- Exporte seus treinos periodicamente.
+- Guarde os arquivos JSON em um local seguro.
+- Evite apagar os dados do site sem realizar uma exportação.
+- Mantenha cópias dos treinos importantes em outro dispositivo ou serviço de armazenamento.
+  
+## 🗺️ Roadmap
+O desenvolvimento do Sequence Training segue uma abordagem incremental: primeiro consolidar a confiabilidade do aplicativo, depois ampliar os recursos de acompanhamento e progressão.
+
+### 🟢 Fase 1 — Persistência e confiabilidade
+- [x] Persistência dos treinos.
+- [x] Persistência do histórico.
+- [x] Persistência do tema.
+- [x] Recuperação da sessão em andamento.
+- [x] Backup e restauração.
+- [x] Proteção contra alterações não salvas.
+- [x] Migração de dados legados.
+- [x] Gerenciamento de versões do Service Worker.
+### 🟢 Fase 2 — Criação e organização
+- [x] Múltiplos treinos.
+- [x] Criar, visualizar, atualizar e excluir treinos.
+- [x] Duplicar treinos.
+- [x] Exercícios personalizados.
+- [x] Biblioteca por grupo muscular.
+- [x] Carga individual por série.
+- [x] Reordenação dos exercícios.
+- [x] Treinos favoritos.
+- [x] Ordenação e informações de último uso.
+## 🟢 Fase 3 — Execução
+- [x] Controle de séries e repetições.
+- [x] Cronômetros de execução e descanso.
+- [x] Pausar e continuar.
+- [x] Pular séries e exercícios.
+- [x] Pular descanso.
+- [x] Ajustar o descanso em intervalos de 15 segundos.
+- [x] Indicação da próxima etapa.
+- [x] Sinais sonoros.
+- [x] Suporte à vibração em dispositivos compatíveis.
+### 🟢 Fase 4 — Histórico e estatísticas
+- [x] Registro de treinos concluídos.
+- [x] Histórico detalhado por exercício.
+- [x] Registro de cargas e repetições.
+- [x] Frequência semanal.
+- [x] Tempo total treinado.
+- [x] Volume de treino.
+- [x] Gráficos de evolução.
+- [x] Recordes pessoais.
+- [x] Notificação de novos recordes.
+### 🟡 Fase 5 — Progressão avançada
+- [x] Consulta ao desempenho anterior.
+- [x] Sugestões de progressão em situações elegíveis.
+- [ ] Ampliar as opções de metas de repetições.
+- [ ] Ampliar as opções de metas de carga.
+- [ ] Indicadores adicionais de evolução.
+- [ ] Avaliação de dificuldade e RPE.
+### 🔵 Fase 6 — Dashboard
+- [ ] Consolidar um dashboard inicial.
+- [ ] Resumo semanal dos treinos.
+- [x] Visão consolidada de séries e repetições.
+- [x] Evolução dos principais exercícios.
+- [x] Resumo de recordes pessoais.
+- [x] Último treino realizado.
+- [x] Sugestões de próximos treinos.
+### 🔵 Fase 7 — Recursos avançados
+- [ ] Suporte a circuitos.
+- [ ] Timer para HIIT.
+- [ ] Timer EMOM.
+- [ ] Timer AMRAP.
+- [ ] Expansão dos exercícios isométricos.
+- [ ] Técnicas avançadas de treino.
+- [ ] Configuração de tempo de execução.
+- [ ] Tempo sob tensão.
+### ⚫ Fase 8 — Sincronização entre dispositivos
+Esta fase depende de uma possível evolução para uma arquitetura com backend.
+- [ ] Sistema de usuários e login.
+- [ ] Banco de dados remoto.
+- [ ] Sincronização entre dispositivos.
+- [ ] Backup na nuvem.
+- [ ] Recuperação de dados em outros dispositivos.
+  
+O roadmap representa o planejamento do projeto e pode ser atualizado conforme as prioridades de desenvolvimento.
 
 ## 🤝 Contribuição
+Contribuições, sugestões e melhorias são bem-vindas.
 
-Contribuições são bem-vindas.
+# Como contribuir
+- Faça um fork do repositório.
+- Clone sua cópia local.
+- Crie uma branch para sua alteração.
+- Implemente e teste a mudança.
+- Faça um commit com uma mensagem descritiva.
+- Envie a branch e abra um Pull Request.
 
-Para contribuir:
+Exemplo:
 
-```bash
-# Faça um fork do projeto
-
-# Clone
+bash
+```
 git clone https://github.com/peedrinhoph/Sequence-Training.git
-
-# Crie uma branch
+```
+```
+cd Sequence-Training
+```
+```
 git checkout -b feature/minha-feature
-
+```
 # Faça suas alterações
-
-# Commit
+```
+git add .
+```
+```
 git commit -m "feat: adiciona minha feature"
-
-# Push
+```
+```
 git push origin feature/minha-feature
 ```
+Depois, abra um Pull Request no GitHub descrevendo a alteração e seu objetivo.
 
-Depois, abra um **Pull Request**.
+📄 Licença
+Consulte os arquivos e as informações de licença disponíveis no repositório para conhecer as condições de uso, modificação e distribuição do projeto.
 
----
+👨‍💻 Autor
+Pedro Henrique
 
-## 📄 Licença
+Desenvolvido com HTML, CSS e JavaScript, com foco em simplicidade, desempenho e praticidade para a criação e execução de treinos de calistenia.
 
-Este projeto está disponível sob a licença definida no repositório.
-
----
-
-## 👨‍💻 Autor
-
-**Pedro Henrique**
-
-Projeto desenvolvido com foco em uma experiência simples, rápida e prática para criação e execução de treinos de calistenia.
-
----
-
+Projeto: Sequence Training
+Aplicação: Abrir no navegador
 <p align="center">
-  Desenvolvido com HTML, CSS e JavaScript ❤️
+Feito com 💚 para tornar os treinos mais organizados e acompanhar a evolução, uma série de cada vez.
 </p>
